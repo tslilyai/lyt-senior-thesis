@@ -4,25 +4,14 @@
 \usepackage{enumerate}
 \usepackage{graphicx}
 \usepackage{todonotes}
-\usepackage{cite}
 
-%\usepackage{biblatex}
-%\addbibresource{thesis.bib}
+\usepackage[backend=biber]{biblatex}
+\addbibresource{thesis.bib}
 
 \newcounter{notecounter}
 \newcommand{\mynote}[1]{\stepcounter{notecounter}\textcolor{red}{\small \bf [\arabic{notecounter}]}\marginpar{\tiny \sf \textcolor{red}{\bf [\arabic{notecounter}]}#1}}
 
 \newcommand{\lyt}[1]{\mynote{LYT: #1}}
-\newcommand{\pop}{\texttt{pop}}
-\newcommand{\pops}{\texttt{pop}s}
-\newcommand{\popped}{\texttt{pop}ed}
-\newcommand{\popping}{\texttt{pop}ing}
-\newcommand{\push}{\texttt{push}}
-\newcommand{\pushes}{\texttt{push}es}
-\newcommand{\pushed}{\texttt{push}ed}
-\newcommand{\pushing}{\texttt{push}ing}
-\newcommand{\front}{\texttt{front}}
-\newcommand{\fronts}{\texttt{front}s}
 
 \newenvironment{bullets}
 { \begin{itemize}
@@ -82,6 +71,6 @@
 \input{future_conclude.tex}
 
 \newpage
-%\printbibliography
+\printbibliography
 
 \end{document}

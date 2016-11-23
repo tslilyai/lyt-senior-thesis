@@ -9,15 +9,15 @@ STO provides a transactional FIFO queue that adheres to the interface exposed by
 
 A concurrent queue must adhere to the following specification, in which all operations can be ordered such that:
 \begin{bullets}
-    \item A value is \popped off the queue only once (no duplicate \pops)
-    \item A value is \pushed onto the queue only once (no duplicate \pushes)
-    \item Values are \popped in the order in which they are \pushed
+    \item A value is \texttt{pop}ped off the queue only once (no duplicate \texttt{pop}s)
+    \item A value is \texttt{push}ed onto the queue only once (no duplicate \texttt{push}es)
+    \item Values are \texttt{pop}ped in the order in which they are \texttt{push}ed
 \end{bullets}
 
 A transactional queue adds the following invariants to the specification; there must be a serial order of all transactions such that, within one transaction:
 \begin{bullets}
-    \item Any two \pops pop consecutive values in the queue starting from the head of the queue 
-    \item Any two \pushes push consecutive values at the tail of the queue
+    \item Any two \texttt{pop}s pop consecutive values in the queue starting from the head of the queue 
+    \item Any two \texttt{push}es push consecutive values at the tail of the queue
 \end{bullets}
 
 \subsubsection{STO1 Queue}
@@ -27,28 +27,28 @@ The queue is implemented using optimistic concurrency control (OCC), which is a 
 
 There are two “versions” for the queue that can potentially invalidate a transaction if either changes: a headversion, and a tailversion. The headversion tracks the location of the head of the queue, and the tailversion tracks the location of the tail of the queue.
 
-The queue supports three transactional operations: \push, \pop, and \front. A \push within a transaction adds to an internal \texttt{write\_list\_item}. This \texttt{write\_list} holds thread-local list of values to be \pushed onto the queue, which are added to the tail of the queue during commit time (ensuring all values are added consecutively). We observe that all transactions comprised of only \pushes will always commit because \pushes do not observe any property of the queue: one transaction’s \pushes, \fronts, or \pops do not affect the outcome of another’s \pushes. (Note, however, that the opposite is not true). During commit time, the thread locks the tailversion so that no other thread’s \push can push onto the queue. The items on the \texttt{write\_list} are added to the queue, and the tailversion incremented.
+The queue supports three transactional operations: \texttt{push}, \texttt{pop}, and \texttt{front}. A \texttt{push} within a transaction adds to an internal \texttt{write\_list\_item}. This \texttt{write\_list} holds thread-local list of values to be \texttt{push}ed onto the queue, which are added to the tail of the queue during commit time (ensuring all values are added consecutively). We observe that all transactions comprised of only \texttt{push}es will always commit because \texttt{push}es do not observe any property of the queue: one transaction’s \texttt{push}es, \texttt{front}s, or \texttt{pop}s do not affect the outcome of another’s \texttt{push}es. (Note, however, that the opposite is not true). During commit time, the thread locks the tailversion so that no other thread’s \texttt{push} can push onto the queue. The items on the \texttt{write\_list} are added to the queue, and the tailversion incremented.
 
-A \pop within a transaction first checks if the queue is empty. If the queue is empty, then the thread reads the tailversion to ensure that no other transaction has committed a \push before this thread commits. Suppose another thread successfully installs a \push before this thread commits. Then this \pop should have read that \pushed value instead of seeing an empty queue. This forces the thread to abort the transaction. If there have been items added to the \texttt{write\_list} from previous \pushes within the transaction, then the \pop will “pop” an item off the \texttt{write\_list}, performing read-my-writes. If the queue is nonempty, then the thread reads the headversion to ensure that no other transaction has committed a \pop before this thread commits. The thread then finds the item to pop off the queue by iterating through the queue from the head until it finds an item that has not yet been \popped off within this transaction. The thread adds a write to this item so it knows during commit time and during future \pops that it intends to pop this item.
+A \texttt{pop} within a transaction first checks if the queue is empty. If the queue is empty, then the thread reads the tailversion to ensure that no other transaction has committed a \texttt{push} before this thread commits. Suppose another thread successfully installs a \texttt{push} before this thread commits. Then this \texttt{pop} should have read that \texttt{push}ed value instead of seeing an empty queue. This forces the thread to abort the transaction. If there have been items added to the \texttt{write\_list} from previous \texttt{push}es within the transaction, then the \texttt{pop} will “pop” an item off the \texttt{write\_list}, performing read-my-writes. If the queue is nonempty, then the thread reads the headversion to ensure that no other transaction has committed a \texttt{pop} before this thread commits. The thread then finds the item to pop off the queue by iterating through the queue from the head until it finds an item that has not yet been \texttt{pop}ped off within this transaction. The thread adds a write to this item so it knows during commit time and during future \texttt{pop}s that it intends to pop this item.
 
-A \front within a transaction is similar to a \pop, excluding the iteration procedure to find the item to return (the value at the head of the queue or the \texttt{write\_list} is always returned). The queue is not modified, but the versions are read appropriately to ensure that the values returned by the \front are still valid at commit time.
+A \texttt{front} within a transaction is similar to a \texttt{pop}, excluding the iteration procedure to find the item to return (the value at the head of the queue or the \texttt{write\_list} is always returned). The queue is not modified, but the versions are read appropriately to ensure that the values returned by the \texttt{front} are still valid at commit time.
 
 The design is summarized in Table BLAH\lyt{TODO}.
 
 \subsubsection{STO2 Queue}
-The STO2 Queue is also a circular, fixed-size queue, with operations \push, \pop, and \front. The STO2 Queue algorithm is a hybrid design integrating the STO1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library [1] as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the STO1 queue. 
+The STO2 Queue is also a circular, fixed-size queue, with operations \texttt{push}, \texttt{pop}, and \texttt{front}. The STO2 Queue algorithm is a hybrid design integrating the STO1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library [1] as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the STO1 queue. 
 
-Pessimistic locking entails locking the queue when any naturally-contentious operation---\pop or \front--- is invoked. The queue is then only unlocked after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a \pop or \front within this thread’s transaction. However, operations such as “\push” which can operate without any wait do not require locking during execution. Therefore, a \push follows the same protocol as in the STO1 queue.
+Pessimistic locking entails locking the queue when any naturally-contentious operation---\texttt{pop} or \texttt{front}--- is invoked. The queue is then only unlocked after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a \texttt{pop} or \texttt{front} within this thread’s transaction. However, operations such as “\texttt{push}” which can operate without any wait do not require locking during execution. Therefore, a \texttt{push} follows the same protocol as in the STO1 queue.
 
-Because \pop and \front lock the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
+Because \texttt{pop} and \texttt{front} lock the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
 
 The algorithms are summarized in Table BLAH.\lyt{TODO}
 
-\subsubsection{Flat Combining Queue (Nont-Transactional)}
+\subsubsection{Flat Combining Queue (Non-Transactional)}
 
-\emph{In the following discussion of our flat combining-based queues, we omit the discussion of the \front operation to simplify reasoning about the state of the queue. An appropriate algorithm for \front can be easily inferred from those used for \pop.}
+\emph{In the following discussion of our flat combining-based queues, we omit the discussion of the \texttt{front} operation to simplify reasoning about the state of the queue. An appropriate algorithm for \texttt{front} can be easily inferred from those used for \texttt{pop}.}
 
-Flat Combining, proposed by Hendler, et. al. in 2010, is a synchronization technique that is based upon coarse-grained locking and single-thread access to the data structure. The key insight is that the cost of synchronization for certain classes of data structures often outweighs the benefits gained from parallelizing access to the data structure. These data structures include high-contention data structures such as stacks, queues, and priority queues. Created with this insight, the flat combining algorithm proposes a simple, thread-local synchronization technique that allows only one thread to ever access the data structure at once. This both reduces synchronization overhead on points of contention (such as the head of the queue) and achieves better cache performance by leveraging the single-threaded access patterns during data structure design.
+Flat Combining, proposed by Hendler, et. al. in 2010\cite{Hendler:2010:FCS:1810479.1810540}, is a synchronization technique that is based upon coarse-grained locking and single-thread access to the data structure. The key insight is that the cost of synchronization for certain classes of data structures often outweighs the benefits gained from parallelizing access to the data structure. These data structures include high-contention data structures such as stacks, queues, and priority queues. Created with this insight, the flat combining algorithm proposes a simple, thread-local synchronization technique that allows only one thread to ever access the data structure at once. This both reduces synchronization overhead on points of contention (such as the head of the queue) and achieves better cache performance by leveraging the single-threaded access patterns during data structure design.
 
 The data structure design includes a sequential implementation of the data structure, a global lock, and per-thread records that are linked together in a global publication list. A record allows a thread to publish to other threads the specifics of any operation it wants to perform; the result of the operation is subsequently written to and retrieved from the record.
 
@@ -66,37 +66,63 @@ In the context of the queue, flat combining proves to be an effective technique 
 
 \subsubsection{Flat Combining Queue (Transactional)}
 
-Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there must be a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two \pushes push consecutive values at the tail of the queue.
+Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there must be a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two \texttt{push}es push consecutive values at the tail of the queue.
 
-In order to add transactional guarantees to the flat combining queue, the order in which threads’ requests are applied to the queue becomes important. For example, let a transaction in thread T1 be \texttt{pop, pop} and a transaction in thread T2 be \pop. The combiner thread sees \texttt{T1:pop} and \texttt{T2:pop}, and applies both operations to the queue. T1 second \pop request will violate the transactional specification because the two \popped values in T1’s transaction will not be consecutive. T1 must now abort, which means T2’s \pop is now invalid: it does not represent a \pop at the head of the queue.
+In order to add transactional guarantees to the flat combining queue, the order in which threads’ requests are applied to the queue becomes important. For example, let a transaction in thread T1 be \texttt{pop, pop} and a transaction in thread T2 be \texttt{pop}. The combiner thread sees \texttt{T1:pop} and \texttt{T2:pop}, and applies both operations to the queue. T1 second \texttt{pop} request will violate the transactional specification because the two \texttt{pop}ped values in T1’s transaction will not be consecutive. T1 must now abort, which means T2’s \texttt{pop} is now invalid: it does not represent a \texttt{pop} at the head of the queue.
 
 Addressing the scenario described above requires two important changes to flat combining: 
 \begin{ordlist}
-\item \pops and \pushes cannot be applied to the queue during a transaction’s execution, and must instead be performed when a transaction commits
-\item Because of (1), values remain in the queue even when a transaction has previously performed a \pop. Thus, the algorithm must track which values in the queue are going to be \popped within the transaction in order to prevent duplicate \pops.
+\item \texttt{pop}s and \texttt{push}es cannot be applied to the queue during a transaction’s execution, and must instead be performed when a transaction commits
+\item Because of (1), values remain in the queue even when a transaction has previously performed a \texttt{pop}. Thus, the algorithm must track which values in the queue are going to be \texttt{pop}ped within the transaction in order to prevent duplicate \texttt{pop}s.
 \end{ordlist}
 
-We now describe the new algorithms for \push and \pop.  We change the types of request a thread can publish to its record on the publication list. Recall that the original flat combining queue supports two requests: \texttt{<PUSH, value>} and \texttt{<POP, 0>}. The transactional queue supports the follow requests:
+We now describe the new algorithms for \texttt{push} and \texttt{pop}.  We change the types of request a thread can publish to its record on the publication list. Recall that the original flat combining queue supports two requests: \texttt{<PUSH, value>} and \texttt{<POP, 0>}. The transactional queue supports the follow requests:
 \begin{bullets}
-    \item \texttt{<PUSH, list>} : \push a list of values onto the queue
-    \item \texttt{<MARK\_POP, thread\_id>} : mark a value in the queue to be \popped by this thread\_id
-    \item \texttt{<DEQ, thread\_id>} : dequeue all values in the queue that are marked by this thread\_id
-    \item \texttt{<EMPTY?, thread\_id>} : check if the queue, after \popping all items marked by this thread\_id, is empty
-    \item \texttt{<CLEANUP, thread\_id>} : unmark all values that are marked with this thread\_id
+    \item \texttt{<PUSH, list>} : \texttt{push} a list of values onto the queue
+    \item \texttt{<MARK\_POP, thread\_id>} : mark a value in the queue to be \texttt{pop}ped by this \texttt{thread\_id}
+    \item \texttt{<DEQ, thread\_id>} : dequeue all values in the queue that are marked by this \texttt{thread\_id}
+    \item \texttt{<EMPTY?, thread\_id>} : check if the queue, after \texttt{pop}ping all items marked by this \texttt{thread\_id}, is empty
+    \item \texttt{<CLEANUP, thread\_id>} : unmark all values that are marked with this \texttt{thread\_id}
 \end{bullets}
 
-As with the STO1 queue, a \push within a transaction adds to an internal \texttt{write\_list\_item}. At commit time, the thread will invoke the \texttt{<PUSH, list>}, with the \texttt{write\_list} passed as the argument.
+As with the STO1 queue, a \texttt{push} within a transaction adds to an internal \texttt{write\_list\_item}. At commit time, the thread will invoke the \texttt{<PUSH, list>}, with the \texttt{write\_list} passed as the argument.
 
-A \pop within a transaction invokes the \texttt{<MARK\_POP, thread\_id>} command. The combiner thread, upon seeing a MARK\_POP command, looks at the first value at the head of the queue. If this value is marked with another thread’s thread\_id, the combiner thread returns \texttt{<ABORT>} to the calling thread. If the value is not marked, the combiner thread marks the value with the caller’s thread\_id and returns \texttt{<OK>}. Else the value is marked by the calling thread’s thread\_id. In this scenario, note that no other thread will have marked values in the queue, since they will abort when seeing the head value marked by the calling thread’s thread\_id. The combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread’s thread\_id. It then marks the value with the caller’s thread\_id and returns \texttt{<OK>}. If the queue is either empty or there are no values not marked with the caller’s thread\_id, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
+A \texttt{pop} within a transaction invokes the \texttt{<MARK\_POP, thread\_id>} command. The combiner thread, upon seeing a MARK\_POP command, looks at the first value at the head of the queue. If this value is marked with another thread’s \texttt{thread\_id}, the combiner thread returns \texttt{<ABORT>} to the calling thread. If the value is not marked, the combiner thread marks the value with the caller’s \texttt{thread\_id} and returns \texttt{<OK>}. Else the value is marked by the calling thread’s \texttt{thread\_id}. In this scenario, note that no other thread will have marked values in the queue, since they will abort when seeing the head value marked by the calling thread’s \texttt{thread\_id}. The combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread’s \texttt{thread\_id}. It then marks the value with the caller’s \texttt{thread\_id} and returns \texttt{<OK>}. If the queue is either empty or there are no values not marked with the caller’s \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
 
-Note that this algorithm does not allow \pops to read the values \pushed within the same transaction. To do so would require passing in the thread’s \texttt{write\_list} in addition to the ; for the sake of our evaluation, we leave this part of the transactional queue specification unimplemented.
+Note that this algorithm does not allow \texttt{pop}s to read the values \texttt{push}ed within the same transaction. To do so would require passing in the thread’s \texttt{write\_list} in addition to the \texttt{thread\_id} as arguments to the combiner thread. For the sake of our evaluation, we leave this part of the transactional queue specification unimplemented.
 
-The \texttt{<EMPTY?, thread\_id>} request is posted when a thread attempts to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If the response to \texttt{<EMPTY?>} is true, then the thread knows that no other thread has \pushed onto the queue between the time of its \texttt{<MARK\_POP>} seeing an empty queue and commit time. Else another thread has \pushed items onto the queue, invalidating this thread’s \pop result, and this thread must abort.
+The \texttt{<EMPTY?, thread\_id>} request is posted when a thread attempts to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If the response to \texttt{<EMPTY?>} is true, then the thread knows that no other thread has \texttt{push}ed onto the queue between the time of its \texttt{<MARK\_POP>} seeing an empty queue and commit time. Else another thread has \texttt{push}ed items onto the queue, invalidating this thread’s \texttt{pop} result, and this thread must abort.
 
-The \texttt{<CLEANUP, thread\_id>} request is posted when 
+The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending \texttt{pop}s. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}.
 
+The algorithm is summarized in Table BLAH \lyt{TODO}.
+ 
 \subsection{Evaluation}
-\subsubsection{Benchmarks}
+
+\subsubsection{Benchmark Parameters}
+\begin{bullets}
+\item Value Types: Each queue benchmark uses randomly chosen integers. This is because the benchmark tests do not manipulate the values they push/pop and the queue algorithms are agnostic to the actual values being placed in the queue.
+
+\item Initial Queue Size: We run several tests with different initial fullness of the data structure. This affects how often the structure becomes empty, which can cause aborts and additional overhead (as described in the algorithms above). It also affects the number of cache lines accessed: a near-empty queue will never require iterating over values contained in more than one cache line.
+
+\item Transaction Size: We modify the number of operations per transaction in different benchmarks. For some benchmarks, the number of operations in a transaction for our benchmarks is set to 1. This minimizes the overhead added to support multiple-operation transactions. The overhead includes support for multiple items in read/write sets, read-my-writes, and an increased number of aborts and retries. With single operation transactions, we observe an upper bound on the best performance our data structures can achieve. We also can more easily compare the performance of a transactional data structure with a nontransactional concurrent data structure.
+
+\item Data Structure Opacity: If opacity is enabled, a transaction will abort immediately if any inconsistent state is detected. \lyt{MORE HERE?}. This requires keeping track of a global transaction ID (TID). This global TID must be accessed when a transaction commits and when items are added to the read set during a transaction's, making transactions overall more expensive.
+\end{bullets}
+
+\subsubsection{Benchmarks Tests}
+\begin{ordlist}
+\item 2-Thread Push-Pop Test: This test has one thread that performs only \texttt{push}es and another thread that performs only \texttt{pops}. Unless the queue is empty, the two threads should never be modifying the same part of the data structure, and will never conflict (abort rate should be near 0).
+
+\item Multi-Thread Random Single-Operation Transaction Test: 
+    In this test, a thread randomly selects an operation (\texttt{push} or \texttt{pop}) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads.
+    
+\item Multi-Thread Random Multi-Operation Transaction Test: 
+    In this test, a thread randomly selects multiple operations (\texttt{push} or \texttt{pop}) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads.
+    
+\end{ordlist}
+
 \subsubsection{Results}
-\subsubsection{Conclusion}
+
+\subsection{Discussion and Conclusions}
 
