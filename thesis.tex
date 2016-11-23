@@ -1,0 +1,87 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{enumerate}
+\usepackage{graphicx}
+\usepackage{todonotes}
+\usepackage{cite}
+
+%\usepackage{biblatex}
+%\addbibresource{thesis.bib}
+
+\newcounter{notecounter}
+\newcommand{\mynote}[1]{\stepcounter{notecounter}\textcolor{red}{\small \bf [\arabic{notecounter}]}\marginpar{\tiny \sf \textcolor{red}{\bf [\arabic{notecounter}]}#1}}
+
+\newcommand{\lyt}[1]{\mynote{LYT: #1}}
+\newcommand{\pop}{\texttt{pop}}
+\newcommand{\pops}{\texttt{pop}s}
+\newcommand{\popped}{\texttt{pop}ed}
+\newcommand{\popping}{\texttt{pop}ing}
+\newcommand{\push}{\texttt{push}}
+\newcommand{\pushes}{\texttt{push}es}
+\newcommand{\pushed}{\texttt{push}ed}
+\newcommand{\pushing}{\texttt{push}ing}
+\newcommand{\front}{\texttt{front}}
+\newcommand{\fronts}{\texttt{front}s}
+
+\newenvironment{bullets}
+{ \begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}     }
+{ \end{itemize}                  } 
+
+\newenvironment{ordlist}
+{ \begin{enumerate}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}     }
+{ \end{enumerate}                  } 
+
+\title{TITLE HERE}
+\author{Lillian Tsai}
+
+\begin{document}
+
+\maketitle
+
+{\centering
+    Submitted to the Department of Computer Science on April 1, 2017, \\
+    in partial fulfillment of the honors requirements for the degree \\
+    of Bachelor of Arts in Computer Science at Harvard University.
+
+}
+
+\section*{Abstract}
+
+\newpage
+\section*{Acknowledgements}
+
+\newpage
+\tableofcontents
+
+\newpage
+\listoffigures
+
+\newpage
+\listoftables
+
+\newpage
+\input{introduction.tex}
+
+\newpage
+\input{related_work.tex}
+
+\newpage
+\input{queues.tex}
+
+\newpage
+\input{hashmap.tex}
+
+\newpage
+\input{future_conclude.tex}
+
+\newpage
+%\printbibliography
+
+\end{document}
