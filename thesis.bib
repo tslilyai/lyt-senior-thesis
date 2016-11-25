@@ -1,4 +1,4 @@
-@inproceedings{Hendler:2010:FCS:1810479.1810540,
+@inproceedings{flatcombining,
  author = {Hendler, Danny and Incze, Itai and Shavit, Nir and Tzafrir, Moran},
  title = {Flat Combining and the Synchronization-parallelism Tradeoff},
  booktitle = {Proceedings of the Twenty-second Annual ACM Symposium on Parallelism in Algorithms and Architectures},
@@ -16,7 +16,7 @@
  keywords = {concurrent data-structures, multiprocessors, synchronization},
 } 
 
-@inproceedings{Spiegelman:2016:TDS:2908080.2908112,
+@inproceedings{tdsl,
  author = {Spiegelman, Alexander and Golan-Gueta, Guy and Keidar, Idit},
  title = {Transactional Data Structure Libraries},
  booktitle = {Proceedings of the 37th ACM SIGPLAN Conference on Programming Language Design and Implementation},
@@ -34,7 +34,7 @@
  keywords = {Concurrency, data structures, semantics, transactions},
 } 
 
-@inproceedings{Herman:2016:TTF:2901318.2901348,
+@inproceedings{sto,
  author = {Herman, Nathaniel and Inala, Jeevana Priya and Huang, Yihe and Tsai, Lillian and Kohler, Eddie and Liskov, Barbara and Shrira, Liuba},
  title = {Type-aware Transactions for Faster Concurrent Code},
  booktitle = {Proceedings of the Eleventh European Conference on Computer Systems},
@@ -52,3 +52,179 @@
  address = {New York, NY, USA},
 } 
 
+@article{linearizability,
+  title={Linearizability: A correctness condition for concurrent objects},
+  author={Herlihy, Maurice P and Wing, Jeannette M},
+  journal={ACM Transactions on Programming Languages and Systems (TOPLAS)},
+  volume={12},
+  number={3},
+  pages={463--492},
+  year={1990},
+  publisher={ACM}
+}
+
+@book{herlihytm,
+  title={Transactional memory: Architectural support for lock-free data structures},
+  author={Herlihy, Maurice and Moss, J Eliot B},
+  volume={21},
+  number={2},
+  year={1993},
+  publisher={ACM}
+}
+
+@book{harristm,
+ author = {Harris, Tim and Larus, James and Rajwar, Ravi},
+ title = {Transactional Memory, 2nd Edition},
+ year = {2010},
+ isbn = {1608452352, 9781608452354},
+ edition = {2nd},
+ publisher = {Morgan and Claypool Publishers},
+} 
+
+@article{cascaval,
+  title={Software transactional memory: Why is it only a research toy?},
+  author={Cascaval, Calin and Blundell, Colin and Michael, Maged and Cain, Harold W and Wu, Peng and Chiras, Stefanie and Chatterjee, Siddhartha},
+  journal={Queue},
+  volume={6},
+  number={5},
+  pages={40},
+  year={2008},
+  publisher={ACM}
+}
+
+@inproceedings{tl2,
+  title={Transactional locking II},
+  author={Dice, Dave and Shalev, Ori and Shavit, Nir},
+  booktitle={International Symposium on Distributed Computing},
+  pages={194--208},
+  year={2006},
+  organization={Springer}
+}
+
+@techreport{larktm,
+  title={Larktm: Efficient, strongly atomic software transactional memory},
+  author={Zhang, Minjia and Huang, Jipeng and Cao, Man and Bond, Michael D},
+  year={2012},
+  institution={Technical Report OSUCISRC-11/12-TR17, Computer Science \& Engineering, Ohio State University}
+}
+
+@inproceedings{opennesting,
+  title={Open nesting in software transactional memory},
+  author={Ni, Yang and Menon, Vijay S and Adl-Tabatabai, Ali-Reza and Hosking, Antony L and Hudson, Richard L and Moss, J Eliot B and Saha, Bratin and Shpeisman, Tatiana},
+  booktitle={Proceedings of the 12th ACM SIGPLAN symposium on Principles and practice of parallel programming},
+  pages={68--78},
+  year={2007},
+  organization={ACM}
+}
+
+@inproceedings{elastic,
+ author = {Felber, Pascal and Gramoli, Vincent and Guerraoui, Rachid},
+ title = {Elastic Transactions},
+ booktitle = {Proceedings of the 23rd International Conference on Distributed Computing},
+ series = {DISC'09},
+ year = {2009},
+ isbn = {3-642-04354-2, 978-3-642-04354-3},
+ location = {Elche, Spain},
+ pages = {93--107},
+ numpages = {15},
+ url = {http://dl.acm.org/citation.cfm?id=1813164.1813180},
+ acmid = {1813180},
+ publisher = {Springer-Verlag},
+ address = {Berlin, Heidelberg},
+} 
+
+@inproceedings{tcc,
+  title={Transactional collection classes},
+  author={Carlstrom, Brian D and McDonald, Austen and Carbin, Michael and Kozyrakis, Christos and Olukotun, Kunle},
+  booktitle={Proceedings of the 12th ACM SIGPLAN symposium on Principles and practice of parallel programming},
+  pages={56--67},
+  year={2007},
+  organization={ACM}
+}
+@article{earlyrelease,
+  title={Nonblocking memory management support for dynamic-sized data structures},
+  author={Herlihy, Maurice and Luchangco, Victor and Martin, Paul and Moir, Mark},
+  journal={ACM Transactions on Computer Systems (TOCS)},
+  volume={23},
+  number={2},
+  pages={146--196},
+  year={2005},
+  publisher={ACM}
+}
+
+@inproceedings{boost,
+  title={Transactional boosting: a methodology for highly-concurrent transactional objects},
+  author={Herlihy, Maurice and Koskinen, Eric},
+  booktitle={Proceedings of the 13th ACM SIGPLAN Symposium on Principles and practice of parallel programming},
+  pages={207--216},
+  year={2008},
+  organization={ACM}
+}
+
+@inproceedings{autolock,
+  title={Automatic scalable atomicity via semantic locking},
+  author={Golan-Gueta, Guy and Ramalingam, G and Sagiv, Mooly and Yahav, Eran},
+  booktitle={ACM SIGPLAN Notices},
+  volume={50},
+  number={8},
+  pages={31--41},
+  year={2015},
+  organization={ACM}
+}
+
+@inproceedings{predication,
+  title={Transactional predication: high-performance concurrent sets and maps for stm},
+  author={Bronson, Nathan G and Casper, Jared and Chafi, Hassan and Olukotun, Kunle},
+  booktitle={Proceedings of the 29th ACM SIGACT-SIGOPS symposium on Principles of distributed computing},
+  pages={6--15},
+  year={2010},
+  organization={ACM}
+}
+
+@inproceedings{spectm,
+  title={STM in the small: trading generality for performance in software transactional memory},
+  author={Dragojevi{\'c}, Aleksandar and Harris, Tim},
+  booktitle={Proceedings of the 7th ACM european conference on Computer Systems},
+  pages={1--14},
+  year={2012},
+  organization={ACM}
+}
+
+@inproceedings{swisstm,
+  title={Stretching transactional memory},
+  author={Dragojevi{\'c}, Aleksandar and Guerraoui, Rachid and Kapalka, Michal},
+  booktitle={ACM sigplan notices},
+  volume={44},
+  number={6},
+  pages={155--165},
+  year={2009},
+  organization={ACM}
+}
+
+@inproceedings{htm,
+  title={Performance evaluation of Intel{\textregistered} transactional synchronization extensions for high-performance computing},
+  author={Yoo, Richard M and Hughes, Christopher J and Lai, Konrad and Rajwar, Ravi},
+  booktitle={2013 SC-International Conference for High Performance Computing, Networking, Storage and Analysis (SC)},
+  pages={1--11},
+  year={2013},
+  organization={IEEE}
+}
+@article{optboost,
+ author = {Hassan, Ahmed and Palmieri, Roberto and Ravindran, Binoy},
+ title = {Optimistic Transactional Boosting},
+ journal = {SIGPLAN Not.},
+ issue_date = {August 2014},
+ volume = {49},
+ number = {8},
+ month = feb,
+ year = {2014},
+ issn = {0362-1340},
+ pages = {387--388},
+ numpages = {2},
+ url = {http://doi.acm.org/10.1145/2692916.2555283},
+ doi = {10.1145/2692916.2555283},
+ acmid = {2555283},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {STM, transactional boosting, transactional data structures},
+} 
