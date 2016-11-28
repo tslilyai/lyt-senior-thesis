@@ -27,6 +27,7 @@ The STO data type algorithms enforce transactonal correctness using \emph{versio
 
 
 \subsubsection{STO1 Queue}
+\input{sto1table.tex}
 The STO1 Queue is the first implementation of the transactional queue data structure using STO’s framework. It implements a circular, fixed-size transactional queue.
 
 The queue is implemented using optimistic concurrency control (OCC), which is a transactional algorithm that optimistically assumes that no other transaction will conflict with a thread’s transaction. No thread prevents another thread from operating simultaneously on the queue during a transaction, which means multiple threads can add read/writes of the same parts of the queue during their transactions. Contention only occurs during commit time, when the thread must necessarily lock the queue so that it can safely verify and modify the queue’s values without parallel modifications by other threads. A thread can only realize that another thread has “beaten” it to modifying the queue at commit time.
@@ -39,16 +40,17 @@ A \texttt{pop} within a transaction first checks if the queue is empty. If the q
 
 A \texttt{front} within a transaction is similar to a \texttt{pop}, excluding the iteration procedure to find the item to return (the value at the head of the queue or the \texttt{write\_list} is always returned). The queue is not modified, but the versions are read appropriately to ensure that the values returned by the \texttt{front} are still valid at commit time.
 
-The design is summarized in Table BLAH\lyt{TODO}.
+The design is summarized in Table \ref{table:sto1}.
 
 \subsubsection{STO2 Queue}
-The STO2 Queue is also a circular, fixed-size queue, with operations \texttt{push}, \texttt{pop}, and \texttt{front}. The STO2 Queue algorithm is a hybrid design integrating the STO1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library [1] as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the STO1 queue. 
+\input{sto2table.tex}
+The STO2 Queue is also a circular, fixed-size queue, with operations \texttt{push}, \texttt{pop}, and \texttt{front}. The STO2 Queue algorithm is a hybrid design integrating the STO1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library [1] as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the STO1 queue, and the algorithm is simpler to implement and describe. 
 
 Pessimistic locking entails locking the queue when any naturally-contentious operation---\texttt{pop} or \texttt{front}--- is invoked. The queue is then only unlocked after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a \texttt{pop} or \texttt{front} within this thread’s transaction. However, operations such as “\texttt{push}” which can operate without any wait do not require locking during execution. Therefore, a \texttt{push} follows the same protocol as in the STO1 queue.
 
 Because \texttt{pop} and \texttt{front} lock the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
 
-The algorithms are summarized in Table BLAH.\lyt{TODO}
+The algorithms are summarized in Table \ref{table:sto2}
 
 \subsubsection{Flat Combining Queue (Non-Transactional)}
 
@@ -71,6 +73,7 @@ When a thread T wishes to do an operation O:
 In the context of the queue, flat combining proves to be an effective technique to handle the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses “fat nodes” (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the STO1 and STO2 queues suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that flat combining’s alternative synchronization paradigm might improve the performance of a transactional queue as much as it does for a concurrent queue.
 
 \subsubsection{Flat Combining Queue (Transactional)}
+\input{fctable.tex}
 
 Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there must be a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two \texttt{push}es push consecutive values at the tail of the queue.
 
@@ -93,7 +96,9 @@ We now describe the new algorithms for \texttt{push} and \texttt{pop}.  We chang
 
 As with the STO1 queue, a \texttt{push} within a transaction adds to an internal \texttt{write\_list\_item}. At commit time, the thread will invoke the \texttt{<PUSH, list>}, with the \texttt{write\_list} passed as the argument.
 
-A \texttt{pop} within a transaction invokes the \texttt{<MARK\_POP, thread\_id>} command. The combiner thread, upon seeing a MARK\_POP command, looks at the first value at the head of the queue. If this value is marked with another thread’s \texttt{thread\_id}, the combiner thread returns \texttt{<ABORT>} to the calling thread. If the value is not marked, the combiner thread marks the value with the caller’s \texttt{thread\_id} and returns \texttt{<OK>}. Else the value is marked by the calling thread’s \texttt{thread\_id}. In this scenario, note that no other thread will have marked values in the queue, since they will abort when seeing the head value marked by the calling thread’s \texttt{thread\_id}. The combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread’s \texttt{thread\_id}. It then marks the value with the caller’s \texttt{thread\_id} and returns \texttt{<OK>}. If the queue is either empty or there are no values not marked with the caller’s \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
+A \texttt{pop} within a transaction invokes the \texttt{<MARK\_POP, thread\_id>} command. The combiner thread, upon seeing a MARK\_POP command, looks at the first value at the head of the queue. If this value is marked with another thread’s \texttt{thread\_id}, the combiner thread returns \texttt{<ABORT>} to the calling thread. If the value is not marked, the combiner thread marks the value with the caller’s \texttt{thread\_id} and returns \texttt{<OK>}. Else the value is marked by the calling thread’s \texttt{thread\_id}. In this scenario, note that no other thread will have marked values in the queue, since they will abort when seeing the head value marked by the calling thread’s \texttt{thread\_id}. The combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread’s \texttt{thread\_id}. It then marks the value with the caller’s \texttt{thread\_id} and returns \texttt{<OK>}. Upon receiving the response, the calling thread adds a write to a \texttt{pop\_item} to tell the thread to post a \texttt{<DEQ, thread\_id>} request at commit time. This removes the popped value from the queue.
+
+If the queue is either empty or there are no values not marked with the caller’s \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
 
 Note that this algorithm does not allow \texttt{pop}s to read the values \texttt{push}ed within the same transaction. To do so would require passing in the thread’s \texttt{write\_list} in addition to the \texttt{thread\_id} as arguments to the combiner thread. For the sake of our evaluation, we leave this part of the transactional queue specification unimplemented.
 
@@ -101,8 +106,8 @@ The \texttt{<EMPTY?, thread\_id>} request is posted when a thread attempts to co
 
 The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending \texttt{pop}s. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}.
 
-The algorithm is summarized in Table BLAH \lyt{TODO}.
- 
+The algorithm is summarized in Table \ref{table:fc}.
+
 \subsection{Evaluation}
 
 \subsubsection{Benchmark Parameters}

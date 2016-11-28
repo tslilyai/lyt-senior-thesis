@@ -1,0 +1,35 @@
+\begin{table}[h!]
+\centering
+\begin{tabular}{|C{.8cm}|C{1.5cm}|C{2.5cm}|C{2cm}|C{2cm}|L{5.5cm}|} 
+ \toprule
+ \multicolumn{2}{|c|}{Operation} & Execution-Time Effects & Read Set& Write Set & \multicolumn{1}{c|}{Commit Protocol}\\ [0.5ex] 
+ \midrule
+ \midrule
+ \multicolumn{2}{|c|}{Push} & none & none & \texttt{write\_list} & 
+     \tabitem lock queueversion \newline
+     \tabitem push items from \texttt{write\_list} onto the queue (increment tail) \newline
+     \tabitem unlock queueversion\\
+\midrule
+ \multirow{2}{*}{Pop} & Nonempty & 
+ locks queueversion
+ & none
+ & element to be popped
+ & \tabitem increment head for every value in the \texttt{write\_list}\newline
+    \tabitem unlock queueversion\\
+ \cline{2-6}
+ & Empty
+ & locks queueversion 
+ & none 
+ & none 
+ & none \\
+ \midrule
+ \multicolumn{2}{|c|}{Front} & 
+ locks queueversion and stores head value
+ & none
+ & none 
+ & none\\
+ \bottomrule
+\end{tabular}
+\caption{Summary of the STO2 Queue Algorithm}
+\label{table:sto2}
+\end{table}
