@@ -1,0 +1,78 @@
+\section{Evaluation}
+
+\subsection{Microbenchmarks}
+\label{microbenchmarks}
+
+All queues are evaluated on a set of microbenchmarks to demonstrate scalability and performance of different queue algorithms. The controlled nature of these microbenchmarks allow us to easily compare particular aspects of each algorithm, such as transactional overhead introduced by STO. All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with g++-5.3. In all graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
+
+\subsubsection{Parameters}
+
+\begin{itemize}
+\item Value Types: Each queue benchmark uses randomly chosen integers. This is because the benchmark tests do not manipulate the values they push/pop and the queue algorithms are agnostic to the actual values being placed in the queue.
+
+\item Initial Queue Size: We run several tests with different initial fullness of the data structure. This affects how often the structure becomes empty, which can cause aborts and additional overhead (as described in the algorithms above). It also affects the number of cache lines accessed: a near-empty queue will never require iterating over values contained in more than one cache line.
+
+\item Transaction Size: We modify the number of operations per transaction in different benchmarks. For some benchmarks, the number of operations in a transaction is set to 1. This provides a more fair evaluation of transactional data strucures against concurrent data structures: by keeping a transaction as short as possible, we minimize the performance hit from transactional overhead. In order to support multiple-operation transactions, STO adds overhead which includes support for multiple items in read/write sets, read-my-writes, and an increased number of aborts and retries. With single operation transactions, we observe an upper bound on the best performance our data structures can achieve.
+
+%\item Data Structure Opacity: If opacity is enabled, a transaction will abort immediately if any inconsistent state is detected. This requires keeping track of a global transaction ID (TID). This global TID must be accessed when a transaction commits and when items are added to the read set during a transaction's, making transactions overall more expensive.\lyt{do we need this?}
+\end{itemize}
+
+\subsubsection{Tests}
+\begin{enumerate}
+\item 2-Thread Push-Pop Test: This test has one thread that performs only \texttt{push}es and another thread that performs only \texttt{pops}. Unless the queue is empty, the two threads should never be modifying the same part of the data structure, and will never conflict (abort rate should be near 0). We use this test to measure the speed of push/pops on the queue when contention is not an issue. We expect that our transactional queues should perform as well, if not better, than most of the high-concurrency queues: while their algorithms are optimized for multi-threaded access, our simpler implementation should be just as fast with low contention and low abort rates.
+
+\item Multi-Thread Random Single-Operation Transactions Test: 
+    In this test, a thread randomly selects an operation (\texttt{push} or \texttt{pop}) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test allows us to benchmark performance under variable amounts of contention (by increasing the number of threads) and increased abort rates. We expect that our STO1/STO2 transactional queues will perform significantly worse once the number of threads is increased and our naive concurrency algorithms underperform concurrency algorithms optimized for contentious situations.
+    
+\item Multi-Thread Random Multi-Operation Transactions Test: 
+    In this test, a thread randomly selects multiple operations (\texttt{push} or \texttt{pop}) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test is most useful to compare different transactional data structures.
+    
+\end{enumerate}
+
+\subsection{Results}
+
+\subsection{Concurrent Queues}
+
+We benchmark a set of the best-performing high-concurrency queue algorithms against our two STO queue implementations in order to determine which high-concurrency algorithm would be best suited to integration with STO. We look for both the most scalable and the highest-performing queue (even when contention is low).
+
+\subsubsection{2-Thread Push-Pop Test}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{concurrent/Q:PushPop}
+\caption{Performance of Concurrent Queue Algorithms}
+\label{fig:concurrent_queues_pushpop}
+\end{figure}
+
+\subsection{Multi-Thread Random Single-Operation Transactions Test}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps10000.png}
+\includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps50000.png}
+\includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps100000.png}
+\caption{Performance of Concurrent Queue Algorithms}
+\label{fig:concurrent_queues_rand}
+\end{figure}
+
+\subsection{Transactional Flat-Combining Queue}
+
+\subsection{2-Thread Push-Pop Test}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{txnal/Q:PushPop}
+\caption{Performance of Transactional Queue Algorithms}
+\label{fig:txnal_queues}
+\end{figure}
+
+\subsection{Multi-Thread Random Single-Operation Transactions Test}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{txnal/Q:RandSingleOps10000.png}
+\includegraphics[width=\textwidth]{txnal/Q:RandSingleOps50000.png}
+\includegraphics[width=\textwidth]{txnal/Q:RandSingleOps100000.png}
+\caption{Performance of txnal Queue Algorithms}
+\label{fig:txnal_queues}
+\end{figure}
+
+\subsection{Multi-Thread Random Multi-Operation Transactions Test}
+
+\section{Discussion and Conclusions}
