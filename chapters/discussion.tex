@@ -1,0 +1,16 @@
+\section{Discussion}
+
+\subsection{STO Overhead}
+We first analyze what our results tell us about STO itself. Benchmarking transactional queues with naive concurrency algorithms (STO1 and STO2) against various high-concurrency algorithms demonstrates a simple implementation of a naive algorithm can consistently outperform more complex concurrent queue implementations even given the additional STO overhead. This indicates that the overhead added from STO does not cripple performance if used carefully---our transactional data structures can compete with several high-concurrency, non-transactional data structures. However, we see by comparing to the non-transactional flat combining queue that our algorithms are certainly not optimal for performance in a non-transactional setting.
+
+Our comparison of the WrappedFCQueueNT and the FCQueueNT demonstrates that STO introduces some signficant necessary overhead \lyt{actual numbers here}. The STO wrapper calls (\texttt{start\_transaction} and \texttt{commit\_transaction}) allow a thread to mark which operations should occur together in the same transaction. After invoking the \texttt{start\_transaction} call, the thread can collect items in its read- and write-set; when \texttt{commit\_transaction} is invoked, the commit procedure is run (validation and installation of items in the read-/write-sets). The WrappedFCQueueNT adds no items to the read-/write-sets after invoking \texttt{start\_transaction}, and therefore incurs the minimum amount of overhead necessary to use STO: the commit procedure has zero items to validate or install. The WrappedFCQueueNT therefore represents the upper bound of performance we can expect from our STO queues. Even with the wraper calls, our results indicate it can still be possible to achieve performance \lyt{numbers} times greater than that of our original STO1 and STO2 queues.
+
+\subsection{Transactional Flat Combining Queue}
+
+Our results for the flat combining queue variants indicate that the fully-transactional flat combining queue algorithm (STO-FCQueue) performs poorly. Analysis with the \texttt{perf} tool indicates that the majority of the overhead is incurred from spinning on the flat combining lock (acquired by the combiner thread) or waiting for a flat combining call to complete. We see these results because of two reasons:
+\begin{enumerate}
+\item \emph{Higher Quantity}: A thread must make multiple flat combining calls to perform a \texttt{pop} within a transaction (recall that a \texttt{push} only requires one flat combining call) 
+\item \emph{Higher Complexity}: each flat combining call requires executing instructions, which makes each operation request more expensive.
+\end{enumerate}
+
+We conclude that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better in a transactional setting than a naive synchronization technique such as that used in the STO1 and STO2 queues. In the next chapter, we formalize this argument using a commutativity discussion and claim that the higher quantity of more complex flat combining calls is necessary for flat combining to be used in a transactional setting. Furthermore, we claim that the flat combining technique depends on non-transactional properties to achieve its high performance. 

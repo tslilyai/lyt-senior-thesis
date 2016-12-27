@@ -49,13 +49,6 @@
 \usepackage[closeFloats, noSeparatorLine]{fltpage} %use the custom modified fltpage package
 \RequirePackage{afterpage} 
 
-
-
-
-
- 
-
-
 \synctex=1 % turn synctex on automatically to sync between pdf viewer [andy]
 
 %   list an entire bibliography entry inline. Useful for acknowledging when my paper was previously published
@@ -76,7 +69,7 @@
 \onehalfspacing
 %\raggedright
 
-%\parindent 12pt
+\parindent 12pt
 \RequirePackage{mathspec}
 
 % use Arno Pro instead of standard LaTeX fonts

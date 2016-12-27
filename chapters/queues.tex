@@ -59,6 +59,7 @@ The algorithms are summarized in Table \ref{table:sto2}
 Given the relatively slow performance of our STO queues, we looked to find a highly-concurrent (non-transactional) queue algorithm that would be promising to integrate with STO's transactional framework. After running several benchmarks (see Figure \ref{fig:concurrent_queues}), we found the most promising to be the Flat-Combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
 
 \subsection{Flat Combining Queue (Non-Transactional)}
+\label{fcqueuent}
 
 \emph{In the following discussion of our flat combining-based queues, we omit the discussion of the \texttt{front} operation to simplify reasoning about the state of the queue. An appropriate algorithm for \texttt{front} can be easily inferred from those used for \texttt{pop}.}
 
@@ -85,10 +86,14 @@ Recall that, in addition to the requirements for a correct concurrent queue, a t
 
 In order to add transactional guarantees to the flat combining queue, the order in which threads' requests are applied to the queue becomes important. For example, let a transaction in thread T1 be \texttt{pop, pop} and a transaction in thread T2 be \texttt{pop}. The combiner thread sees \texttt{T1:pop} and \texttt{T2:pop}, and applies both operations to the queue. T1 second \texttt{pop} request will violate the transactional specification because the two \texttt{pop}ped values in T1's transaction will not be consecutive. T1 must now abort, which means T2's \texttt{pop} is now invalid: it does not represent a \texttt{pop} at the head of the queue.
 
-Addressing the scenario described above requires two important changes to flat combining: 
+Addressing the scenario described above requires two important changes to flat combining (we describe the rational for these changes in Chapter~\ref{commutativity}): 
 \begin{enumerate}
-\item \texttt{pop}s and \texttt{push}es cannot be applied to the queue during a transaction's execution, and must instead be performed when a transaction commits
-\item Because of (1), values remain in the queue even when a transaction has previously performed a \texttt{pop}. Thus, the algorithm must track which values in the queue are going to be \texttt{pop}ped within the transaction in order to prevent duplicate \texttt{pop}s.
+\item \texttt{push}es cannot be applied to the queue during a transaction's execution, and must instead be performed when a transaction commits
+\item An uncommitted \texttt{pop} in a thread's transaction must be unobservable by any other thread. This can be implemented in two ways:  
+    \begin{enumerate}
+        \item The algorithm can delay a transaction's \texttt{pop}s until commit time. This algorithm must track which values in the queue are going to be \texttt{pop}ped within the transaction. This prevents duplicate \texttt{pop}s and detects if the queue will be ``empty'' given how values will be \texttt{pop}ped.
+        \item The algorithm does not execute flat combining requests from other threads until the transaction has committed or aborted. This can be implemented either through making other threads' transactions abort, or by causing the threads to block or spin.
+    \end{enumerate}
 \end{enumerate}
 
 We now describe the new algorithms for \texttt{push} and \texttt{pop}.  We change the types of request a thread can publish to its record on the publication list. Recall that the original flat combining queue supports two requests: \texttt{<PUSH, value>} and \texttt{<POP, 0>}. The transactional queue supports the follow requests:
@@ -102,16 +107,21 @@ We now describe the new algorithms for \texttt{push} and \texttt{pop}.  We chang
 
 As with the STO1 queue, a \texttt{push} within a transaction adds to an internal \texttt{write\_list\_item}. At commit time, the thread will invoke the \texttt{<PUSH, list>}, with the \texttt{write\_list} passed as the argument.
 
-A \texttt{pop} within a transaction invokes the \texttt{<MARK\_POP, thread\_id>} command. The combiner thread, upon seeing a MARK\_POP command, looks at the first value at the head of the queue. If this value is marked with another thread's \texttt{thread\_id}, the combiner thread returns \texttt{<ABORT>} to the calling thread. If the value is not marked, the combiner thread marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Else the value is marked by the calling thread's \texttt{thread\_id}. In this scenario, note that no other thread will have marked values in the queue, since they will abort when seeing the head value marked by the calling thread's \texttt{thread\_id}. The combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread's \texttt{thread\_id}. It then marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Upon receiving the response, the calling thread adds a write to a \texttt{pop\_item} to tell the thread to post a \texttt{<DEQ, thread\_id>} request at commit time. This removes the popped value from the queue.
+A \texttt{pop} is implemented with a pessimistic approach. Performing a \texttt{pop} within a transaction invokes the \texttt{<MARK\_POP, thread\_id>} command. The combiner thread, upon seeing a MARK\_POP command, looks at the first value at the head of the queue. If this value is marked with another thread's \texttt{thread\_id}, the combiner thread returns \texttt{<ABORT>} to the calling thread.
+
+If the value is not marked, the combiner thread marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Else the value is marked by the calling thread's \texttt{thread\_id}. Note that in this scenario, no other thread can have marked values in the queue, since they will abort when seeing the head value marked by the calling thread's \texttt{thread\_id}. The combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread's \texttt{thread\_id}. It then marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Upon receiving the response, the calling thread adds a write to a \texttt{pop\_item} to tell the thread to post a \texttt{<DEQ, thread\_id>} request at commit time. This removes the popped value from the queue.
 
 If the queue is either empty or there are no values not marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
 
-Note that this algorithm does not allow \texttt{pop}s to read the values \texttt{push}ed within the same transaction. To do so would require passing in the thread's \texttt{write\_list} in addition to the \texttt{thread\_id} as arguments to the combiner thread. For the sake of our evaluation, we leave this part of the transactional queue specification unimplemented.
+Note that this algorithm does not allow \texttt{pop}s to read the values \texttt{push}ed within the same transaction. To do so would require passing in the thread's \texttt{write\_list} in addition to the \texttt{thread\_id} as arguments to the combiner thread. During our evaluation, we leave this part of the transactional queue specification unimplemented (and expect that adding this will only decrease performance).
 
 The \texttt{<EMPTY?, thread\_id>} request is posted when a thread attempts to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If the response to \texttt{<EMPTY?>} is true, then the thread knows that no other thread has \texttt{push}ed onto the queue between the time of its \texttt{<MARK\_POP>} seeing an empty queue and commit time. Else another thread has \texttt{push}ed items onto the queue, invalidating this thread's \texttt{pop} result, and this thread must abort.
+
+If a thread ever sees an empty queue when executing a \texttt{pop} \emph{and} subsequently performs a push within the same transaction, the thread must prevent another transaction from committing between the time of the empty check and the installation of its pushed value. This requires adding what is essentially a lock of the tail of the queue. This is implemented via additional machinery in the combiner thread, which signals whether or not a transaction has locked the queue, and prevents any other thread's \texttt{push}es from being installed until the ``lock'' is released.\lyt{TODO ACTUALLY IMPLEMENT}
 
 The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending \texttt{pop}s. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}.
 
 The algorithm is summarized in Table \ref{table:fc}.
 
 \input{chapters/evaluation}
+\input{chapters/discussion}

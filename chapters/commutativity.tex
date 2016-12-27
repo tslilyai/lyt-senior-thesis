@@ -1,0 +1,205 @@
+\chapter{Commutativity and Weakly Transactional Queues}
+\label{commutativity}
+
+In this chapter, we first describe the commutativity of queue operations in high-concurrent, non-transactional settings and compare it to the commutativity of queue operations in a fully-transactional setting. We then argue that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better in a transactional data structure than a naive synchronization technique such as that used in the STO1 and STO2 queues. To demonstrate this point, we propose a transactional specification that allows the flat combining technique to be used to greater effectiveness in a transactional setting and illustrate experimentally how the commutativity of operations in this new setting is essential for the effectiveness of the flat combining technique.
+
+\section{Terminology}
+We first introduce some basic terminology (as defined in \cite{schwarz} and \cite{weihl}) that will occur in our discussion.
+
+\subsection{Histories}
+\begin{defn}
+    A \emph{history} is a sequence of \texttt{(transaction, operation, result)} tuples that represent an interleaving of operations of all committed transactions. Knowledge of both the history and initial conditions of a data structure leads to complete knowledge of the (high-level) end state of the structure and operation return values.
+
+\begin{eg}
+    \begin{lstlisting}
+   
+    Q.size() == 0
+
+    (T2, Q.push(a), ())
+    (T1, Q.pop(), true)
+    (T2, Q.push(c), ())
+    (T1, Q.pop(), true)
+    \end{lstlisting}
+\end{eg}
+
+\end{defn}
+
+\begin{defn}
+    A history $H'$ is \emph{consistent} with $H$ if $H'$ contains the same tuples as $H$: the same transactions were executed with the same return values for all operations within the transactions.
+\end{defn}
+
+\begin{defn}
+    A history $H$ is \emph{serial} if all tuples are ordered as if all transactions were executed in a serial order.
+\end{defn}
+\begin{defn}
+    A history $H$ is \emph{serializable} if there exists a serial history $H'$ s.t. $H'$ is consistent with $H$.
+
+\end{defn}
+
+\begin{eg}
+$H$ is a serializable history given $H'$. $H''$ represents a serial but inconsistent history with $H$.
+\begin{lstlisting}
+            H                       H'                      H'' 
+    (T2, Q.push(a), ())     (T2, Q.push(a), ())     (T1, Q.pop(), false)
+    (T1, Q.pop(), true)     (T2, Q.push(c), ())     (T1, Q.pop(), false)
+    (T2, Q.push(c), ())     (T1, Q.pop(), true)     (T2, Q.push(c), ())
+    (T1, Q.pop(), true)     (T1, Q.pop(), true)     (T2, Q.push(a), ()) 
+\end{lstlisting}
+\end{eg}
+
+\begin{defn}
+    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all operations are linearizable. Informally, the serial order of transactions corresponds to the real time at which the transactions commit.
+\end{defn}
+\lyt{examples?}
+
+\subsection{Dependencies}
+
+Note that all operations can be classified as either reads or writes (as we do in Table~\ref{table:qrw}). We therefore define dependencies abstractly as reads and writes of particular objects in our definitions.
+
+\begin{defn}
+    Transaction $T2$ is \emph{dependent} on transaction $T1$ if one of the following relations holds:
+    \begin{itemize}
+        \item R-R: $T1$ reads an object later read by $T2$
+        \item R-W: $T1$ reads an object later written by $T2$
+        \item W-R: $T1$ writes an object later read by $T2$
+        \item W-W: $T1$ writes an object later written by $T2$
+    \end{itemize}
+\end{defn}
+
+\begin{defn}
+    An operation $P$ of transaction $T1$ is \emph{commutative} with operation $Q$ of transaction $T2$ when ordering $P$ before $Q$ results in a \emph{R-R} dependency or no dependency at all.
+\end{defn}
+
+\subsection{Results}
+
+These results are well-known in the literature about transactional data structure scalability: we repeat them here for reference.
+\begin{theorem}
+    A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions (see \cite{schwarz} for proof).
+\end{theorem}
+
+\begin{corollary}
+    When operations commute, they can be freely ordered in the history without affecting serializability.
+\end{corollary}
+\begin{corollary}
+    The number of valid histories of a transactional data structure is dependent on the commutativity of its operations.
+\end{corollary}
+\begin{corollary}
+    Commutativity of data structure operations determines scalability: the greater number of valid histories, the lower the contention between transactions, and the greater the scalability of the transactional data structure. 
+\end{corollary}
+
+\lyt{examples?}
+
+\section{Commutativity of Concurrent and Transactional Queues}
+
+For generality, we reduce each queue operation to a read or write of a particular semantic object: the head, the tail, or the empty? predicate of the queue. This allows for our reasoning to be applied to operations that differ from our current specification of \texttt{pop} or \texttt{push}. For example, we can imagine an alternative \texttt{pop} operation that returns \texttt{void} regardless of whether the queue was empty. We summarize our \texttt{pop} and \texttt{push} reads and writes in Table \ref{table:qrw}.
+\begin{table}
+\centering
+\begin{tabular}{c|cc}
+    \hline
+    Operation & Read & Write\\
+    \hline
+    \texttt{pop} & empty? & head, empty?\\
+    \texttt{push} & & tail, empty?\\
+    \hline
+\end{tabular}
+    \caption{Queue Operation Semantics in terms of reads and writes}
+    \label{table:qrw}
+\end{table}
+
+\subsection{Concurrent Non-Transactional Queues}
+
+\begin{table}
+    \centering
+\begin{tabular}{|c||c|c|c|c|}
+    \hline
+    Object & Pop-Pop & Pop-Push & Push-Pop & Push-Push\\
+    \hline
+    \hline
+    head & W-W & & & \\
+    \hline
+    tail & & & & W-W\\
+    \hline
+    empty & W$^e$-R & R-W$^e$ & W$^e$-R, W$^e$-W$^e$ & \\
+    \hline
+\end{tabular}
+    \caption{Dependencies of Simple Operations}
+    \caption*{The pair of operations X-Y represents an operation X performed by one thread and an operation Y performed by another thread. $^e$ indicates that the operation modifies the empty status of the queue.}
+    \label{table:simpledeps}
+\end{table}
+
+The guarantees of concurrent, non-transactional queues are \emph{nearly} equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable, since the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned), may not be visible to an operation that is performed after $P$ returns.
+
+The flat combining technique provides serializable, atomic, \emph{and} linearizable singleton transactions\cite{flatcombining}. Therefore, we can reason about the commutativity and therefore scalability of a concurrent, non-transactional flat combining queue using notions of transactional dependencies.
+
+We start by defining the dependency relations between single operations (Table~\ref{table:simpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, any concurrency bottlenecks occur due to the synchronization required to ensure correctness when two threads attempt to write to or simultaneously write/read the same object. As we have shown, the flat combining approach works particularly well to minimize the overhead of this synchronization cost.
+
+\subsection{Transactional Queues}
+
+\begin{table}
+    \centering
+    \begin{tabular}{|l|}
+        \hline
+\begin{lstlisting}
+1)  Q.size() > 1
+    (T1, Q.pop(), true)        
+    (T2, Q.pop(), true)        
+    (T1, Q.pop(), *)
+\end{lstlisting}
+\begin{lstlisting}
+    2)  Q.size() == 1 
+        (T1, Q.pop(), true)     
+        (T2, Q.push(a), ())             
+        (T1, Q.pop(), true)
+    \end{lstlisting}
+    \begin{lstlisting}
+    3)  Q.size() == 1 
+        (T1, Q.pop(), true)     
+        (T2, Q.pop(), false)     
+        (T1, Q.push(a), ())             
+\end{lstlisting}
+    \\
+    \hline
+\begin{lstlisting}
+4)  Q.size() >= 0        
+    (T1, Q.push(a), ())
+    (T2, Q.push(a), ())             
+    (T1, Q.push(a), ())             
+\end{lstlisting}
+    \begin{lstlisting}
+    5)  Q.size() == 0 
+        (T1, Q.push(a), ())             
+        (T2, Q.pop(), true)
+        (T1, Q.pop(), false)
+\end{lstlisting}
+\\
+        \hline
+\end{tabular}
+    \caption{Operation interleavings generating dependency cycles. Interleavings that create no dependencies are left out.}
+    \label{tab:interleavings}
+\end{table}
+
+With a fully-transactional queue, cyclical dependencies can occur, thus reducing the number of valid histories. All possible interleavings of two transactions that generate cyclial dependencies are shown in Table~\ref{tab:interleavings}. Note that most of the interleavings that result in cyclical dependencies, and therefore invalid histories, occur only when the queue becomes empty; only when both transactions perform \texttt{push}es or both perform \texttt{pop}s do we see cyclical dependencies in a nonempty queue. 
+
+A transactional queue prevents these interleavings from occurring through delaying \texttt{push} operation execution and using a pessimistic or optimistic approach upon encountering an empty queue.
+
+To prevent interleavings 4 and 5, all pushes are delayed until commit time. These interleavings can only occur if $T1$'s first \texttt{push} is visible to $T2$ prior to $T1$ committing. If we delay pushes until commit time, $T2$ will not detect the presence of a \texttt{push}ed item in the queue.
+
+Because \texttt{pop} operations immediately return values that depend on the state of the queue (empty or nonempty), interleavings 1, 2, and 3 cannot be prevented by delaying \texttt{pop} operations until commit time. Instead, we can take one of two approaches:
+\begin{enumerate}
+    \item Optimistic: Abort $T1$ during commit time if $T2$ has committed an operation that would cause an invalid interleaving.
+    \item Pessimistic: Prevent $T2$ from committing any operation until after $T1$ commits or aborts the transaction containing a \texttt{pop}.
+\end{enumerate}
+
+We see the optimistic method implemented in the STO1 queue, where the \texttt{tailversion} and \texttt{headversion} are used to determine at commit time if the empty status of the queue has been modified by another, already committed transaction. The pessimistic approach is implemented in our STO2 queue, which locks the queue after a \texttt{pop} is performed and only releases the lock if the transaction commits or aborts, therefore preventing any other transaction from committing any operation after the \texttt{pop}.
+
+In order to support transactions, the flat combining approach must do either approach (1) or (2). Here we argue that the flat combining approach cannot do either without introducing overhead that reduces its performance to below that of the STO1 or STO2 queues.
+
+If we take approach (1), a \texttt{pop} cannot be performed at execution time because no locks on the queue are acquired: other transactions may commit \texttt{pop}s of an invalid head if this transaction later aborts. Thus, in order to determine if a \texttt{pop} should return true or if it should return false, a transactional \texttt{pop} flat combining request requires much more complexity than a nontransaction one: the thread must determine how many elements the queue holds, how many elements the current transaction is intending to pop, and if any other thread intends to \texttt{pop} (in which case the transaction aborts). The transactional \texttt{push} flat combining request is also significantly more complex, as it requires installing all the \texttt{push}es of the transaction. Additional flat combining calls are necessary to allow a thread to perform checks of the queue's empty status (the \texttt{<EMPTY?>} flat combining call) to determine whether the transaction can commit or must abort, and to actually execute the \texttt{pop}s at commit time. Thus, approach (1) requires adding both more flat combining calls and more complexity to the existing flat combining calls.
+
+If we take approach (2), the flat combining approach can either perform a \texttt{pop} at execution time or delay the \texttt{pop} until commit time. If the pop is performed at execution time, then the thread must acquire a global lock on the queue after a \texttt{pop} and hold the lock until commit: this prevents another thread from observing an inconsistent state of the queue. If a \texttt{pop} should execute and remove the head of the queue prior to commit and the transaction aborts, the popped elements must be re-attached to the head of the queue. However, the cleanup procedure during an abort does not lock the queue, meaning that any other thread can commit a transaction that pops off the incorrect head of the queue. To remedy this issue, a global lock must be acquired by any transaction that performs a \texttt{pop} to allow for the case in which the transaction aborts. Additional flat combining calls are necessary to acquire or release the global lock. 
+
+We can also imagine a mix of approaches (1) and (2) where if a transaction $T1$ executes a \texttt{pop}, we disallow any \texttt{pop}s from other transactions (using the equivalent of a global lock) but allow other transactions containing only \texttt{push}es to commit prior to $T1$ completing. This approach prevents interleavings 1 and 3, but requires performing a check of the queue's empty status, as in approach (1), if the queue is seen empty during a \texttt{pop}. This is because another transaction may have committed a \texttt{push} between the time of $T1$'s \texttt{pop} and $T1$'s completion. This is the approach described as the flat combining algorithm in Chapter~\ref{Queue}.
+
+As noted previously, all possible approaches to prevent interleavings 1, 2, and 3 rely on additional flat combining calls and increased complexity of previously existing flat combining calls. In addition, acquisition of a global ``lock'' on the queue for approach (2) prevents the combiner thread from applying \emph{all} of the requests it sees: instead, requests will either return ``abort'' to the calling thread or not be applied, leading to additional time spent spinning or repeating requests. We see through our experiments that these changes to the flat combining algorithm reduce its performance such that it performs worse than a naive synchronization algorithm; furthermore, we claim that these changes to be necessary in order to provide transactional guarantees. The original flat combining algorithm exploits the property that any correct history of operations in data structures supporting only singleton transactions (i.e., a normal non-transactional data structure) is valid. The combiner thread is allowed to immediately apply all thread's operation requests in arbitrary order.However, this property that makes flat combining so performant disappears as soon as the algorithm has to deal with invalid histories. In the next section, we demonstrate how ignoring invalid histories leads to a version of flat combining that can outperform our STO1 and STO2 algorithms.
+
+\input{chapters/wqueue}

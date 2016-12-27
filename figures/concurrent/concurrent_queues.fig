@@ -1,9 +1,0 @@
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=\textwidth]{figures/Q:PushPop.png}
-\includegraphics[width=\textwidth]{figures/Q:RandSingleOps10000.png}
-\includegraphics[width=\textwidth]{figures/Q:RandSingleOps50000.png}
-\includegraphics[width=\textwidth]{figures/Q:RandSingleOps100000.png}
-\caption{Performance of Concurrent Queue Algorithms}
-\label{fig:concurrent_queues}
-\end{figure}

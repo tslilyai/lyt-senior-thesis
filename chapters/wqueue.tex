@@ -1,20 +1,24 @@
-\chapter{Weakly Transactional Queues}
-\label{wqueue}
+\section{The Weakly Transactional Queue (QueueWT)}
+
+The Weakly Transactional Queue (QueueWT) demonstrates how the flat combining technique's performance is dependent upon the number of invalid histories. This queue implements a weaker transactional specification, which provides all invariants of a concurrent queue, but provides the following guarantees instead of the transactional ones listed earlier (Chapter~\ref{Queue}).
+\begin{itemize}
+    \item Within a transaction, any two \texttt{pops} do not need to pop consecutive values off the queue.
+    \item A \texttt{pop} cannot remove an uninstalled value (i.e., a value \texttt{push}ed earlier in the same transaction).
+\end{itemize}
+
+Given this specification, interleavings 1, 2, and 3 in Table~\ref{tab:interleavings} are allowable because two \texttt{pop}s in a transaction do not need to pop consecutive values off the queue. Interleaving 4 is prevented by installing all \texttt{push}es in the same transaction together at commit time, and interleaving 5 is allowed because $T1$'s \texttt{pop} cannot see its earlier \texttt{push}ed value.
+
+\subsection{Algorithm}
+
+\subsection{Evaluation}
 %\input{figures/wtxnal_queues.fig}
-
-\section{Algorithm}
-
-Our weakly transactional queue specification differs from that of the WQueue of Schwarz and Spector\cite{schwarz} because it 
-talk about Schwarz and Spector queues
-
-\section{Evaluation}
 
 We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section \ref{microbenchmarks} to compare against the fully transactional flat-combining queue and our other STO queues.
 
-\subsection{2-Thread Push-Pop Test}
+\subsubsection{2-Thread Push-Pop Test}
 
-\subsection{Multi-Thread Random Single-Operation Transactions Test}
+\subsubsection{Multi-Thread Random Singleton Transactions Test}
 
-\subsection{Multi-Thread Random Multi-Operation Transactions Test}
+\subsubsection{Multi-Thread Random Multi-Operation Transactions Test}
 
-\section{Discussion}
+\subsection{Discussion}
