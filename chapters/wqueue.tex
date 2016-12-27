@@ -1,14 +1,30 @@
-\section{The Weakly Transactional Queue (QueueWT)}
+\section{The Weakly Transactional Queue} 
 
-The Weakly Transactional Queue (QueueWT) demonstrates how the flat combining technique's performance is dependent upon the number of invalid histories. This queue implements a weaker transactional specification, which provides all invariants of a concurrent queue, but provides the following guarantees instead of the transactional ones listed earlier (Chapter~\ref{Queue}).
+The Weakly Transactional Queue (FCQueueWT) demonstrates how the flat combining technique's performance is dependent upon the number of invalid histories. This queue implements a weaker transactional specification, which provides all invariants of a concurrent queue, but provides the following guarantees instead of the transactional ones listed earlier (Chapter~\ref{Queue}):
 \begin{itemize}
-    \item Within a transaction, any two \texttt{pops} do not need to pop consecutive values off the queue.
+    \item Instead of the normal \texttt{pop}s, the queue executes \emph{LazyPops} with the following specification:
+        \begin{itemize}
+            \item Any two \texttt{pops} within the transaction do not need to pop consecutive values off the queue.
+            \item A \texttt{pop}'s return value \emph{cannot} be accessed during the transaction. The \texttt{pop}s are applied and their return values determined only at commit time (hence the name LazyPop). 
+        \end{itemize}
     \item A \texttt{pop} cannot remove an uninstalled value (i.e., a value \texttt{push}ed earlier in the same transaction).
+    \item The \emph{atomic} property thus becomes: A transaction with multiple \texttt{pop}s and multiple \texttt{push}es guarantees that the operations will either all occur or that none will occur.
 \end{itemize}
 
-Given this specification, interleavings 1, 2, and 3 in Table~\ref{tab:interleavings} are allowable because two \texttt{pop}s in a transaction do not need to pop consecutive values off the queue. Interleaving 4 is prevented by installing all \texttt{push}es in the same transaction together at commit time, and interleaving 5 is allowed because $T1$'s \texttt{pop} cannot see its earlier \texttt{push}ed value.
+Given this specification, interleavings 1, 2, and 3 in Table~\ref{tab:interleavings} are allowable if the return value of the \texttt{pop} is not used within same transaction. This is because two \texttt{pop}s in a transaction do not need to pop consecutive values off the queue. Interleaving 4 is prevented by installing all \texttt{push}es in the same transaction together at commit time, and interleaving 5 is allowed because $T1$'s \texttt{pop} cannot see its earlier \texttt{push}ed value.
+
+The queue under this specification retains all the fairness properties of a concurrent queue (no value remains in the queue forever, since values are still removed in the order in which they are added). Like Schwarz\cite{schwarz}, we see uses for this transactional queue as a buffer between producer and consumer activities, in which exact ordering of values in the buffer are unimportant.
+Our specification differs from that of Schwarz\cite{schwarz}, however, by preventing a \texttt{pop} from seeing a \texttt{push} within the same transaction, and by preventing access to the return value of a \texttt{pop} until after the transaction commits. This allows us to utilize the flat combining approach to its full potential: we do not need to generate additional flat combining calls during transaction execution because the queue does not need to be accessed until commit time.
 
 \subsection{Algorithm}
+
+The FCQueueWT modifies the nontransactional, flat combining technique as follows:
+   \subsubsection{Pops} 
+    Executing a \texttt{pop} returns a LazyPop value but does not generate a flat combining request or access the queue itself. At commit time, all LazyPops are instantiated with values: for each LazyPop, the thread makes a \texttt{<POP>} flat combining request. This request is completed using the original \texttt{<POP>} flat combining implementation, which \texttt{pop}s an item off the queue.
+
+    \subsubsection{Pushes}
+    Executing a \texttt{push} merely adds the value onto a \texttt{write\_list\_item}. \texttt{push}es from the same transaction are installed together, using the \texttt{<PUSH, list>} flat combining implementation from the transactional flat combining queue that takes the entire list and \texttt{push}es each value onto the queue.
+
 
 \subsection{Evaluation}
 %\input{figures/wtxnal_queues.fig}
@@ -22,3 +38,4 @@ We evaluate the weakly transactional flat-combining queue on the same benchmarks
 \subsubsection{Multi-Thread Random Multi-Operation Transactions Test}
 
 \subsection{Discussion}
+While the weakly-transaction, flat combining queue does not perform as well as its nontransactional counterpart, we note that the performance exceeds that of the fully transactional STO1, STO2, and flat combining queues. In addition, FCQueueWT outperforms its STO counterpart (STO-WT), demonstrating the effectiveness of the flat combining technique in this weakly transactional setting.

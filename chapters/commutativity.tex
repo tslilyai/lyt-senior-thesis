@@ -13,8 +13,7 @@ We first introduce some basic terminology (as defined in \cite{schwarz} and \cit
 \begin{eg}
     \begin{lstlisting}
    
-    Q.size() == 0
-
+    // Q.size() == 0 
     (T2, Q.push(a), ())
     (T1, Q.pop(), true)
     (T2, Q.push(c), ())
@@ -140,19 +139,19 @@ We start by defining the dependency relations between single operations (Table~\
     \begin{tabular}{|l|}
         \hline
 \begin{lstlisting}
-1)  Q.size() > 1
+1)  // Q.size() > 1 
     (T1, Q.pop(), true)        
     (T2, Q.pop(), true)        
     (T1, Q.pop(), *)
 \end{lstlisting}
 \begin{lstlisting}
-    2)  Q.size() == 1 
+    2)  // Q.size() == 1  
         (T1, Q.pop(), true)     
         (T2, Q.push(a), ())             
         (T1, Q.pop(), true)
     \end{lstlisting}
     \begin{lstlisting}
-    3)  Q.size() == 1 
+    3)  // Q.size() == 1  
         (T1, Q.pop(), true)     
         (T2, Q.pop(), false)     
         (T1, Q.push(a), ())             
@@ -160,13 +159,13 @@ We start by defining the dependency relations between single operations (Table~\
     \\
     \hline
 \begin{lstlisting}
-4)  Q.size() >= 0        
+4)  // Q.size() >= 0 
     (T1, Q.push(a), ())
     (T2, Q.push(a), ())             
     (T1, Q.push(a), ())             
 \end{lstlisting}
     \begin{lstlisting}
-    5)  Q.size() == 0 
+    5)  // Q.size() == 0 
         (T1, Q.push(a), ())             
         (T2, Q.pop(), true)
         (T1, Q.pop(), false)
