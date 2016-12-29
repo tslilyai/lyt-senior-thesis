@@ -28,9 +28,12 @@
 \RequirePackage[centertags]{amsmath}
 \RequirePackage{amssymb}
 \RequirePackage[numbers, comma, sort&compress]{natbib}
-\RequirePackage[small, md, sc]{titlesec}
+%\RequirePackage[small, md, sc]{titlesec}
 \RequirePackage[tight,nice]{units}
 \RequirePackage{verbatim}
+
+%\titleformat{\section}{\thesection.}
+
 
 % colors
 \RequirePackage{color}

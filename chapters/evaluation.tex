@@ -1,9 +1,9 @@
 \section{Evaluation}
 
 \subsection{Microbenchmarks}
-\label{microbenchmarks}
+\label{q_microbenchmarks}
 
-All queues are evaluated on a set of microbenchmarks to demonstrate scalability and performance of different queue algorithms. The controlled nature of these microbenchmarks allow us to easily compare particular aspects of each algorithm, such as transactional overhead introduced by STO. All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with g++-5.3. In all graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.\lyt{TODO}
+All queues are evaluated on a set of microbenchmarks to demonstrate their scalability and performance. The controlled nature of these microbenchmarks allow us to easily compare particular aspects of each algorithm, such as transactional overhead introduced by STO. All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with g++-5.3. In all graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.\lyt{TODO}
 
 \subsubsection{Parameters}
 
@@ -14,18 +14,18 @@ All queues are evaluated on a set of microbenchmarks to demonstrate scalability 
 
 \item Transaction Size: We modify the number of operations per transaction in different benchmarks. For some benchmarks, the number of operations in a transaction is set to 1 (i.e., the transactions are singleton transactions). This provides a more fair evaluation of transactional data strucures against concurrent data structures: by keeping a transaction as short as possible, we minimize the performance hit from transactional overhead. In order to support multiple-operation transactions, STO adds overhead which includes support for multiple items in read/write sets, read-my-writes, and an increased number of aborts and retries. With single operation transactions, we observe an upper bound on the best performance our data structures can achieve.
 
-%\item Data Structure Opacity: If opacity is enabled, a transaction will abort immediately if any inconsistent state is detected. This requires keeping track of a global transaction ID (TID). This global TID must be accessed when a transaction commits and when items are added to the read set during a transaction's, making transactions overall more expensive.\lyt{do we need this?}
+\item Data Structure Opacity: If opacity is enabled, a transaction will abort immediately if any inconsistent state is detected. This requires keeping track of a global transaction ID (TID). This global TID must be accessed when a transaction commits and when items are added to the read set during a transaction's, making transactions overall more expensive. For our benchmarks, we consider only queues without opacity enabled (as to measure its maximum achievable performance).\lyt{do we need this?}
 \end{itemize}
 
 \subsubsection{Tests}
 \begin{enumerate}
-\item 2-Thread Push-Pop Test: This test has one thread that performs only \texttt{push}es and another thread that performs only \texttt{pops}. Unless the queue is empty, the two threads should never be modifying the same part of the data structure, and will never conflict (abort rate should be near 0). We use this test to measure the speed of push/pops on the queue when contention is not an issue. We expect that our transactional queues should perform as well, if not better, than most of the high-concurrency queues: while their algorithms are optimized for multi-threaded access, our simpler implementation should be just as fast with low contention and low abort rates.
+\item 2-Thread Push-Pop Test: This test has one thread that performs only pushes and another thread that performs only \texttt{pops}. Unless the queue is empty, the two threads should never be modifying the same part of the data structure, and will never conflict (abort rate should be near 0). We use this test to measure the speed of push/pops on the queue when contention is not an issue. We expect that our transactional queues should perform as well, if not better, than most of the high-concurrency queues: while their algorithms are optimized for multi-threaded access, our simpler implementation should be just as fast with low contention and low abort rates.
 
 \item Multi-Thread Random Singleton Transactions Test: 
-    In this test, a thread randomly selects an operation (\texttt{push} or \texttt{pop}) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test allows us to benchmark performance under variable amounts of contention (by increasing the number of threads) and increased abort rates. We expect that our STO1/STO2 transactional queues will perform significantly worse once the number of threads is increased and our naive concurrency algorithms underperform concurrency algorithms optimized for contentious situations.
+    In this test, a thread randomly selects an operation (push or pop) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test allows us to benchmark performance under variable amounts of contention (by increasing the number of threads) and increased abort rates. We expect that our STO1/STO2 transactional queues will perform significantly worse once the number of threads is increased and our naive concurrency algorithms underperform concurrency algorithms optimized for contentious situations.
     
 \item Multi-Thread Random Multi-Operation Transactions Test: 
-    In this test, a thread randomly selects multiple operations (\texttt{push} or \texttt{pop}) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test is most useful to compare different transactional data structures.
+    In this test, a thread randomly selects multiple operations (push or pop) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test is most useful to compare different transactional data structures.
     
 \end{enumerate}
 
@@ -33,7 +33,7 @@ All queues are evaluated on a set of microbenchmarks to demonstrate scalability 
 
 We describe the results of these benchmarks for two sets of queues. The first is a set of high-concurrency, non-transactional queues, and the second is a set of variations of the flat-combining queue (transactional and non-transactional). Both sets are measured along with our STO1 and STO2 queues as baseline references.
 
-\subsection{Concurrent Queues}
+\subsubsection{Concurrent Queues}
 
 We benchmark a set of the best-performing high-concurrency queue algorithms against our two STO queue implementations in order to determine which high-concurrency algorithm would be best suited to integration with STO. We look for both the most scalable and the highest-performing queue (even when contention is low).
  
@@ -61,7 +61,7 @@ For these reasons, as well as the algorithmic benefits of the flat combining tec
 
 We include the STO1 and STO2 queues in these benchmarks to measure the signficance of the gap between transactional and concurrent data structures. The STO queues---particularly the STO2 queue---outperform all but the read-write queue and flat combining queues on the 2-thread Push-Pop test. This test incurs the least contention and transactional overhead to track simply how fast the data structure can handle pushes and pops. It is unsurprising that, on this test, a simple synchronization strategy, such as that used in the STO queues, outperforms the majority of high-concurrency algorithms which are optimized for scalability. The Multi-Thread Random Singleton Transaction test demonstrate that as contention and transactional overhead (abort rate) increases, the flat combining queue maintains performance approximately 2.5$\times$ greater than that of the STO queues, although neither algorithm scales. However, the other high-concurrency algorithms appear to perform worse than our STO queues. We conjecture this may be due to the implementation of the algorithm used in our benchmarks\cite{libcds}.
 
-\subsection{Flat Combining Queue Variants}
+\subsubsection{Flat Combining Queue Variants}
 
 We benchmark several variants of the flat combining queue against our STO1 and STO2 queues. This includes:
 \begin{itemize}
@@ -73,7 +73,7 @@ We benchmark several variants of the flat combining queue against our STO1 and S
 The relative performance of the WrappedFCQueueNT to the FCQueueNT indicates how much of the overhead added by the STO system is unavoidable (without modifications to STO itself). A data structure must always invoke the STO wrapper calls to support transactions. 
 
 \iffalse
-\subsection{2-Thread Push-Pop Test}
+\emph{2-Thread Push-Pop Test}
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{fcqueues/Q:PushPop.png}
@@ -81,7 +81,7 @@ The relative performance of the WrappedFCQueueNT to the FCQueueNT indicates how 
 \label{fig:fcqueues_queues}
 \end{figure}
 
-\subsection{Multi-Thread Random Singleton Transactions Test}
+\emph{Multi-Thread Random Singleton Transactions Test}
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=\textwidth]{fcqueues/Q:RandSingleOps10000.png}
@@ -91,4 +91,4 @@ The relative performance of the WrappedFCQueueNT to the FCQueueNT indicates how 
 \label{fig:txnal_queues}
 \end{figure}
 \fi
-\subsection{Multi-Thread Random Multi-Operation Transactions Test}
+\emph{Multi-Thread Random Multi-Operation Transactions Test}

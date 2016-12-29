@@ -1,2 +1,57 @@
 \chapter{HashMap Algorithms and Analysis}
 \label{HashMap}
+
+This chapter investigates different concurrent and transactional algorithms for hashmaps. We begin with an overview of concurrent and transactional hashmap specifications and algorithms. We then evaluate how these hashmaps perform on several microbenchmarks, and discuss why and how particular high-concurrency hashmap algorithms, modified to provide transactional guarantees, can outperform our current transactional algorithms.
+
+\section{Algorithms}
+
+We present the concurrency and transactional algorithms we analyzed, created, and implemented in our work. SOme general terminology: an \emph{element} refers to the key-value pair inserted into the hashmap. A \emph{bucket} is a container of elements, and a hashmap consists of a set of buckets. The algorithms differ in the methods used to place elements in buckets and track how buckets and elements are modified.
+
+\subsection{STO Chaining HashMap}
+The STO Chaining HashMap (ChainingHashmap) is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list. Thus, the worst case lookup/delete is $O(n)$. Inserts are always constant time and require allocating an element. Each bucket is associated with a \emph{bucketversion} that increments upon any committed addition or removal from the bucket. The bucketversion is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{elementversion} that tracks if the value to the element has been modified or if the element has been removed.
+
+Elements are inserted at execution time but marked as \emph{phantom}, allowing another transaction that sees ones of these uninstalled elements to realize it is viewing an inconsistent state of the map and therefore abort. If a transaction containing insertions aborts, these phantom elements are removed from the map. ELse thephantom mark is erased during commit. An alternative approach would be to insert all elements at commit time.However, this requires either relying on the bucketversion to determine if another transaction has inserted the same element (which would result in false aborts since the bucketversion increments for \emph{any} inserted value) or redoing the search for the element to see if the insertion can still occur. Thus, we insert at execution time to allow for more fine-grained validation checks at commit time and to reduce redundant computations. Deletions are delayed until commit time (an optimistic approach). This requires careful handling of cases of \emph{read\_my\_writes}, such as deleting an element inserted in the same transaction, 
+
+\subsection{Non-Transactional Cuckoo HashMap}
+The Non-Transactional Cuckoo HashMap (CuckooHashMapNT) implements a concurrent, non-transactional cuckoo hashing algorithm (implementation modified from \cite{cuckoocode}).
+
+Each element is placed in one of two buckets; these buckets are determined by two different hash functions. A bucket has a fixed size of elements. This means that lookups and deletes only require executing two hash functions and checking the contents of two buckets (an $O(1)$ operation).
+
+Inserts run in amortized time $O(1)$ but may occasionally be $O(n)$.
+If an element $e$ is hashed by the first hash function to a bucket that is already full, the algorithm attempts to place $e$ in its alternative bucket by hashing $e$ with the second hash function. If both buckets are full, cuckoo shuffling occurs. This process kicks out an element $e'$ in one of $e$'s buckets and places $e'$ in $e'$'s alternative bucket. If $e'$'s alternative bucket is full, an element $e''$ is ejected from this bucket, and so on. As long as the cuckoo shuffling does not encounter a bucket cycle, $e$ can now be placed in one of its buckets, as the removal of $e'$ has made space for $e$.
+However, if the shuffling encounters a bucket cycle, the hashmap raises an \texttt{out of space} assertion error. We can imagine an alternative implementation that allows the hashmap to grow in number of buckets or otherwise change its hash functions, reinserting all elements, but for simplicity, we keep the algorithm statically sized.
+
+Because the buckets are statically sized, elements are contained in fixed-size key and value arrays and therefore do not require extra allocations.
+
+\subsection{STO CuckooHashMap}
+The STO CuckooHashMap comes in three flavors: allocating, allocating with key-fragments, and non-allocating. All flavors instrument the non-transactional cuckoo hashmap with STO calls that provide transactional guarantees.
+Both allocating and non-allocating versions use the same synchronization algorithm: like the STO Chaining HashMap, each bucket has a \emph{bucketversion} and lock and each element has an \emph{elementversion}. Because insertions can occur due to cuckoo shuffling as well as an external insertion call, the bucketversion increments only when an element \emph{not already contained in the map} is inserted into the bucket (i.e., elements inserted via a call to insert and not via cuckoo shuffling). Elements are inserted at execution time with a \emph{phantom} flag that is then erased at commit time, and deletions are delayed until commit time.
+
+The allocating STO CuckooHashMaps allocate elements upon insertion, with buckets containing pointers to the elements. This allows STO to track elements by their memory address to verify elementversions at commit time. The key-fragments variant expands buckets to contain both an array of keys and an array of element pointers. This enables a lookup or delete for an absent item to skip following the pointer to the allocated internal element itself, and can reduce the number of cache line accesses depending on the workload.
+
+The non-allocating STO CuckooHashMap consists of buckets consisting of a fixed-sized array of wrapped elements. STO tracks elements by their keys. Therefore, to verify if an elementversion has changed at commit time, the check procedure performs a find of the element using the key (searching at most two buckets) and validates the corresponding elementversion. Although this reduces the number of allocations, elementversions can now move between buckets, and the values in their previous locations invalidated. This complicates correctly checking and synchronizing the reads of elementversions.
+
+\section{Evaluation}
+
+\subsection{Microbenchmarks}
+As with the queue, all hashmaps queues are evaluated on a set of microbenchmarks to demonstrate their scalability and performance. The controlled nature of these microbenchmarks allow us to easily compare particular aspects of each algorithm, such as transactional overhead introduced by STO. All experiments are run on the same machine as the queue experiments (with 100GB DRAM, two 6-core Intel Xeon X5690 processors with hyperthreading clocked at 3.47GHz and a 64-bit Linux 3.2.0 operating system). All benchmarks and STO data structures are compiled with g++-5.3. In all graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
+
+\subsubsection{Parameters}
+
+\begin{itemize}
+    \item Proportion of Finds/Inserts/Deletes: The ratio of inserts:deletes is kept at 1 to ensure that the hashmap does not always become empty or only grow in size. It is expected that half the inserts will succeed and half the deletes will succeed, since both are drawing key values from the same range. Tests of 5\% inserts, 5\% deletes, and 90\% finds simulate the most likely use cases for hashmaps [3]. Tests of equal proportion (33\%) of all operations investigate how the hashmap reacts to an increased rate of inserts and deletes.
+    \item Maximum Key Value: The max key value of inserted elements is twice the number of elements the hashmap will contain when it reaches a fixed point for its size. Thus, altering the maximum value changes the load on the hashmap
+    \item Operations per transaction: We choose to run all tests comparing transactional to non-transactional (parallel-only) data structures using single-operation transactions. As discussed in Section~\ref{q_microbenchmarks}, this provides a more fair evaluation of transactional data structures against concurrent ones. In addition, it allows us to minimize the differences between transaction hashmap implementations so we can get a baseline comparison.
+    \item Capacity: the number of buckets of the hashmap and the number of items per bucket (adjustable for CuckooHashMaps only). This, along with the maximum key value, determines the load on the hashmap. It also affects the number of cache lines accessed during the test (for example, a larger hashmap may not be expected to fit into the L2 cache, whereas a small hashmap at full capacity will fit entirely in cache). During all tests, the size of the hashmap is not allowed to outgrow its capacity.
+\end{itemize}
+Note that the initial size of the data structure should not affect performance as the test proceeds for a longer period of time and reaches a steady state. Therefore, we do not include the initial size as a benchmark parameter.
+
+\subsubsection{Tests}
+\begin{itemize}
+\item Multi-Thread Single-Operation Txns Test. This test is run with different numbers of threads and with different proportions of finds/inserts/deletes. 
+\item Variable-Capacity Single-Operation Txns Test. This test is run with a probability of 5\% insert, 5\% delete, and 90\% find. The number of threads is fixed as 8. The only parameter changed in this test is the capacity, with the expected final size being 50\% capacity.
+\end{itemize}
+
+\subsection{Results}
+
+We measure all hashmap's performance in terms of operations per second and cache performance (number of cache misses).
