@@ -1,0 +1,1542 @@
+
+--------------NEW TEST-----------------
+
+Q:PushPop
+STO, STO(2), FC, STO/FC, 
+
+Running Test Q:PushPop on STO1 queue	 size: 10000, nthreads: 2
+	$ 1011480 starts, 2 max read set, 1010000 commits, 1480 (0.146%) aborts
+$ 583 (39.392%) of aborts at commit time
+	$ 1010583 commit attempts, 500583 (49.534%) nonopaque
+	$ 1015607 starts, 2 max read set, 1010000 commits, 5607 (0.552%) aborts
+$ 2068 (36.882%) of aborts at commit time
+	$ 1012068 commit attempts, 502068 (49.608%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 500000 (49.505%) nonopaque
+	$ 1011360 starts, 2 max read set, 1010000 commits, 1360 (0.134%) aborts
+$ 157 (11.544%) of aborts at commit time
+	$ 1010157 commit attempts, 500157 (49.513%) nonopaque
+	$ 1011571 starts, 2 max read set, 1010000 commits, 1571 (0.155%) aborts
+$ 206 (13.113%) of aborts at commit time
+	$ 1010206 commit attempts, 500206 (49.515%) nonopaque
+4297434.000000,4629222.500000,5149861.000000,4676371.500000,4700750.000000,:0.146320,0.552084,0.000000,0.134472,0.155303,;
+Running Test Q:PushPop on STO2 queue	 size: 10000, nthreads: 2
+	$ 1030927 starts, 2 max read set, 1010000 commits, 20927 (2.030%) aborts
+$ 8212 (39.241%) of aborts at commit time
+	$ 1018212 commit attempts, 0 (0.000%) nonopaque
+	$ 1030752 starts, 2 max read set, 1010000 commits, 20752 (2.013%) aborts
+$ 7868 (37.914%) of aborts at commit time
+	$ 1017868 commit attempts, 0 (0.000%) nonopaque
+	$ 1031211 starts, 2 max read set, 1010000 commits, 21211 (2.057%) aborts
+$ 8322 (39.234%) of aborts at commit time
+	$ 1018322 commit attempts, 0 (0.000%) nonopaque
+	$ 1029493 starts, 2 max read set, 1010000 commits, 19493 (1.893%) aborts
+$ 6896 (35.377%) of aborts at commit time
+	$ 1016896 commit attempts, 0 (0.000%) nonopaque
+	$ 1029781 starts, 2 max read set, 1010000 commits, 19781 (1.921%) aborts
+$ 7037 (35.575%) of aborts at commit time
+	$ 1017037 commit attempts, 0 (0.000%) nonopaque
+9573501.000000,9554657.000000,9545901.000000,9584236.000000,9668375.000000,:2.029921,2.013287,2.056902,1.893456,1.920894,;
+Running Test Q:PushPop on FCQueueNT	 size: 10000, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+3651300.750000,3432663.250000,3655304.750000,3501633.500000,3565520.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:PushPop on Wrapped FCQueueNT	 size: 10000, nthreads: 2
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+3288154.000000,3083745.250000,3265583.250000,3263111.250000,3257329.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:PushPop on FCQueueT	 size: 10000, nthreads: 2
+	$ 1010000 starts, 1 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 1 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010002 starts, 1 max read set, 1010000 commits, 2 (0.000%) aborts
+$ 2 (100.000%) of aborts at commit time
+	$ 1010002 commit attempts, 34932 (3.459%) nonopaque
+	$ 1010000 starts, 1 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 1 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+3225317.500000,3162065.250000,2767492.000000,3673836.750000,3782033.750000,:0.000000,0.000000,0.000198,0.000000,0.000000,;
+Running Test Q:PushPop on FCQueueLP	 size: 10000, nthreads: 2
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+2453205.000000,2383852.750000,2342869.500000,2297915.500000,2303845.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+Running Test Q:PushPop on STO1 queue	 size: 50000, nthreads: 2
+	$ 1057639 starts, 2 max read set, 1050000 commits, 7639 (0.722%) aborts
+$ 4305 (56.356%) of aborts at commit time
+	$ 1054305 commit attempts, 504305 (47.833%) nonopaque
+	$ 1051155 starts, 2 max read set, 1050000 commits, 1155 (0.110%) aborts
+$ 492 (42.597%) of aborts at commit time
+	$ 1050492 commit attempts, 500492 (47.644%) nonopaque
+	$ 1051722 starts, 2 max read set, 1050000 commits, 1722 (0.164%) aborts
+$ 740 (42.973%) of aborts at commit time
+	$ 1050740 commit attempts, 500740 (47.656%) nonopaque
+	$ 1051965 starts, 2 max read set, 1050000 commits, 1965 (0.187%) aborts
+$ 938 (47.735%) of aborts at commit time
+	$ 1050938 commit attempts, 500938 (47.666%) nonopaque
+	$ 1051110 starts, 2 max read set, 1050000 commits, 1110 (0.106%) aborts
+$ 382 (34.414%) of aborts at commit time
+	$ 1050382 commit attempts, 500382 (47.638%) nonopaque
+4666181.500000,4620495.500000,4627380.000000,4623892.500000,4629608.000000,:0.722269,0.109879,0.163731,0.186793,0.105603,;
+Running Test Q:PushPop on STO2 queue	 size: 50000, nthreads: 2
+	$ 1062938 starts, 2 max read set, 1050000 commits, 12938 (1.217%) aborts
+$ 226 (1.747%) of aborts at commit time
+	$ 1050226 commit attempts, 0 (0.000%) nonopaque
+	$ 1063812 starts, 2 max read set, 1050000 commits, 13812 (1.298%) aborts
+$ 215 (1.557%) of aborts at commit time
+	$ 1050215 commit attempts, 0 (0.000%) nonopaque
+	$ 1063024 starts, 2 max read set, 1050000 commits, 13024 (1.225%) aborts
+$ 295 (2.265%) of aborts at commit time
+	$ 1050295 commit attempts, 0 (0.000%) nonopaque
+	$ 1062963 starts, 2 max read set, 1050000 commits, 12963 (1.220%) aborts
+$ 264 (2.037%) of aborts at commit time
+	$ 1050264 commit attempts, 0 (0.000%) nonopaque
+	$ 1063039 starts, 2 max read set, 1050000 commits, 13039 (1.227%) aborts
+$ 408 (3.129%) of aborts at commit time
+	$ 1050408 commit attempts, 0 (0.000%) nonopaque
+9967109.000000,9623713.000000,9941050.000000,10000500.000000,9922604.000000,:1.217192,1.298350,1.225184,1.219516,1.226578,;
+Running Test Q:PushPop on FCQueueNT	 size: 50000, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+3864271.250000,4232732.500000,4342728.000000,3432451.000000,4244248.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:PushPop on Wrapped FCQueueNT	 size: 50000, nthreads: 2
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+3144486.000000,3037150.500000,3099084.000000,3070413.750000,3169843.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:PushPop on FCQueueT	 size: 50000, nthreads: 2
+	$ 1050001 starts, 1 max read set, 1050000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 1050001 commit attempts, 2868 (0.273%) nonopaque
+	$ 1050001 starts, 1 max read set, 1050000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 1050001 commit attempts, 43631 (4.155%) nonopaque
+	$ 1050001 starts, 1 max read set, 1050000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 1050001 commit attempts, 41972 (3.997%) nonopaque
+	$ 1050002 starts, 1 max read set, 1050000 commits, 2 (0.000%) aborts
+$ 2 (100.000%) of aborts at commit time
+	$ 1050002 commit attempts, 37088 (3.532%) nonopaque
+	$ 1050001 starts, 1 max read set, 1050000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 1050001 commit attempts, 57388 (5.466%) nonopaque
+3004157.750000,3035712.000000,2992900.750000,3814100.750000,3600878.500000,:0.000095,0.000095,0.000095,0.000190,0.000095,;
+Running Test Q:PushPop on FCQueueLP	 size: 50000, nthreads: 2
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+2759290.500000,3158829.000000,3083355.500000,2898139.000000,3003399.750000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+Running Test Q:PushPop on STO1 queue	 size: 100000, nthreads: 2
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 500000 (45.455%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 500000 (45.455%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 500000 (45.455%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 500000 (45.455%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 500000 (45.455%) nonopaque
+5014064.500000,5031775.500000,5048567.000000,4968894.500000,5043780.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:PushPop on STO2 queue	 size: 100000, nthreads: 2
+	$ 1125939 starts, 2 max read set, 1100000 commits, 25939 (2.304%) aborts
+$ 12930 (49.848%) of aborts at commit time
+	$ 1112930 commit attempts, 0 (0.000%) nonopaque
+	$ 1126167 starts, 2 max read set, 1100000 commits, 26167 (2.324%) aborts
+$ 12166 (46.494%) of aborts at commit time
+	$ 1112166 commit attempts, 0 (0.000%) nonopaque
+	$ 1124810 starts, 2 max read set, 1100000 commits, 24810 (2.206%) aborts
+$ 11871 (47.848%) of aborts at commit time
+	$ 1111871 commit attempts, 0 (0.000%) nonopaque
+	$ 1126734 starts, 2 max read set, 1100000 commits, 26734 (2.373%) aborts
+$ 13739 (51.391%) of aborts at commit time
+	$ 1113739 commit attempts, 0 (0.000%) nonopaque
+	$ 1127126 starts, 2 max read set, 1100000 commits, 27126 (2.407%) aborts
+$ 13729 (50.612%) of aborts at commit time
+	$ 1113729 commit attempts, 0 (0.000%) nonopaque
+9484606.000000,9256517.000000,9574876.000000,9506517.000000,9364787.000000,:2.303766,2.323545,2.205706,2.372699,2.406652,;
+Running Test Q:PushPop on FCQueueNT	 size: 100000, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+5089680.000000,5212514.000000,5234697.500000,5525542.000000,4587240.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:PushPop on Wrapped FCQueueNT	 size: 100000, nthreads: 2
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+3558301.000000,3543686.500000,3516261.000000,3599064.250000,3580187.250000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:PushPop on FCQueueT	 size: 100000, nthreads: 2
+	$ 1100000 starts, 1 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100001 starts, 1 max read set, 1100000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 1100001 commit attempts, 28179 (2.562%) nonopaque
+	$ 1100002 starts, 1 max read set, 1100000 commits, 2 (0.000%) aborts
+$ 2 (100.000%) of aborts at commit time
+	$ 1100002 commit attempts, 39267 (3.570%) nonopaque
+	$ 1100001 starts, 1 max read set, 1100000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 1100001 commit attempts, 34086 (3.099%) nonopaque
+	$ 1100001 starts, 1 max read set, 1100000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 1100001 commit attempts, 32165 (2.924%) nonopaque
+2939758.500000,3485899.500000,3565316.500000,3372488.000000,3814304.500000,:0.000000,0.000091,0.000182,0.000091,0.000091,;
+Running Test Q:PushPop on FCQueueLP	 size: 100000, nthreads: 2
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+2714853.500000,3330757.500000,3207595.500000,3177498.250000,3114042.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+Q:RandSingleOps
+STO, STO(2), FC, STO/FC, 
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 10000, nthreads: 1
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 249765 (48.974%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 249765 (48.974%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 249765 (48.974%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 249765 (48.974%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 249765 (48.974%) nonopaque
+8475007.000000,8465107.000000,8462958.000000,8475007.000000,8491704.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 10000, nthreads: 1
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+8379139.500000,8423039.000000,8412693.000000,8434263.000000,8418642.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 10000, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+14286939.000000,14282450.000000,14273887.000000,14325006.000000,14299196.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 10000, nthreads: 1
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+10954102.000000,10956983.000000,10947147.000000,10951223.000000,10878315.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 10000, nthreads: 1
+	$ 510000 starts, 1 max read set, 510000 commits
+	$ 510000 commit attempts, 488 (0.096%) nonopaque
+	$ 510000 starts, 1 max read set, 510000 commits
+	$ 510000 commit attempts, 488 (0.096%) nonopaque
+	$ 510000 starts, 1 max read set, 510000 commits
+	$ 510000 commit attempts, 488 (0.096%) nonopaque
+	$ 510000 starts, 1 max read set, 510000 commits
+	$ 510000 commit attempts, 488 (0.096%) nonopaque
+	$ 510000 starts, 1 max read set, 510000 commits
+	$ 510000 commit attempts, 488 (0.096%) nonopaque
+6717180.000000,6737999.500000,6784628.500000,6790249.000000,6783984.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 10000, nthreads: 1
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+	$ 510000 starts, 2 max read set, 510000 commits
+	$ 510000 commit attempts, 0 (0.000%) nonopaque
+6465294.500000,6406888.500000,6461785.000000,6460032.000000,6461952.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 10000, nthreads: 2
+	$ 1086759 starts, 2 max read set, 1010000 commits, 76759 (7.063%) aborts
+$ 60602 (78.951%) of aborts at commit time
+	$ 1070602 commit attempts, 530557 (49.557%) nonopaque
+	$ 1084323 starts, 2 max read set, 1010000 commits, 74323 (6.854%) aborts
+$ 57912 (77.919%) of aborts at commit time
+	$ 1067912 commit attempts, 529504 (49.583%) nonopaque
+	$ 1089348 starts, 2 max read set, 1010000 commits, 79348 (7.284%) aborts
+$ 63007 (79.406%) of aborts at commit time
+	$ 1073007 commit attempts, 531864 (49.568%) nonopaque
+	$ 1087981 starts, 2 max read set, 1010000 commits, 77981 (7.167%) aborts
+$ 62252 (79.830%) of aborts at commit time
+	$ 1072252 commit attempts, 531378 (49.557%) nonopaque
+	$ 1082908 starts, 2 max read set, 1010000 commits, 72908 (6.733%) aborts
+$ 56984 (78.159%) of aborts at commit time
+	$ 1066984 commit attempts, 528932 (49.573%) nonopaque
+5554105.500000,5701774.500000,5500247.500000,5562787.000000,5686147.500000,:7.063111,6.854323,7.283990,7.167497,6.732613,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 10000, nthreads: 2
+	$ 1043696 starts, 2 max read set, 1010000 commits, 33696 (3.229%) aborts
+$ 2041 (6.057%) of aborts at commit time
+	$ 1012041 commit attempts, 0 (0.000%) nonopaque
+	$ 1044320 starts, 2 max read set, 1010000 commits, 34320 (3.286%) aborts
+$ 2507 (7.305%) of aborts at commit time
+	$ 1012507 commit attempts, 0 (0.000%) nonopaque
+	$ 1043804 starts, 2 max read set, 1010000 commits, 33804 (3.239%) aborts
+$ 2209 (6.535%) of aborts at commit time
+	$ 1012209 commit attempts, 0 (0.000%) nonopaque
+	$ 1044053 starts, 2 max read set, 1010000 commits, 34053 (3.262%) aborts
+$ 2457 (7.215%) of aborts at commit time
+	$ 1012457 commit attempts, 0 (0.000%) nonopaque
+	$ 1043598 starts, 2 max read set, 1010000 commits, 33598 (3.219%) aborts
+$ 2274 (6.768%) of aborts at commit time
+	$ 1012274 commit attempts, 0 (0.000%) nonopaque
+7619860.500000,7662307.000000,7661719.500000,7661074.000000,7669182.000000,:3.228526,3.286349,3.238539,3.261616,3.219439,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 10000, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+3682970.000000,3663366.000000,3673593.750000,3684408.250000,3681221.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 10000, nthreads: 2
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+2987741.250000,3019788.750000,3008686.000000,3066130.250000,3003057.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 10000, nthreads: 2
+	$ 1044355 starts, 1 max read set, 1010000 commits, 34355 (3.290%) aborts
+$ 36 (0.105%) of aborts at commit time
+	$ 1010036 commit attempts, 634 (0.063%) nonopaque
+	$ 1046574 starts, 1 max read set, 1010000 commits, 36574 (3.495%) aborts
+$ 29 (0.079%) of aborts at commit time
+	$ 1010029 commit attempts, 488 (0.048%) nonopaque
+	$ 1044291 starts, 1 max read set, 1010000 commits, 34291 (3.284%) aborts
+$ 47 (0.137%) of aborts at commit time
+	$ 1010047 commit attempts, 613 (0.061%) nonopaque
+	$ 1045931 starts, 1 max read set, 1010000 commits, 35931 (3.435%) aborts
+$ 22 (0.061%) of aborts at commit time
+	$ 1010022 commit attempts, 472 (0.047%) nonopaque
+	$ 1044433 starts, 1 max read set, 1010000 commits, 34433 (3.297%) aborts
+$ 47 (0.136%) of aborts at commit time
+	$ 1010047 commit attempts, 620 (0.061%) nonopaque
+3686826.250000,3537006.000000,3695163.750000,3605045.500000,3682739.250000,:3.289590,3.494641,3.283663,3.435313,3.296813,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 10000, nthreads: 2
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+	$ 1010000 starts, 2 max read set, 1010000 commits
+	$ 1010000 commit attempts, 0 (0.000%) nonopaque
+2911657.500000,2315881.500000,2310899.000000,2330024.750000,2321182.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 10000, nthreads: 6
+	$ 3267269 starts, 2 max read set, 3010000 commits, 257269 (7.874%) aborts
+$ 173036 (67.259%) of aborts at commit time
+	$ 3183036 commit attempts, 1591612 (50.003%) nonopaque
+	$ 3267581 starts, 2 max read set, 3010000 commits, 257581 (7.883%) aborts
+$ 172949 (67.144%) of aborts at commit time
+	$ 3182949 commit attempts, 1591564 (50.003%) nonopaque
+	$ 3263116 starts, 2 max read set, 3010000 commits, 253116 (7.757%) aborts
+$ 169512 (66.970%) of aborts at commit time
+	$ 3179512 commit attempts, 1590006 (50.008%) nonopaque
+	$ 3262147 starts, 2 max read set, 3010000 commits, 252147 (7.729%) aborts
+$ 169243 (67.121%) of aborts at commit time
+	$ 3179243 commit attempts, 1589690 (50.002%) nonopaque
+	$ 3261251 starts, 2 max read set, 3010000 commits, 251251 (7.704%) aborts
+$ 168316 (66.991%) of aborts at commit time
+	$ 3178316 commit attempts, 1590050 (50.028%) nonopaque
+6624227.500000,6725221.000000,6655382.000000,6718910.000000,6258749.000000,:7.874130,7.882926,7.756880,7.729480,7.704130,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 10000, nthreads: 6
+	$ 3081793 starts, 2 max read set, 3010000 commits, 71793 (2.330%) aborts
+$ 6664 (9.282%) of aborts at commit time
+	$ 3016664 commit attempts, 0 (0.000%) nonopaque
+	$ 3079936 starts, 2 max read set, 3010000 commits, 69936 (2.271%) aborts
+$ 4602 (6.580%) of aborts at commit time
+	$ 3014602 commit attempts, 0 (0.000%) nonopaque
+	$ 3080267 starts, 2 max read set, 3010000 commits, 70267 (2.281%) aborts
+$ 5231 (7.444%) of aborts at commit time
+	$ 3015231 commit attempts, 0 (0.000%) nonopaque
+	$ 3080880 starts, 2 max read set, 3010000 commits, 70880 (2.301%) aborts
+$ 5389 (7.603%) of aborts at commit time
+	$ 3015389 commit attempts, 0 (0.000%) nonopaque
+	$ 3079784 starts, 2 max read set, 3010000 commits, 69784 (2.266%) aborts
+$ 5141 (7.367%) of aborts at commit time
+	$ 3015141 commit attempts, 0 (0.000%) nonopaque
+7915254.000000,8072979.500000,8057130.500000,8064538.000000,8078197.000000,:2.329585,2.270697,2.281198,2.300641,2.265873,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 10000, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+10272425.000000,10815449.000000,9938909.000000,10162533.000000,8594634.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 10000, nthreads: 6
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+6424203.000000,6215658.500000,6168854.000000,6649938.500000,6460866.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 10000, nthreads: 6
+	$ 3129966 starts, 1 max read set, 3010000 commits, 119966 (3.833%) aborts
+$ 105 (0.088%) of aborts at commit time
+	$ 3010105 commit attempts, 1888 (0.063%) nonopaque
+	$ 3128775 starts, 1 max read set, 3010000 commits, 118775 (3.796%) aborts
+$ 137 (0.115%) of aborts at commit time
+	$ 3010137 commit attempts, 2090 (0.069%) nonopaque
+	$ 3127786 starts, 1 max read set, 3010000 commits, 117786 (3.766%) aborts
+$ 154 (0.131%) of aborts at commit time
+	$ 3010154 commit attempts, 2208 (0.073%) nonopaque
+	$ 3129684 starts, 1 max read set, 3010000 commits, 119684 (3.824%) aborts
+$ 159 (0.133%) of aborts at commit time
+	$ 3010159 commit attempts, 2518 (0.084%) nonopaque
+	$ 3128135 starts, 1 max read set, 3010000 commits, 118135 (3.777%) aborts
+$ 114 (0.096%) of aborts at commit time
+	$ 3010114 commit attempts, 2197 (0.073%) nonopaque
+3637426.250000,3788400.250000,3824174.750000,3739333.500000,3820016.000000,:3.832821,3.796214,3.765795,3.824156,3.776531,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 10000, nthreads: 6
+	$ 3010000 starts, 2 max read set, 3010000 commits
+	$ 3010000 commit attempts, 0 (0.000%) nonopaque
+	$ 3010000 starts, 2 max read set, 3010000 commits
+	$ 3010000 commit attempts, 0 (0.000%) nonopaque
+	$ 3010000 starts, 2 max read set, 3010000 commits
+	$ 3010000 commit attempts, 0 (0.000%) nonopaque
+	$ 3010000 starts, 2 max read set, 3010000 commits
+	$ 3010000 commit attempts, 0 (0.000%) nonopaque
+	$ 3010000 starts, 2 max read set, 3010000 commits
+	$ 3010000 commit attempts, 0 (0.000%) nonopaque
+5349768.000000,5480213.000000,5493258.000000,5397945.500000,5290081.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 10000, nthreads: 12
+	$ 6405360 starts, 2 max read set, 6010000 commits, 395360 (6.172%) aborts
+$ 260743 (65.951%) of aborts at commit time
+	$ 6270743 commit attempts, 3138814 (50.055%) nonopaque
+	$ 6379173 starts, 2 max read set, 6010000 commits, 369173 (5.787%) aborts
+$ 232441 (62.963%) of aborts at commit time
+	$ 6242441 commit attempts, 3126622 (50.087%) nonopaque
+	$ 6378700 starts, 2 max read set, 6010000 commits, 368700 (5.780%) aborts
+$ 232142 (62.962%) of aborts at commit time
+	$ 6242142 commit attempts, 3126549 (50.088%) nonopaque
+	$ 6371085 starts, 2 max read set, 6010000 commits, 361085 (5.668%) aborts
+$ 226802 (62.811%) of aborts at commit time
+	$ 6236802 commit attempts, 3123960 (50.089%) nonopaque
+	$ 6377802 starts, 2 max read set, 6010000 commits, 367802 (5.767%) aborts
+$ 231454 (62.929%) of aborts at commit time
+	$ 6241454 commit attempts, 3126086 (50.086%) nonopaque
+6850316.000000,6803053.000000,6823703.000000,6814271.500000,6831581.000000,:6.172331,5.787161,5.780175,5.667559,5.766909,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 10000, nthreads: 12
+	$ 6177067 starts, 2 max read set, 6010000 commits, 167067 (2.705%) aborts
+$ 40401 (24.183%) of aborts at commit time
+	$ 6050401 commit attempts, 0 (0.000%) nonopaque
+	$ 6173827 starts, 2 max read set, 6010000 commits, 163827 (2.654%) aborts
+$ 38762 (23.660%) of aborts at commit time
+	$ 6048762 commit attempts, 0 (0.000%) nonopaque
+	$ 6176229 starts, 2 max read set, 6010000 commits, 166229 (2.691%) aborts
+$ 39202 (23.583%) of aborts at commit time
+	$ 6049202 commit attempts, 0 (0.000%) nonopaque
+	$ 6177379 starts, 2 max read set, 6010000 commits, 167379 (2.710%) aborts
+$ 40604 (24.259%) of aborts at commit time
+	$ 6050604 commit attempts, 0 (0.000%) nonopaque
+	$ 6178962 starts, 2 max read set, 6010000 commits, 168962 (2.734%) aborts
+$ 40582 (24.018%) of aborts at commit time
+	$ 6050582 commit attempts, 0 (0.000%) nonopaque
+7383979.000000,7335510.500000,7419342.500000,7269564.000000,7333430.500000,:2.704633,2.653573,2.691432,2.709547,2.734472,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 10000, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+12958739.000000,12897096.000000,12716957.000000,13115442.000000,12813695.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 10000, nthreads: 12
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+13242051.000000,12946660.000000,12872912.000000,12024723.000000,11291631.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 10000, nthreads: 12
+	$ 6260804 starts, 1 max read set, 6010000 commits, 250804 (4.006%) aborts
+$ 240 (0.096%) of aborts at commit time
+	$ 6010240 commit attempts, 3842 (0.064%) nonopaque
+	$ 6232315 starts, 1 max read set, 6010000 commits, 222315 (3.567%) aborts
+$ 247 (0.111%) of aborts at commit time
+	$ 6010247 commit attempts, 4000 (0.067%) nonopaque
+	$ 6236636 starts, 1 max read set, 6010000 commits, 226636 (3.634%) aborts
+$ 265 (0.117%) of aborts at commit time
+	$ 6010265 commit attempts, 4202 (0.070%) nonopaque
+	$ 6238429 starts, 1 max read set, 6010000 commits, 228429 (3.662%) aborts
+$ 281 (0.123%) of aborts at commit time
+	$ 6010281 commit attempts, 4181 (0.070%) nonopaque
+	$ 6239230 starts, 1 max read set, 6010000 commits, 229230 (3.674%) aborts
+$ 251 (0.109%) of aborts at commit time
+	$ 6010251 commit attempts, 4119 (0.069%) nonopaque
+3084928.000000,3478017.000000,3461555.000000,3392285.500000,3382248.250000,:4.005939,3.567134,3.633946,3.661643,3.674011,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 10000, nthreads: 12
+	$ 6010000 starts, 2 max read set, 6010000 commits
+	$ 6010000 commit attempts, 0 (0.000%) nonopaque
+	$ 6010000 starts, 2 max read set, 6010000 commits
+	$ 6010000 commit attempts, 0 (0.000%) nonopaque
+	$ 6010000 starts, 2 max read set, 6010000 commits
+	$ 6010000 commit attempts, 0 (0.000%) nonopaque
+	$ 6010000 starts, 2 max read set, 6010000 commits
+	$ 6010000 commit attempts, 0 (0.000%) nonopaque
+	$ 6010000 starts, 2 max read set, 6010000 commits
+	$ 6010000 commit attempts, 0 (0.000%) nonopaque
+9799006.000000,10130429.000000,10523897.000000,10695473.000000,10256603.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 10000, nthreads: 18
+	$ 9610003 starts, 2 max read set, 9010000 commits, 600003 (6.244%) aborts
+$ 399890 (66.648%) of aborts at commit time
+	$ 9409890 commit attempts, 4712210 (50.077%) nonopaque
+	$ 9602502 starts, 2 max read set, 9010000 commits, 592502 (6.170%) aborts
+$ 391457 (66.068%) of aborts at commit time
+	$ 9401457 commit attempts, 4708172 (50.079%) nonopaque
+	$ 9603943 starts, 2 max read set, 9010000 commits, 593943 (6.184%) aborts
+$ 393536 (66.258%) of aborts at commit time
+	$ 9403536 commit attempts, 4709065 (50.078%) nonopaque
+	$ 9591640 starts, 2 max read set, 9010000 commits, 581640 (6.064%) aborts
+$ 383597 (65.951%) of aborts at commit time
+	$ 9393597 commit attempts, 4704159 (50.078%) nonopaque
+	$ 9598765 starts, 2 max read set, 9010000 commits, 588765 (6.134%) aborts
+$ 390822 (66.380%) of aborts at commit time
+	$ 9400822 commit attempts, 4707476 (50.075%) nonopaque
+6131989.000000,6146915.500000,6164358.000000,6151348.000000,6140038.000000,:6.243526,6.170288,6.184366,6.064031,6.133758,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 10000, nthreads: 18
+	$ 9233008 starts, 2 max read set, 9010000 commits, 223008 (2.415%) aborts
+$ 40411 (18.121%) of aborts at commit time
+	$ 9050411 commit attempts, 0 (0.000%) nonopaque
+	$ 9232133 starts, 2 max read set, 9010000 commits, 222133 (2.406%) aborts
+$ 39914 (17.969%) of aborts at commit time
+	$ 9049914 commit attempts, 0 (0.000%) nonopaque
+	$ 9230728 starts, 2 max read set, 9010000 commits, 220728 (2.391%) aborts
+$ 40345 (18.278%) of aborts at commit time
+	$ 9050345 commit attempts, 0 (0.000%) nonopaque
+	$ 9232161 starts, 2 max read set, 9010000 commits, 222161 (2.406%) aborts
+$ 39728 (17.883%) of aborts at commit time
+	$ 9049728 commit attempts, 0 (0.000%) nonopaque
+	$ 9233733 starts, 2 max read set, 9010000 commits, 223733 (2.423%) aborts
+$ 39930 (17.847%) of aborts at commit time
+	$ 9049930 commit attempts, 0 (0.000%) nonopaque
+6719492.000000,6730642.500000,6737167.500000,6735468.000000,6736229.500000,:2.415334,2.406085,2.391231,2.406381,2.422996,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 10000, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+12848278.000000,12994438.000000,12096368.000000,12008438.000000,12566463.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 10000, nthreads: 18
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+13226464.000000,12533824.000000,12740296.000000,13120413.000000,12679717.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 10000, nthreads: 18
+	$ 9448081 starts, 1 max read set, 9010000 commits, 438081 (4.637%) aborts
+$ 363 (0.083%) of aborts at commit time
+	$ 9010363 commit attempts, 5167 (0.057%) nonopaque
+	$ 9457522 starts, 1 max read set, 9010000 commits, 447522 (4.732%) aborts
+$ 333 (0.074%) of aborts at commit time
+	$ 9010333 commit attempts, 4767 (0.053%) nonopaque
+	$ 9433953 starts, 1 max read set, 9010000 commits, 423953 (4.494%) aborts
+$ 447 (0.105%) of aborts at commit time
+	$ 9010447 commit attempts, 5726 (0.064%) nonopaque
+	$ 9511002 starts, 1 max read set, 9010000 commits, 501002 (5.268%) aborts
+$ 475 (0.095%) of aborts at commit time
+	$ 9010475 commit attempts, 5332 (0.059%) nonopaque
+	$ 9429782 starts, 1 max read set, 9010000 commits, 419782 (4.452%) aborts
+$ 428 (0.102%) of aborts at commit time
+	$ 9010428 commit attempts, 5159 (0.057%) nonopaque
+2335596.000000,2285685.250000,2396397.750000,2010991.125000,2419869.500000,:4.636719,4.731916,4.493906,5.267605,4.451662,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 10000, nthreads: 18
+	$ 9010000 starts, 2 max read set, 9010000 commits
+	$ 9010000 commit attempts, 0 (0.000%) nonopaque
+	$ 9010000 starts, 2 max read set, 9010000 commits
+	$ 9010000 commit attempts, 0 (0.000%) nonopaque
+	$ 9010000 starts, 2 max read set, 9010000 commits
+	$ 9010000 commit attempts, 0 (0.000%) nonopaque
+	$ 9010000 starts, 2 max read set, 9010000 commits
+	$ 9010000 commit attempts, 0 (0.000%) nonopaque
+	$ 9010000 starts, 2 max read set, 9010000 commits
+	$ 9010000 commit attempts, 0 (0.000%) nonopaque
+12210410.000000,11327965.000000,10731392.000000,10959438.000000,9849952.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 50000, nthreads: 1
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 249765 (45.412%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 249765 (45.412%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 249765 (45.412%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 249765 (45.412%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 249765 (45.412%) nonopaque
+8512812.000000,8521517.000000,8511073.000000,8511218.000000,8516002.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 50000, nthreads: 1
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+8494156.000000,8479319.000000,8502968.000000,8506150.000000,8509480.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 50000, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+14519267.000000,14492334.000000,14515052.000000,14518845.000000,14450032.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 50000, nthreads: 1
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+11095085.000000,11112840.000000,11106915.000000,11107162.000000,11091639.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 50000, nthreads: 1
+	$ 550000 starts, 1 max read set, 550000 commits
+	$ 550000 commit attempts, 488 (0.089%) nonopaque
+	$ 550000 starts, 1 max read set, 550000 commits
+	$ 550000 commit attempts, 488 (0.089%) nonopaque
+	$ 550000 starts, 1 max read set, 550000 commits
+	$ 550000 commit attempts, 488 (0.089%) nonopaque
+	$ 550000 starts, 1 max read set, 550000 commits
+	$ 550000 commit attempts, 488 (0.089%) nonopaque
+	$ 550000 starts, 1 max read set, 550000 commits
+	$ 550000 commit attempts, 488 (0.089%) nonopaque
+6801703.000000,6822027.000000,6808557.000000,6809577.000000,6808835.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 50000, nthreads: 1
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+	$ 550000 starts, 2 max read set, 550000 commits
+	$ 550000 commit attempts, 0 (0.000%) nonopaque
+6485841.500000,6483486.500000,6488029.500000,6493000.500000,6485421.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 50000, nthreads: 2
+	$ 1134113 starts, 2 max read set, 1050000 commits, 84113 (7.417%) aborts
+$ 68025 (80.873%) of aborts at commit time
+	$ 1118025 commit attempts, 534334 (47.793%) nonopaque
+	$ 1136052 starts, 2 max read set, 1050000 commits, 86052 (7.575%) aborts
+$ 70114 (81.479%) of aborts at commit time
+	$ 1120114 commit attempts, 535079 (47.770%) nonopaque
+	$ 1137512 starts, 2 max read set, 1050000 commits, 87512 (7.693%) aborts
+$ 71234 (81.399%) of aborts at commit time
+	$ 1121234 commit attempts, 535599 (47.769%) nonopaque
+	$ 1136771 starts, 2 max read set, 1050000 commits, 86771 (7.633%) aborts
+$ 71105 (81.946%) of aborts at commit time
+	$ 1121105 commit attempts, 535533 (47.768%) nonopaque
+	$ 1136776 starts, 2 max read set, 1050000 commits, 86776 (7.634%) aborts
+$ 71044 (81.871%) of aborts at commit time
+	$ 1121044 commit attempts, 535540 (47.772%) nonopaque
+5597004.500000,5556512.500000,5507093.000000,5504577.000000,5534095.500000,:7.416633,7.574653,7.693282,7.633111,7.633518,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 50000, nthreads: 2
+	$ 1082293 starts, 2 max read set, 1050000 commits, 32293 (2.984%) aborts
+$ 1812 (5.611%) of aborts at commit time
+	$ 1051812 commit attempts, 0 (0.000%) nonopaque
+	$ 1082629 starts, 2 max read set, 1050000 commits, 32629 (3.014%) aborts
+$ 1619 (4.962%) of aborts at commit time
+	$ 1051619 commit attempts, 0 (0.000%) nonopaque
+	$ 1081746 starts, 2 max read set, 1050000 commits, 31746 (2.935%) aborts
+$ 1593 (5.018%) of aborts at commit time
+	$ 1051593 commit attempts, 0 (0.000%) nonopaque
+	$ 1082998 starts, 2 max read set, 1050000 commits, 32998 (3.047%) aborts
+$ 1818 (5.509%) of aborts at commit time
+	$ 1051818 commit attempts, 0 (0.000%) nonopaque
+	$ 1081971 starts, 2 max read set, 1050000 commits, 31971 (2.955%) aborts
+$ 1276 (3.991%) of aborts at commit time
+	$ 1051276 commit attempts, 0 (0.000%) nonopaque
+7794779.000000,7792106.500000,7805548.000000,7786100.500000,7790589.000000,:2.983758,3.013867,2.934700,3.046912,2.954885,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 50000, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+3502663.750000,3511051.000000,3555429.250000,3524713.500000,3509880.250000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 50000, nthreads: 2
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+2992954.500000,3000534.000000,2983685.250000,2984745.000000,2992318.750000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 50000, nthreads: 2
+	$ 1083367 starts, 1 max read set, 1050000 commits, 33367 (3.080%) aborts
+$ 40 (0.120%) of aborts at commit time
+	$ 1050040 commit attempts, 706 (0.067%) nonopaque
+	$ 1086126 starts, 1 max read set, 1050000 commits, 36126 (3.326%) aborts
+$ 36 (0.100%) of aborts at commit time
+	$ 1050036 commit attempts, 549 (0.052%) nonopaque
+	$ 1082985 starts, 1 max read set, 1050000 commits, 32985 (3.046%) aborts
+$ 37 (0.112%) of aborts at commit time
+	$ 1050037 commit attempts, 706 (0.067%) nonopaque
+	$ 1084930 starts, 1 max read set, 1050000 commits, 34930 (3.220%) aborts
+$ 36 (0.103%) of aborts at commit time
+	$ 1050036 commit attempts, 573 (0.055%) nonopaque
+	$ 1083979 starts, 1 max read set, 1050000 commits, 33979 (3.135%) aborts
+$ 53 (0.156%) of aborts at commit time
+	$ 1050053 commit attempts, 642 (0.061%) nonopaque
+3788122.750000,3743663.750000,3773556.500000,3801081.750000,3754416.250000,:3.079935,3.326133,3.045748,3.219563,3.134655,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 50000, nthreads: 2
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+	$ 1050000 starts, 2 max read set, 1050000 commits
+	$ 1050000 commit attempts, 0 (0.000%) nonopaque
+2370342.250000,2293935.750000,2304641.250000,2285578.500000,2301310.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 50000, nthreads: 6
+	$ 3305806 starts, 2 max read set, 3050000 commits, 255806 (7.738%) aborts
+$ 173125 (67.678%) of aborts at commit time
+	$ 3223125 commit attempts, 1591100 (49.365%) nonopaque
+	$ 3300756 starts, 2 max read set, 3050000 commits, 250756 (7.597%) aborts
+$ 168544 (67.214%) of aborts at commit time
+	$ 3218544 commit attempts, 1589291 (49.379%) nonopaque
+	$ 3304494 starts, 2 max read set, 3050000 commits, 254494 (7.701%) aborts
+$ 172084 (67.618%) of aborts at commit time
+	$ 3222084 commit attempts, 1590852 (49.373%) nonopaque
+	$ 3298694 starts, 2 max read set, 3050000 commits, 248694 (7.539%) aborts
+$ 166688 (67.025%) of aborts at commit time
+	$ 3216688 commit attempts, 1588212 (49.374%) nonopaque
+	$ 3304600 starts, 2 max read set, 3050000 commits, 254600 (7.704%) aborts
+$ 171335 (67.296%) of aborts at commit time
+	$ 3221335 commit attempts, 1590659 (49.379%) nonopaque
+6751495.500000,6792171.000000,6757259.000000,6798759.000000,6760274.000000,:7.738082,7.596926,7.701451,7.539165,7.704412,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 50000, nthreads: 6
+	$ 3119621 starts, 2 max read set, 3050000 commits, 69621 (2.232%) aborts
+$ 4617 (6.632%) of aborts at commit time
+	$ 3054617 commit attempts, 0 (0.000%) nonopaque
+	$ 3119708 starts, 2 max read set, 3050000 commits, 69708 (2.234%) aborts
+$ 4577 (6.566%) of aborts at commit time
+	$ 3054577 commit attempts, 0 (0.000%) nonopaque
+	$ 3119836 starts, 2 max read set, 3050000 commits, 69836 (2.238%) aborts
+$ 4790 (6.859%) of aborts at commit time
+	$ 3054790 commit attempts, 0 (0.000%) nonopaque
+	$ 3119803 starts, 2 max read set, 3050000 commits, 69803 (2.237%) aborts
+$ 5030 (7.206%) of aborts at commit time
+	$ 3055030 commit attempts, 0 (0.000%) nonopaque
+	$ 3119943 starts, 2 max read set, 3050000 commits, 69943 (2.242%) aborts
+$ 4794 (6.854%) of aborts at commit time
+	$ 3054794 commit attempts, 0 (0.000%) nonopaque
+8095221.500000,8103355.500000,8094369.500000,8082702.000000,8091466.000000,:2.231713,2.234440,2.238451,2.237417,2.241804,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 50000, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+10153246.000000,10537482.000000,9328300.000000,8703649.000000,9176248.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 50000, nthreads: 6
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+7605777.500000,7453046.000000,7484283.000000,7385815.500000,7685213.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 50000, nthreads: 6
+	$ 3169827 starts, 1 max read set, 3050000 commits, 119827 (3.780%) aborts
+$ 123 (0.103%) of aborts at commit time
+	$ 3050123 commit attempts, 2002 (0.066%) nonopaque
+	$ 3172146 starts, 1 max read set, 3050000 commits, 122146 (3.851%) aborts
+$ 118 (0.097%) of aborts at commit time
+	$ 3050118 commit attempts, 2245 (0.074%) nonopaque
+	$ 3168004 starts, 1 max read set, 3050000 commits, 118004 (3.725%) aborts
+$ 164 (0.139%) of aborts at commit time
+	$ 3050164 commit attempts, 2608 (0.086%) nonopaque
+	$ 3167943 starts, 1 max read set, 3050000 commits, 117943 (3.723%) aborts
+$ 105 (0.089%) of aborts at commit time
+	$ 3050105 commit attempts, 1940 (0.064%) nonopaque
+	$ 3173017 starts, 1 max read set, 3050000 commits, 123017 (3.877%) aborts
+$ 141 (0.115%) of aborts at commit time
+	$ 3050141 commit attempts, 2480 (0.081%) nonopaque
+3762656.750000,3661666.750000,3735315.500000,3768778.000000,3700423.500000,:3.780238,3.850580,3.724869,3.723015,3.876973,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 50000, nthreads: 6
+	$ 3050000 starts, 2 max read set, 3050000 commits
+	$ 3050000 commit attempts, 0 (0.000%) nonopaque
+	$ 3050000 starts, 2 max read set, 3050000 commits
+	$ 3050000 commit attempts, 0 (0.000%) nonopaque
+	$ 3050000 starts, 2 max read set, 3050000 commits
+	$ 3050000 commit attempts, 0 (0.000%) nonopaque
+	$ 3050000 starts, 2 max read set, 3050000 commits
+	$ 3050000 commit attempts, 0 (0.000%) nonopaque
+	$ 3050000 starts, 2 max read set, 3050000 commits
+	$ 3050000 commit attempts, 0 (0.000%) nonopaque
+5728875.000000,5566203.500000,5457929.500000,5759627.500000,5702706.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 50000, nthreads: 12
+	$ 6457147 starts, 2 max read set, 6050000 commits, 407147 (6.305%) aborts
+$ 269024 (66.075%) of aborts at commit time
+	$ 6319024 commit attempts, 3143611 (49.748%) nonopaque
+	$ 6454345 starts, 2 max read set, 6050000 commits, 404345 (6.265%) aborts
+$ 268391 (66.377%) of aborts at commit time
+	$ 6318391 commit attempts, 3143223 (49.747%) nonopaque
+	$ 6457331 starts, 2 max read set, 6050000 commits, 407331 (6.308%) aborts
+$ 269449 (66.150%) of aborts at commit time
+	$ 6319449 commit attempts, 3143617 (49.745%) nonopaque
+	$ 6460860 starts, 2 max read set, 6050000 commits, 410860 (6.359%) aborts
+$ 273487 (66.565%) of aborts at commit time
+	$ 6323487 commit attempts, 3145599 (49.745%) nonopaque
+	$ 6454326 starts, 2 max read set, 6050000 commits, 404326 (6.264%) aborts
+$ 267556 (66.173%) of aborts at commit time
+	$ 6317556 commit attempts, 3142572 (49.743%) nonopaque
+6704674.500000,6637109.500000,6763894.000000,6657272.500000,6723088.500000,:6.305370,6.264695,6.308040,6.359215,6.264419,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 50000, nthreads: 12
+	$ 6194901 starts, 2 max read set, 6050000 commits, 144901 (2.339%) aborts
+$ 18663 (12.880%) of aborts at commit time
+	$ 6068663 commit attempts, 0 (0.000%) nonopaque
+	$ 6193812 starts, 2 max read set, 6050000 commits, 143812 (2.322%) aborts
+$ 18212 (12.664%) of aborts at commit time
+	$ 6068212 commit attempts, 0 (0.000%) nonopaque
+	$ 6195115 starts, 2 max read set, 6050000 commits, 145115 (2.342%) aborts
+$ 18461 (12.722%) of aborts at commit time
+	$ 6068461 commit attempts, 0 (0.000%) nonopaque
+	$ 6193024 starts, 2 max read set, 6050000 commits, 143024 (2.309%) aborts
+$ 17525 (12.253%) of aborts at commit time
+	$ 6067525 commit attempts, 0 (0.000%) nonopaque
+	$ 6194600 starts, 2 max read set, 6050000 commits, 144600 (2.334%) aborts
+$ 17620 (12.185%) of aborts at commit time
+	$ 6067620 commit attempts, 0 (0.000%) nonopaque
+7462259.500000,7420352.000000,7361882.000000,7376236.000000,7503949.000000,:2.339036,2.321866,2.342410,2.309437,2.334291,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 50000, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+13200536.000000,13021398.000000,13635310.000000,13019986.000000,13607880.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 50000, nthreads: 12
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+13612634.000000,13731454.000000,12605280.000000,13991265.000000,12928555.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 50000, nthreads: 12
+	$ 6269547 starts, 1 max read set, 6050000 commits, 219547 (3.502%) aborts
+$ 256 (0.117%) of aborts at commit time
+	$ 6050256 commit attempts, 4325 (0.071%) nonopaque
+	$ 6275782 starts, 1 max read set, 6050000 commits, 225782 (3.598%) aborts
+$ 251 (0.111%) of aborts at commit time
+	$ 6050251 commit attempts, 3989 (0.066%) nonopaque
+	$ 6273347 starts, 1 max read set, 6050000 commits, 223347 (3.560%) aborts
+$ 249 (0.111%) of aborts at commit time
+	$ 6050249 commit attempts, 3844 (0.064%) nonopaque
+	$ 6279512 starts, 1 max read set, 6050000 commits, 229512 (3.655%) aborts
+$ 249 (0.108%) of aborts at commit time
+	$ 6050249 commit attempts, 4301 (0.071%) nonopaque
+	$ 6267241 starts, 1 max read set, 6050000 commits, 217241 (3.466%) aborts
+$ 238 (0.110%) of aborts at commit time
+	$ 6050238 commit attempts, 4042 (0.067%) nonopaque
+3510858.000000,3440805.000000,3447128.750000,3399924.750000,3540203.250000,:3.501800,3.597671,3.560253,3.654934,3.466294,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 50000, nthreads: 12
+	$ 6050000 starts, 2 max read set, 6050000 commits
+	$ 6050000 commit attempts, 0 (0.000%) nonopaque
+	$ 6050000 starts, 2 max read set, 6050000 commits
+	$ 6050000 commit attempts, 0 (0.000%) nonopaque
+	$ 6050000 starts, 2 max read set, 6050000 commits
+	$ 6050000 commit attempts, 0 (0.000%) nonopaque
+	$ 6050000 starts, 2 max read set, 6050000 commits
+	$ 6050000 commit attempts, 0 (0.000%) nonopaque
+	$ 6050000 starts, 2 max read set, 6050000 commits
+	$ 6050000 commit attempts, 0 (0.000%) nonopaque
+10513644.000000,10847830.000000,10889984.000000,10477092.000000,10299262.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 50000, nthreads: 18
+	$ 9649992 starts, 2 max read set, 9050000 commits, 599992 (6.218%) aborts
+$ 399633 (66.606%) of aborts at commit time
+	$ 9449633 commit attempts, 4712363 (49.868%) nonopaque
+	$ 9645805 starts, 2 max read set, 9050000 commits, 595805 (6.177%) aborts
+$ 396482 (66.546%) of aborts at commit time
+	$ 9446482 commit attempts, 4710509 (49.865%) nonopaque
+	$ 9654370 starts, 2 max read set, 9050000 commits, 604370 (6.260%) aborts
+$ 402932 (66.670%) of aborts at commit time
+	$ 9452932 commit attempts, 4713970 (49.868%) nonopaque
+	$ 9642111 starts, 2 max read set, 9050000 commits, 592111 (6.141%) aborts
+$ 394479 (66.622%) of aborts at commit time
+	$ 9444479 commit attempts, 4709569 (49.866%) nonopaque
+	$ 9639754 starts, 2 max read set, 9050000 commits, 589754 (6.118%) aborts
+$ 393268 (66.683%) of aborts at commit time
+	$ 9443268 commit attempts, 4708779 (49.864%) nonopaque
+6130577.000000,6148574.000000,6138425.500000,6138915.500000,6131404.000000,:6.217539,6.176830,6.260067,6.140885,6.117936,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 50000, nthreads: 18
+	$ 9272939 starts, 2 max read set, 9050000 commits, 222939 (2.404%) aborts
+$ 39816 (17.860%) of aborts at commit time
+	$ 9089816 commit attempts, 0 (0.000%) nonopaque
+	$ 9272376 starts, 2 max read set, 9050000 commits, 222376 (2.398%) aborts
+$ 39940 (17.961%) of aborts at commit time
+	$ 9089940 commit attempts, 0 (0.000%) nonopaque
+	$ 9273040 starts, 2 max read set, 9050000 commits, 223040 (2.405%) aborts
+$ 38942 (17.460%) of aborts at commit time
+	$ 9088942 commit attempts, 0 (0.000%) nonopaque
+	$ 9270572 starts, 2 max read set, 9050000 commits, 220572 (2.379%) aborts
+$ 37914 (17.189%) of aborts at commit time
+	$ 9087914 commit attempts, 0 (0.000%) nonopaque
+	$ 9273305 starts, 2 max read set, 9050000 commits, 223305 (2.408%) aborts
+$ 38401 (17.197%) of aborts at commit time
+	$ 9088401 commit attempts, 0 (0.000%) nonopaque
+6707453.000000,6721720.000000,6722041.500000,6711845.000000,6712160.000000,:2.404189,2.398263,2.405252,2.379271,2.408041,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 50000, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+13757955.000000,13081205.000000,13379199.000000,12952156.000000,13631448.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 50000, nthreads: 18
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+14632552.000000,13602687.000000,13041985.000000,13523077.000000,13002473.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 50000, nthreads: 18
+	$ 9419990 starts, 1 max read set, 9050000 commits, 369990 (3.928%) aborts
+$ 370 (0.100%) of aborts at commit time
+	$ 9050370 commit attempts, 5163 (0.057%) nonopaque
+	$ 9509864 starts, 1 max read set, 9050000 commits, 459864 (4.836%) aborts
+$ 449 (0.098%) of aborts at commit time
+	$ 9050449 commit attempts, 5109 (0.056%) nonopaque
+	$ 9522730 starts, 1 max read set, 9050000 commits, 472730 (4.964%) aborts
+$ 462 (0.098%) of aborts at commit time
+	$ 9050462 commit attempts, 5113 (0.056%) nonopaque
+	$ 9514936 starts, 1 max read set, 9050000 commits, 464936 (4.886%) aborts
+$ 508 (0.109%) of aborts at commit time
+	$ 9050508 commit attempts, 5495 (0.061%) nonopaque
+	$ 9513178 starts, 1 max read set, 9050000 commits, 463178 (4.869%) aborts
+$ 487 (0.105%) of aborts at commit time
+	$ 9050487 commit attempts, 5360 (0.059%) nonopaque
+2738964.000000,2204175.250000,2139707.750000,2171351.500000,2180235.250000,:3.927711,4.835653,4.964228,4.886381,4.868804,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 50000, nthreads: 18
+	$ 9050000 starts, 2 max read set, 9050000 commits
+	$ 9050000 commit attempts, 0 (0.000%) nonopaque
+	$ 9050000 starts, 2 max read set, 9050000 commits
+	$ 9050000 commit attempts, 0 (0.000%) nonopaque
+	$ 9050000 starts, 2 max read set, 9050000 commits
+	$ 9050000 commit attempts, 0 (0.000%) nonopaque
+	$ 9050000 starts, 2 max read set, 9050000 commits
+	$ 9050000 commit attempts, 0 (0.000%) nonopaque
+	$ 9050000 starts, 2 max read set, 9050000 commits
+	$ 9050000 commit attempts, 0 (0.000%) nonopaque
+12785871.000000,12095652.000000,11345844.000000,11042511.000000,10820572.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 100000, nthreads: 1
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 249765 (41.627%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 249765 (41.627%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 249765 (41.627%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 249765 (41.627%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 249765 (41.627%) nonopaque
+8499065.000000,8436398.000000,8458806.000000,8454515.000000,8464964.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 100000, nthreads: 1
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+8483347.000000,8503112.000000,8497332.000000,8496610.000000,8487956.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 100000, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+14491869.000000,14475970.000000,14496535.000000,14497796.000000,14542070.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 100000, nthreads: 1
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+	$ 500000 starts, 0 max read set, 500000 commits
+	$ 500000 commit attempts, 0 (0.000%) nonopaque
+11142061.000000,11138338.000000,11152002.000000,11141813.000000,11161711.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 100000, nthreads: 1
+	$ 600000 starts, 1 max read set, 600000 commits
+	$ 600000 commit attempts, 488 (0.081%) nonopaque
+	$ 600000 starts, 1 max read set, 600000 commits
+	$ 600000 commit attempts, 488 (0.081%) nonopaque
+	$ 600000 starts, 1 max read set, 600000 commits
+	$ 600000 commit attempts, 488 (0.081%) nonopaque
+	$ 600000 starts, 1 max read set, 600000 commits
+	$ 600000 commit attempts, 488 (0.081%) nonopaque
+	$ 600000 starts, 1 max read set, 600000 commits
+	$ 600000 commit attempts, 488 (0.081%) nonopaque
+6815146.000000,6825286.500000,6785918.000000,6757670.000000,6796248.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 100000, nthreads: 1
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+	$ 600000 starts, 2 max read set, 600000 commits
+	$ 600000 commit attempts, 0 (0.000%) nonopaque
+6478614.000000,6477187.500000,6484075.000000,6466381.500000,6439896.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 100000, nthreads: 2
+	$ 1185636 starts, 2 max read set, 1100000 commits, 85636 (7.223%) aborts
+$ 69701 (81.392%) of aborts at commit time
+	$ 1169701 commit attempts, 534974 (45.736%) nonopaque
+	$ 1184825 starts, 2 max read set, 1100000 commits, 84825 (7.159%) aborts
+$ 68527 (80.786%) of aborts at commit time
+	$ 1168527 commit attempts, 534428 (45.735%) nonopaque
+	$ 1185002 starts, 2 max read set, 1100000 commits, 85002 (7.173%) aborts
+$ 68669 (80.785%) of aborts at commit time
+	$ 1168669 commit attempts, 534426 (45.729%) nonopaque
+	$ 1185596 starts, 2 max read set, 1100000 commits, 85596 (7.220%) aborts
+$ 68718 (80.282%) of aborts at commit time
+	$ 1168718 commit attempts, 534361 (45.722%) nonopaque
+	$ 1190926 starts, 2 max read set, 1100000 commits, 90926 (7.635%) aborts
+$ 75166 (82.667%) of aborts at commit time
+	$ 1175166 commit attempts, 537751 (45.760%) nonopaque
+5463943.500000,5489348.000000,5476661.000000,5477801.000000,5316208.000000,:7.222790,7.159285,7.173152,7.219660,7.634899,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 100000, nthreads: 2
+	$ 1136226 starts, 2 max read set, 1100000 commits, 36226 (3.188%) aborts
+$ 4263 (11.768%) of aborts at commit time
+	$ 1104263 commit attempts, 0 (0.000%) nonopaque
+	$ 1136498 starts, 2 max read set, 1100000 commits, 36498 (3.211%) aborts
+$ 4636 (12.702%) of aborts at commit time
+	$ 1104636 commit attempts, 0 (0.000%) nonopaque
+	$ 1136322 starts, 2 max read set, 1100000 commits, 36322 (3.196%) aborts
+$ 4539 (12.497%) of aborts at commit time
+	$ 1104539 commit attempts, 0 (0.000%) nonopaque
+	$ 1136532 starts, 2 max read set, 1100000 commits, 36532 (3.214%) aborts
+$ 4939 (13.520%) of aborts at commit time
+	$ 1104939 commit attempts, 0 (0.000%) nonopaque
+	$ 1134279 starts, 2 max read set, 1100000 commits, 34279 (3.022%) aborts
+$ 2263 (6.602%) of aborts at commit time
+	$ 1102263 commit attempts, 0 (0.000%) nonopaque
+7611103.000000,7643857.500000,7638194.000000,7629336.500000,7696570.500000,:3.188274,3.211444,3.196453,3.214340,3.022096,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 100000, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+4004709.500000,3938729.250000,3988274.500000,3989611.000000,3991442.250000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 100000, nthreads: 2
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+	$ 1000000 starts, 0 max read set, 1000000 commits
+	$ 1000000 commit attempts, 0 (0.000%) nonopaque
+3191136.250000,3135022.250000,3214472.750000,3183699.500000,3189589.250000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 100000, nthreads: 2
+	$ 1132902 starts, 1 max read set, 1100000 commits, 32902 (2.904%) aborts
+$ 50 (0.152%) of aborts at commit time
+	$ 1100050 commit attempts, 698 (0.063%) nonopaque
+	$ 1134721 starts, 1 max read set, 1100000 commits, 34721 (3.060%) aborts
+$ 43 (0.124%) of aborts at commit time
+	$ 1100043 commit attempts, 632 (0.057%) nonopaque
+	$ 1133361 starts, 1 max read set, 1100000 commits, 33361 (2.944%) aborts
+$ 48 (0.144%) of aborts at commit time
+	$ 1100048 commit attempts, 704 (0.064%) nonopaque
+	$ 1135562 starts, 1 max read set, 1100000 commits, 35562 (3.132%) aborts
+$ 36 (0.101%) of aborts at commit time
+	$ 1100036 commit attempts, 597 (0.054%) nonopaque
+	$ 1132659 starts, 1 max read set, 1100000 commits, 32659 (2.883%) aborts
+$ 35 (0.107%) of aborts at commit time
+	$ 1100035 commit attempts, 623 (0.057%) nonopaque
+3830317.000000,3748210.250000,3801255.250000,3680557.000000,3832548.250000,:2.904223,3.059871,2.943546,3.131665,2.883392,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 100000, nthreads: 2
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+	$ 1100000 starts, 2 max read set, 1100000 commits
+	$ 1100000 commit attempts, 0 (0.000%) nonopaque
+2340303.500000,2296527.750000,2305714.750000,2328207.500000,2318690.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 100000, nthreads: 6
+	$ 3352737 starts, 2 max read set, 3100000 commits, 252737 (7.538%) aborts
+$ 170320 (67.390%) of aborts at commit time
+	$ 3270320 commit attempts, 1590198 (48.625%) nonopaque
+	$ 3353843 starts, 2 max read set, 3100000 commits, 253843 (7.569%) aborts
+$ 171503 (67.563%) of aborts at commit time
+	$ 3271503 commit attempts, 1590240 (48.609%) nonopaque
+	$ 3352200 starts, 2 max read set, 3100000 commits, 252200 (7.523%) aborts
+$ 170356 (67.548%) of aborts at commit time
+	$ 3270356 commit attempts, 1590079 (48.621%) nonopaque
+	$ 3351824 starts, 2 max read set, 3100000 commits, 251824 (7.513%) aborts
+$ 170142 (67.564%) of aborts at commit time
+	$ 3270142 commit attempts, 1589977 (48.621%) nonopaque
+	$ 3353363 starts, 2 max read set, 3100000 commits, 253363 (7.555%) aborts
+$ 171202 (67.572%) of aborts at commit time
+	$ 3271202 commit attempts, 1590394 (48.618%) nonopaque
+6663660.500000,6789819.000000,6827896.000000,6816230.000000,6802027.000000,:7.538229,7.568720,7.523417,7.513044,7.555490,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 100000, nthreads: 6
+	$ 3171086 starts, 2 max read set, 3100000 commits, 71086 (2.242%) aborts
+$ 4751 (6.683%) of aborts at commit time
+	$ 3104751 commit attempts, 0 (0.000%) nonopaque
+	$ 3176194 starts, 2 max read set, 3100000 commits, 76194 (2.399%) aborts
+$ 8115 (10.650%) of aborts at commit time
+	$ 3108115 commit attempts, 0 (0.000%) nonopaque
+	$ 3172942 starts, 2 max read set, 3100000 commits, 72942 (2.299%) aborts
+$ 6249 (8.567%) of aborts at commit time
+	$ 3106249 commit attempts, 0 (0.000%) nonopaque
+	$ 3173316 starts, 2 max read set, 3100000 commits, 73316 (2.310%) aborts
+$ 4605 (6.281%) of aborts at commit time
+	$ 3104605 commit attempts, 0 (0.000%) nonopaque
+	$ 3171788 starts, 2 max read set, 3100000 commits, 71788 (2.263%) aborts
+$ 4679 (6.518%) of aborts at commit time
+	$ 3104679 commit attempts, 0 (0.000%) nonopaque
+8096423.000000,7478294.500000,7571054.500000,7520983.500000,7611953.000000,:2.241693,2.398909,2.298876,2.310391,2.263329,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 100000, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+9886536.000000,9787705.000000,10672169.000000,10623418.000000,8924693.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 100000, nthreads: 6
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+	$ 3000000 starts, 0 max read set, 3000000 commits
+	$ 3000000 commit attempts, 0 (0.000%) nonopaque
+7152189.000000,7371913.000000,7054043.500000,7377533.000000,6645754.500000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 100000, nthreads: 6
+	$ 3217923 starts, 1 max read set, 3100000 commits, 117923 (3.665%) aborts
+$ 83 (0.070%) of aborts at commit time
+	$ 3100083 commit attempts, 1894 (0.061%) nonopaque
+	$ 3221713 starts, 1 max read set, 3100000 commits, 121713 (3.778%) aborts
+$ 136 (0.112%) of aborts at commit time
+	$ 3100136 commit attempts, 2486 (0.080%) nonopaque
+	$ 3221507 starts, 1 max read set, 3100000 commits, 121507 (3.772%) aborts
+$ 143 (0.118%) of aborts at commit time
+	$ 3100143 commit attempts, 2488 (0.080%) nonopaque
+	$ 3222279 starts, 1 max read set, 3100000 commits, 122279 (3.795%) aborts
+$ 98 (0.080%) of aborts at commit time
+	$ 3100098 commit attempts, 2211 (0.071%) nonopaque
+	$ 3220673 starts, 1 max read set, 3100000 commits, 120673 (3.747%) aborts
+$ 98 (0.081%) of aborts at commit time
+	$ 3100098 commit attempts, 1994 (0.064%) nonopaque
+3690786.000000,3710768.000000,3639142.500000,3594372.750000,3667566.750000,:3.664569,3.777897,3.771744,3.794799,3.746826,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 100000, nthreads: 6
+	$ 3100000 starts, 2 max read set, 3100000 commits
+	$ 3100000 commit attempts, 0 (0.000%) nonopaque
+	$ 3100000 starts, 2 max read set, 3100000 commits
+	$ 3100000 commit attempts, 0 (0.000%) nonopaque
+	$ 3100000 starts, 2 max read set, 3100000 commits
+	$ 3100000 commit attempts, 0 (0.000%) nonopaque
+	$ 3100000 starts, 2 max read set, 3100000 commits
+	$ 3100000 commit attempts, 0 (0.000%) nonopaque
+	$ 3100000 starts, 2 max read set, 3100000 commits
+	$ 3100000 commit attempts, 0 (0.000%) nonopaque
+4772707.500000,4727126.500000,4815772.500000,4753687.500000,4761096.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 100000, nthreads: 12
+	$ 6468890 starts, 2 max read set, 6100000 commits, 368890 (5.703%) aborts
+$ 233523 (63.304%) of aborts at commit time
+	$ 6333523 commit attempts, 3127840 (49.385%) nonopaque
+	$ 6490334 starts, 2 max read set, 6100000 commits, 390334 (6.014%) aborts
+$ 245920 (63.002%) of aborts at commit time
+	$ 6345920 commit attempts, 3134290 (49.391%) nonopaque
+	$ 6467322 starts, 2 max read set, 6100000 commits, 367322 (5.680%) aborts
+$ 230759 (62.822%) of aborts at commit time
+	$ 6330759 commit attempts, 3126323 (49.383%) nonopaque
+	$ 6472924 starts, 2 max read set, 6100000 commits, 372924 (5.761%) aborts
+$ 234369 (62.846%) of aborts at commit time
+	$ 6334369 commit attempts, 3128064 (49.382%) nonopaque
+	$ 6459425 starts, 2 max read set, 6100000 commits, 359425 (5.564%) aborts
+$ 224243 (62.389%) of aborts at commit time
+	$ 6324243 commit attempts, 3122936 (49.380%) nonopaque
+6734694.500000,6754155.500000,6728411.000000,6804495.500000,6753874.000000,:5.702524,6.014082,5.679662,5.761291,5.564350,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 100000, nthreads: 12
+	$ 6268412 starts, 2 max read set, 6100000 commits, 168412 (2.687%) aborts
+$ 40719 (24.178%) of aborts at commit time
+	$ 6140719 commit attempts, 0 (0.000%) nonopaque
+	$ 6269340 starts, 2 max read set, 6100000 commits, 169340 (2.701%) aborts
+$ 40055 (23.654%) of aborts at commit time
+	$ 6140055 commit attempts, 0 (0.000%) nonopaque
+	$ 6268896 starts, 2 max read set, 6100000 commits, 168896 (2.694%) aborts
+$ 41566 (24.610%) of aborts at commit time
+	$ 6141566 commit attempts, 0 (0.000%) nonopaque
+	$ 6268647 starts, 2 max read set, 6100000 commits, 168647 (2.690%) aborts
+$ 39691 (23.535%) of aborts at commit time
+	$ 6139691 commit attempts, 0 (0.000%) nonopaque
+	$ 6268727 starts, 2 max read set, 6100000 commits, 168727 (2.692%) aborts
+$ 40558 (24.038%) of aborts at commit time
+	$ 6140558 commit attempts, 0 (0.000%) nonopaque
+7404774.500000,7446515.500000,7341694.500000,7455843.000000,7397799.500000,:2.686677,2.701082,2.694191,2.690325,2.691567,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 100000, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+13392289.000000,12934881.000000,14135075.000000,13087977.000000,13279184.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 100000, nthreads: 12
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+	$ 6000000 starts, 0 max read set, 6000000 commits
+	$ 6000000 commit attempts, 0 (0.000%) nonopaque
+13039821.000000,13727590.000000,13719930.000000,13618783.000000,13755190.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 100000, nthreads: 12
+	$ 6324006 starts, 1 max read set, 6100000 commits, 224006 (3.542%) aborts
+$ 204 (0.091%) of aborts at commit time
+	$ 6100204 commit attempts, 3710 (0.061%) nonopaque
+	$ 6321426 starts, 1 max read set, 6100000 commits, 221426 (3.503%) aborts
+$ 259 (0.117%) of aborts at commit time
+	$ 6100259 commit attempts, 4069 (0.067%) nonopaque
+	$ 6327624 starts, 1 max read set, 6100000 commits, 227624 (3.597%) aborts
+$ 230 (0.101%) of aborts at commit time
+	$ 6100230 commit attempts, 3750 (0.061%) nonopaque
+	$ 6321187 starts, 1 max read set, 6100000 commits, 221187 (3.499%) aborts
+$ 228 (0.103%) of aborts at commit time
+	$ 6100228 commit attempts, 3692 (0.061%) nonopaque
+	$ 6327766 starts, 1 max read set, 6100000 commits, 227766 (3.599%) aborts
+$ 278 (0.122%) of aborts at commit time
+	$ 6100278 commit attempts, 4134 (0.068%) nonopaque
+3460541.000000,3468623.000000,3400030.500000,3441821.500000,3403670.250000,:3.542154,3.502786,3.597306,3.499137,3.599469,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 100000, nthreads: 12
+	$ 6100000 starts, 2 max read set, 6100000 commits
+	$ 6100000 commit attempts, 0 (0.000%) nonopaque
+	$ 6100000 starts, 2 max read set, 6100000 commits
+	$ 6100000 commit attempts, 0 (0.000%) nonopaque
+	$ 6100000 starts, 2 max read set, 6100000 commits
+	$ 6100000 commit attempts, 0 (0.000%) nonopaque
+	$ 6100000 starts, 2 max read set, 6100000 commits
+	$ 6100000 commit attempts, 0 (0.000%) nonopaque
+	$ 6100000 starts, 2 max read set, 6100000 commits
+	$ 6100000 commit attempts, 0 (0.000%) nonopaque
+10932905.000000,10139605.000000,10421823.000000,10437651.000000,10350967.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test Q:RandSingleOps on STO1 queue	 size: 100000, nthreads: 18
+	$ 9702384 starts, 2 max read set, 9100000 commits, 602384 (6.209%) aborts
+$ 400705 (66.520%) of aborts at commit time
+	$ 9500705 commit attempts, 4712910 (49.606%) nonopaque
+	$ 9720304 starts, 2 max read set, 9100000 commits, 620304 (6.382%) aborts
+$ 418445 (67.458%) of aborts at commit time
+	$ 9518445 commit attempts, 4722273 (49.612%) nonopaque
+	$ 9724719 starts, 2 max read set, 9100000 commits, 624719 (6.424%) aborts
+$ 420011 (67.232%) of aborts at commit time
+	$ 9520011 commit attempts, 4723162 (49.613%) nonopaque
+	$ 9716244 starts, 2 max read set, 9100000 commits, 616244 (6.342%) aborts
+$ 415237 (67.382%) of aborts at commit time
+	$ 9515237 commit attempts, 4720799 (49.613%) nonopaque
+	$ 9709469 starts, 2 max read set, 9100000 commits, 609469 (6.277%) aborts
+$ 408903 (67.092%) of aborts at commit time
+	$ 9508903 commit attempts, 4717252 (49.609%) nonopaque
+6105006.000000,6040597.000000,6036428.000000,6031011.500000,6014651.500000,:6.208619,6.381529,6.424031,6.342410,6.277058,;
+Running Test Q:RandSingleOps on STO2 queue	 size: 100000, nthreads: 18
+	$ 9324040 starts, 2 max read set, 9100000 commits, 224040 (2.403%) aborts
+$ 40339 (18.005%) of aborts at commit time
+	$ 9140339 commit attempts, 0 (0.000%) nonopaque
+	$ 9322702 starts, 2 max read set, 9100000 commits, 222702 (2.389%) aborts
+$ 38617 (17.340%) of aborts at commit time
+	$ 9138617 commit attempts, 0 (0.000%) nonopaque
+	$ 9322942 starts, 2 max read set, 9100000 commits, 222942 (2.391%) aborts
+$ 38172 (17.122%) of aborts at commit time
+	$ 9138172 commit attempts, 0 (0.000%) nonopaque
+	$ 9325110 starts, 2 max read set, 9100000 commits, 225110 (2.414%) aborts
+$ 37285 (16.563%) of aborts at commit time
+	$ 9137285 commit attempts, 0 (0.000%) nonopaque
+	$ 9323889 starts, 2 max read set, 9100000 commits, 223889 (2.401%) aborts
+$ 38930 (17.388%) of aborts at commit time
+	$ 9138930 commit attempts, 0 (0.000%) nonopaque
+6638392.000000,6626071.000000,6640513.000000,6628901.500000,6615317.000000,:2.402821,2.388814,2.391327,2.414020,2.401241,;
+Running Test Q:RandSingleOps on FCQueueNT	 size: 100000, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+14668636.000000,12518587.000000,13328239.000000,12454524.000000,12980457.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on Wrapped FCQueueNT	 size: 100000, nthreads: 18
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+	$ 9000000 starts, 0 max read set, 9000000 commits
+	$ 9000000 commit attempts, 0 (0.000%) nonopaque
+13362652.000000,13726354.000000,13285604.000000,13310636.000000,13144059.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test Q:RandSingleOps on FCQueueT	 size: 100000, nthreads: 18
+	$ 9471477 starts, 1 max read set, 9100000 commits, 371477 (3.922%) aborts
+$ 326 (0.088%) of aborts at commit time
+	$ 9100326 commit attempts, 4861 (0.053%) nonopaque
+	$ 9465229 starts, 1 max read set, 9100000 commits, 365229 (3.859%) aborts
+$ 324 (0.089%) of aborts at commit time
+	$ 9100324 commit attempts, 4814 (0.053%) nonopaque
+	$ 9566920 starts, 1 max read set, 9100000 commits, 466920 (4.881%) aborts
+$ 484 (0.104%) of aborts at commit time
+	$ 9100484 commit attempts, 5409 (0.059%) nonopaque
+	$ 9474589 starts, 1 max read set, 9100000 commits, 374589 (3.954%) aborts
+$ 363 (0.097%) of aborts at commit time
+	$ 9100363 commit attempts, 5567 (0.061%) nonopaque
+	$ 9566456 starts, 1 max read set, 9100000 commits, 466456 (4.876%) aborts
+$ 404 (0.087%) of aborts at commit time
+	$ 9100404 commit attempts, 4675 (0.051%) nonopaque
+2747395.250000,2797375.000000,2148127.750000,2692727.500000,2143165.750000,:3.922060,3.858639,4.880568,3.953617,4.875954,;
+Running Test Q:RandSingleOps on FCQueueLP	 size: 100000, nthreads: 18
+	$ 9100000 starts, 2 max read set, 9100000 commits
+	$ 9100000 commit attempts, 0 (0.000%) nonopaque
+	$ 9100000 starts, 2 max read set, 9100000 commits
+	$ 9100000 commit attempts, 0 (0.000%) nonopaque
+	$ 9100000 starts, 2 max read set, 9100000 commits
+	$ 9100000 commit attempts, 0 (0.000%) nonopaque
+	$ 9100000 starts, 2 max read set, 9100000 commits
+	$ 9100000 commit attempts, 0 (0.000%) nonopaque
+	$ 9100000 starts, 2 max read set, 9100000 commits
+	$ 9100000 commit attempts, 0 (0.000%) nonopaque
+12663856.000000,11436297.000000,12022506.000000,11167362.000000,10646805.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+

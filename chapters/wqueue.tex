@@ -23,7 +23,7 @@ The FCQueueWT modifies the nontransactional, flat combining technique as follows
     Executing a pop returns a LazyPop value but does not generate a flat combining request or access the queue itself. At commit time, all LazyPops are instantiated with values: for each LazyPop, the thread makes a \texttt{<POP>} flat combining request. This request is completed using the original \texttt{<POP>} flat combining implementation, which pops an item off the queue.
 
     \subsubsection{Pushes}
-    Executing a push merely adds the value onto a \texttt{write\_list\_item}. pushes from the same transaction are installed together, using the \texttt{<PUSH, list>} flat combining implementation from the transactional flat combining queue that takes the entire list and pushes each value onto the queue.
+    Executing a push merely adds the value onto a \texttt{write\_list\_item}. Pushes from the same transaction are installed together, using the \texttt{<PUSH, list>} flat combining implementation from the transactional flat combining queue that takes the entire list and pushes each value onto the queue.
 
 
 \subsection{Evaluation}

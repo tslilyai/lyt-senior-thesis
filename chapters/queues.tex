@@ -28,7 +28,6 @@ STO provides a transactional FIFO queue that adheres to the interface exposed by
 The STO data type algorithms enforce transactonal correctness using \emph{versions}. A version can act as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure because it monotonically increases when a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. The first instance of the version observed by a thread during a transaction is checked when the transaction commits. This ensures that all observations are valid. Note that we cannot update the read version to an instance of the version observed later in the transaction. This is because we need to validate the first time we see the version in the transaction. 
 
 \subsection{STO1 Queue}
-%\input{tables/sto1table.tex}
 The STO1 Queue is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size transactional queue.
 
 The queue is implemented using optimistic concurrency control (OCC), which is a transactional algorithm that optimistically assumes that no other transaction will conflict with a thread's transaction. No thread prevents another thread from operating simultaneously on the queue during a transaction, which means multiple threads can add read/writes of the same parts of the queue during their transactions. Contention only occurs during commit time, when the thread must necessarily lock the queue so that it can safely verify and modify the queue's values without parallel modifications by other threads. A thread can only realize that another thread has “beaten” it to modifying the queue at commit time.
@@ -44,14 +43,13 @@ A \texttt{front} within a transaction is similar to a pop, excluding the iterati
 The design is summarized in Table \ref{table:sto1}.
 
 \subsection{STO2 Queue}
-%\input{tables/sto2table.tex}
 The STO2 Queue is also a circular, fixed-size queue, with operations push, pop, and \texttt{front}. The STO2 Queue algorithm is a hybrid design integrating the STO1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library [1] as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the STO1 queue, and the algorithm is simpler to implement and describe. 
 
 Pessimistic locking entails locking the queue when any naturally-contentious operation---pop or \texttt{front}--- is invoked. The queue is then only unlocked after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop or \texttt{front} within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the STO1 queue.
 
 Because pop and \texttt{front} lock the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
 
-The algorithms are summarized in Table \ref{table:sto2}
+The design is summarized in Table \ref{table:sto2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -80,7 +78,6 @@ When a thread T wishes to do an operation O:
 In the context of the queue, flat combining proves to be an effective technique to handle the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses ``fat nodes'' (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the STO1 and STO2 queues suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that flat combining's alternative synchronization paradigm might improve the performance of a transactional queue as much as it does for a concurrent queue.
 
 \subsection{Flat Combining Queue (Transactional)}
-%\input{tables/fctable.tex}
 
 Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there must be a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two pushes push consecutive values at the tail of the queue.
 
@@ -121,7 +118,9 @@ If a thread ever sees an empty queue when executing a pop \emph{and} subsequentl
 
 The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending pops. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}.
 
-The algorithm is summarized in Table \ref{table:fc}.
+The algorithm is summarized in Table \ref{table:fcqueue}.
+
+\input{tables/sto_queues.tex}
 
 \input{chapters/evaluation}
 \input{chapters/discussion}
