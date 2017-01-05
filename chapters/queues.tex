@@ -7,25 +7,29 @@ This chapter investigates different concurrent and transactional algorithms for 
 
 A concurrent queue must adhere to the following specification, in which all operations can be ordered such that:
 \begin{itemize}
-    \item A value is popped off the queue only once (no duplicate pops)
-    \item A value is pushed onto the queue only once (no duplicate pushes)
-    \item Values are popped in the order in which they are pushed
+    \item A value is popped off the queue only once (no duplicate pops).
+    \item A value is pushed onto the queue only once (no duplicate pushes).
+    \item Values are popped in the order in which they are pushed.
 \end{itemize}
 
-A transactional queue adds the following invariants to the specification; there must be a serial order of all transactions such that, within one transaction:
+A transactional queue adds the following invariants to the specification. There must be a serial order of all transactions such that, within one transaction:
 \begin{itemize}
-    \item Any two pops pop consecutive values in the queue starting from the head of the queue 
-    \item Any two pushes push consecutive values at the tail of the queue
+    \item Any two pops pop consecutive values in the queue starting from the head of the queue .
+    \item Any two pushes push consecutive values at the tail of the queue.
 \end{itemize}
 
 To satisfy these invariants, transactional data structures must support \emph{read-my-writes}. This is when a thread sees and modifies or returns the value from a previous operation in the transaction.
 
+
+\emph{In the following discussion of our queue algorithms, we omit the discussion of the \texttt{front} operation to simplify reasoning about the state of the queue. An appropriate algorithm for \texttt{front} can be easily inferred from those used for pop.}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{STO Queue Algorithms}
 
-STO provides a transactional FIFO queue that adheres to the interface exposed by the C++ standard library queue. Our first transactional algorithms were designed with transactional correctness in mind, and concurrency as a secondary concern. Here we detail different transactional queue algorithms that we implemented in this fashion.
+STO provides a transactional FIFO queue that adheres to the interface exposed by the \texttt
+r{C++} standard library queue. The following transactional queue algorithms are designed with transactional correctness in mind, and concurrency as a secondary concern. 
 
-The STO data type algorithms enforce transactonal correctness using \emph{versions}. A version can act as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure because it monotonically increases when a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. The first instance of the version observed by a thread during a transaction is checked when the transaction commits. This ensures that all observations are valid. Note that we cannot update the read version to an instance of the version observed later in the transaction. This is because we need to validate the first time we see the version in the transaction. 
+The STO data type algorithms enforce transactional correctness using \emph{versions}. A version can act as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure because it monotonically increases when a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. The first instance of the version observed by a thread during a transaction is checked when the transaction commits. This ensures that all observations are valid. Note that we cannot update the read version to an instance of the version observed later in the transaction. This is because we need to validate the first time we see the version in the transaction. 
 
 \subsection{STO1 Queue}
 The STO1 Queue is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size transactional queue.
@@ -34,20 +38,18 @@ The queue is implemented using optimistic concurrency control (OCC), which is a 
 
 There are two versions for the queue that can potentially invalidate a transaction if either changes: a headversion, and a tailversion. The headversion tracks the location of the head of the queue, and the tailversion tracks the location of the tail of the queue.
 
-The queue supports three transactional operations: push, pop, and \texttt{front}. A push within a transaction adds to an internal \texttt{write\_list\_item}. This \texttt{write\_list} holds thread-local list of values to be pushed onto the queue, which are added to the tail of the queue during commit time (ensuring all values are added consecutively). We observe that all transactions comprised of only pushes will always commit because pushes do not observe any property of the queue: one transaction's pushes, \texttt{front}s, or pops do not affect the outcome of another's pushes. (Note, however, that the opposite is not true). During commit time, the thread locks the tailversion so that no other thread's push can push onto the queue. The items on the \texttt{write\_list} are added to the queue, and the tailversion incremented.
+The queue supports three transactional operations: push, pop, and \texttt{front}. A push within a transaction adds to an internal \texttt{write\_list\_item}. This \texttt{write\_list} holds thread-local list of values to be pushed onto the queue, which are added to the tail of the queue during commit time (ensuring all values are added consecutively). We observe that all transactions comprised of only pushes will always commit because pushes do not observe any property of the queue: one transaction's pushes and pops do not affect the outcome of another's pushes. (Note, however, that the opposite is not true). During commit time, the thread locks the tailversion so that no other thread's push can push onto the queue. The items on the \texttt{write\_list} are added to the queue, and the tailversion incremented.
 
 A pop within a transaction first checks if the queue is empty. If the queue is empty, then the thread reads the tailversion to ensure that no other transaction has committed a push before this thread commits. Suppose another thread successfully installs a push before this thread commits. Then this pop should have read that pushed value instead of seeing an empty queue. This forces the thread to abort the transaction. If there have been items added to the \texttt{write\_list} from previous pushes within the transaction, then the pop will “pop” an item off the \texttt{write\_list}, performing an instance of \emph{read-my-writes}. Such a modiicatio is allowable during execution time because the \texttt{write\_list} is thread-local. If the queue is nonempty, then the thread reads the headversion to ensure that no other transaction has committed a pop before this thread commits. The thread then finds the item to pop off the queue by iterating through the queue from the head until it finds an item that has not yet been popped off within this transaction. The thread adds a write to this item so it knows during commit time and during future pops that it intends to pop this item.
-
-A \texttt{front} within a transaction is similar to a pop, excluding the iteration procedure to find the item to return (the value at the head of the queue or the \texttt{write\_list} is always returned). The queue is not modified, but the versions are read appropriately to ensure that the values returned by the \texttt{front} are still valid at commit time.
 
 The design is summarized in Table \ref{table:sto1}.
 
 \subsection{STO2 Queue}
-The STO2 Queue is also a circular, fixed-size queue, with operations push, pop, and \texttt{front}. The STO2 Queue algorithm is a hybrid design integrating the STO1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library [1] as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the STO1 queue, and the algorithm is simpler to implement and describe. 
+The STO2 Queue is also a circular, fixed-size queue, with operations push, pop, and front. The STO2 Queue algorithm is a hybrid design integrating the STO1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library\cite{TDSL} as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the STO1 queue, and the algorithm is simpler to implement and describe. 
 
-Pessimistic locking entails locking the queue when any naturally-contentious operation---pop or \texttt{front}--- is invoked. The queue is then only unlocked after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop or \texttt{front} within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the STO1 queue.
+Pessimistic locking entails locking the queue when any naturally-contentious operation (e.g., pop) is invoked. The queue is then only unlocked after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the STO1 queue.
 
-Because pop and \texttt{front} lock the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
+Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
 
 The design is summarized in Table \ref{table:sto2}
 
@@ -59,7 +61,6 @@ Given the relatively slow performance of our STO queues, we looked to find a hig
 \subsection{Flat Combining Queue (Non-Transactional)}
 \label{fcqueuent}
 
-\emph{In the following discussion of our flat combining-based queues, we omit the discussion of the \texttt{front} operation to simplify reasoning about the state of the queue. An appropriate algorithm for \texttt{front} can be easily inferred from those used for pop.}
 
 Flat Combining, proposed by Hendler, et. al. in 2010\cite{flatcombining}, is a synchronization technique that is based upon coarse-grained locking and single-thread access to the data structure. The key insight is that the cost of synchronization for certain classes of data structures often outweighs the benefits gained from parallelizing access to the data structure. These data structures include high-contention data structures such as stacks, queues, and priority queues. Created with this insight, the flat combining algorithm proposes a simple, thread-local synchronization technique that allows only one thread to ever access the data structure at once. This both reduces synchronization overhead on points of contention (such as the head of the queue) and achieves better cache performance by leveraging the single-threaded access patterns during data structure design.
 

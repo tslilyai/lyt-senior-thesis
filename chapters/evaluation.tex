@@ -21,11 +21,11 @@ All queues are evaluated on a set of microbenchmarks to demonstrate their scalab
 \begin{enumerate}
 \item 2-Thread Push-Pop Test: This test has one thread that performs only pushes and another thread that performs only \texttt{pops}. Unless the queue is empty, the two threads should never be modifying the same part of the data structure, and will never conflict (abort rate should be near 0). We use this test to measure the speed of push/pops on the queue when contention is not an issue. We expect that our transactional queues should perform as well, if not better, than most of the high-concurrency queues: while their algorithms are optimized for multi-threaded access, our simpler implementation should be just as fast with low contention and low abort rates.
 
-\item Multi-Thread Random Singleton Transactions Test: 
-    In this test, a thread randomly selects an operation (push or pop) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test allows us to benchmark performance under variable amounts of contention (by increasing the number of threads) and increased abort rates. We expect that our STO1/STO2 transactional queues will perform significantly worse once the number of threads is increased and our naive concurrency algorithms underperform concurrency algorithms optimized for contentious situations.
+\item Multi-Thread Singletons Test: 
+    In this test, a thread randomly selects an operation (push or pop) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads, which each thread performing singleton transactions. This test allows us to benchmark performance under variable amounts of contention (by increasing the number of threads) and increased abort rates. We expect that our STO1/STO2 transactional queues will perform significantly worse once the number of threads is increased and our naive concurrency algorithms underperform concurrency algorithms optimized for contentious situations.
     
-\item Multi-Thread Random Multi-Operation Transactions Test: 
-    In this test, a thread randomly selects multiple operations (push or pop) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test is most useful to compare different transactional data structures.
+%\item Multi-Thread Random Multi-Operation Transactions Test: 
+    %In this test, a thread randomly selects multiple operations (push or pop) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads. This test is most useful to compare different transactional data structures.
     
 \end{enumerate}
 
@@ -38,23 +38,33 @@ We describe the results of these benchmarks for two sets of queues. The first is
 We benchmark a set of the best-performing high-concurrency queue algorithms against our two STO queue implementations in order to determine which high-concurrency algorithm would be best suited to integration with STO. We look for both the most scalable and the highest-performing queue (even when contention is low).
  
  Our implementation of the flat combining queue modifies the implementation of the flat combining queue from the authors of the flat combining paper\cite{flatcombining}. Our implementation of the other high-concurrency queues are taken from the Concurrent Data Structures (CDS) library implementations online\cite{libcds}. The performance of these implementations on our tests the performance results given in the papers that originally proposed the algorithms.\lyt{CHECK}
-\iffalse
+
+
+\paragraph{2-Thread Push-Pop Test}
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=\textwidth]{concurrent/Q:PushPop.png}
-\caption{Performance of Concurrent Queue Algorithms}
-\label{fig:concurrent_queues_pushpop}
+    \includegraphics[height=3in]{concurrent/Q:PushPopspeed.png}
+\caption{2-Thread Push-Pop Test Results of Various Concurrent Queues}
+\label{fig:concurrent_queues}
 \end{figure}
 
+\paragraph{Multi-Thread Random Singleton Transactions Test}
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps10000.png}
-\includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps50000.png}
-\includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps100000.png}
-\caption{Performance of Concurrent Queue Algorithms}
-\label{fig:concurrent_queues_rand}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[height=2.5in]{concurrent/Q:RandSingleOps10000speed.png}
+        \caption*{Initial Queue Size of 10000.\\Performance (ops/s) (higher is better)}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[height=2.5in]{concurrent/Q:RandSingleOps100000speed.png}
+        \caption*{Initial Queue Size of 100000.\\Performance (ops/s) (higher is better)}
+    \end{minipage}
+\caption{Multi-Thread Singletons Test Results of Various Flat-Combining and Transactional Queues}
+\label{fig:concurrent_queues}
 \end{figure}
-\fi
+
 Out of the concurrent data structures tested, the read-write queue\cite{queue1} and the flat combining queue consistently perform best on the 2-Thread Push-Pop Test. On the Multi-Thread Random Singleton Test, the flat combining queue achieves performance over $2.5\times$ greater than any other queue as the number of threads increases above 2.
 
 For these reasons, as well as the algorithmic benefits of the flat combining technique described in Section~\ref{fcqueuent}, we focus our work on the flat combining queue.
@@ -72,23 +82,48 @@ We benchmark several variants of the flat combining queue against our STO1 and S
 
 The relative performance of the WrappedFCQueueNT to the FCQueueNT indicates how much of the overhead added by the STO system is unavoidable (without modifications to STO itself). A data structure must always invoke the STO wrapper calls to support transactions. 
 
-\iffalse
-\emph{2-Thread Push-Pop Test}
+\paragraph{2-Thread Push-Pop Test}
 \begin{figure}[ht!]
-\centering
-\includegraphics[width=\textwidth]{fcqueues/Q:PushPop.png}
-\caption{Performance of Various Flat-Combining Queue Algorithms}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2in]{fcqueues/Q:PushPopspeed.png}
+    \caption*{Performance (ops/s)\\(higher is better)}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2in]{fcqueues/Q:PushPopaborts.png}
+    \caption*{\%Aborts\\(lower is better)}
+    \end{minipage}
+\caption{2-Thread Push-Pop Test Results of Various Flat-Combining and Transactional Queues}
 \label{fig:fcqueues_queues}
 \end{figure}
 
-\emph{Multi-Thread Random Singleton Transactions Test}
+\paragraph{Multi-Thread Singletons Test}
 \begin{figure}[ht!]
-\centering
-\includegraphics[width=\textwidth]{fcqueues/Q:RandSingleOps10000.png}
-\includegraphics[width=\textwidth]{fcqueues/Q:RandSingleOps50000.png}
-\includegraphics[width=\textwidth]{fcqueues/Q:RandSingleOps100000.png}
-\caption{Performance of Various Flat-Combining Queue Algorithms}
+    \centering
+    \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps10000speed.png}
+    \caption*{Initial Queue Size of 10000.\\Performance (ops/s) (higher is better)}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps100000speed.png}
+    \caption*{Initial Queue Size of 100000.\\Performance (ops/s) (higher is better)}
+    \end{minipage}
+    \\
+    \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps10000aborts.png}
+    \caption*{Initial Queue Size of 10000.\\\%Aborts (lower is better)}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps100000aborts.png}
+    \caption*{Initial Queue Size of 100000.\\\%Aborts (lower is better)}
+    \end{minipage}
+\caption{Multi-Thread Singletons Test Results of Various Flat-Combining and Transactional Queues}
 \label{fig:txnal_queues}
 \end{figure}
-\fi
-\emph{Multi-Thread Random Multi-Operation Transactions Test}
+

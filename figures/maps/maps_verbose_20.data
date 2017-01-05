@@ -1,0 +1,1763 @@
+
+--------------NEW TEST-----------------
+
+HM125K:F34,I33,E33
+
+Running Test HM125K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+2090490.625000,4114875.750000,6159231.000000,8248239.000000,10317724.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM125K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+15463599.000000,18100456.000000,20620672.000000,23269728.000000,25931028.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM125K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3626635 (72.533%) nonopaque
+29082080.000000,36657920.000000,39496272.000000,42877524.000000,45670024.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM125K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+72663464.000000,76824072.000000,80846768.000000,85433496.000000,90379872.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 2
+	$ 10000021 starts, 1 max read set, 10000000 commits, 21 (0.000%) aborts
+$ 21 (100.000%) of aborts at commit time
+	$ 10000021 commit attempts, 7576655 (75.766%) nonopaque
+	$ 10000021 starts, 1 max read set, 10000000 commits, 21 (0.000%) aborts
+$ 21 (100.000%) of aborts at commit time
+	$ 10000021 commit attempts, 7576585 (75.766%) nonopaque
+	$ 10000015 starts, 1 max read set, 10000000 commits, 15 (0.000%) aborts
+$ 15 (100.000%) of aborts at commit time
+	$ 10000015 commit attempts, 7576532 (75.765%) nonopaque
+	$ 10000019 starts, 1 max read set, 10000000 commits, 19 (0.000%) aborts
+$ 19 (100.000%) of aborts at commit time
+	$ 10000019 commit attempts, 7576535 (75.765%) nonopaque
+	$ 10000017 starts, 1 max read set, 10000000 commits, 17 (0.000%) aborts
+$ 17 (100.000%) of aborts at commit time
+	$ 10000017 commit attempts, 7576511 (75.765%) nonopaque
+26580744.000000,28655598.000000,31070374.000000,33453418.000000,35705960.000000,:0.000210,0.000210,0.000150,0.000190,0.000170,;
+Running Test HM125K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 7576498 (75.765%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 7576622 (75.766%) nonopaque
+	$ 10000006 starts, 2 max read set, 10000000 commits, 6 (0.000%) aborts
+	$ 10000000 commit attempts, 7576573 (75.766%) nonopaque
+	$ 10000005 starts, 2 max read set, 10000000 commits, 5 (0.000%) aborts
+	$ 10000000 commit attempts, 7576571 (75.766%) nonopaque
+	$ 10000005 starts, 2 max read set, 10000000 commits, 5 (0.000%) aborts
+	$ 10000000 commit attempts, 7576537 (75.765%) nonopaque
+62603724.000000,67866960.000000,70979072.000000,75076448.000000,78978808.000000,:0.000000,0.000010,0.000060,0.000050,0.000050,;
+Running Test HM125K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 7576588 (75.766%) nonopaque
+	$ 10000002 starts, 2 max read set, 10000000 commits, 2 (0.000%) aborts
+	$ 10000000 commit attempts, 7576584 (75.766%) nonopaque
+	$ 10000003 starts, 2 max read set, 10000000 commits, 3 (0.000%) aborts
+	$ 10000000 commit attempts, 7576586 (75.766%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 7576556 (75.766%) nonopaque
+	$ 10000004 starts, 2 max read set, 10000000 commits, 4 (0.000%) aborts
+	$ 10000000 commit attempts, 7576547 (75.765%) nonopaque
+101635944.000000,106345944.000000,110296664.000000,115339800.000000,120097888.000000,:0.000000,0.000020,0.000030,0.000010,0.000040,;
+Running Test HM125K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+202247040.000000,211548912.000000,219728032.000000,227347104.000000,234113152.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 6
+	$ 30000209 starts, 1 max read set, 30000000 commits, 209 (0.001%) aborts
+$ 207 (99.043%) of aborts at commit time
+	$ 30000207 commit attempts, 24153311 (80.510%) nonopaque
+	$ 30000237 starts, 1 max read set, 30000000 commits, 237 (0.001%) aborts
+$ 237 (100.000%) of aborts at commit time
+	$ 30000237 commit attempts, 24153443 (80.511%) nonopaque
+	$ 30000199 starts, 1 max read set, 30000000 commits, 199 (0.001%) aborts
+$ 196 (98.492%) of aborts at commit time
+	$ 30000196 commit attempts, 24153512 (80.511%) nonopaque
+	$ 30000216 starts, 1 max read set, 30000000 commits, 216 (0.001%) aborts
+$ 216 (100.000%) of aborts at commit time
+	$ 30000216 commit attempts, 24153454 (80.511%) nonopaque
+	$ 30000217 starts, 1 max read set, 30000000 commits, 217 (0.001%) aborts
+$ 217 (100.000%) of aborts at commit time
+	$ 30000217 commit attempts, 24153263 (80.510%) nonopaque
+54961944.000000,59137296.000000,63853744.000000,68775944.000000,73877984.000000,:0.000697,0.000790,0.000663,0.000720,0.000723,;
+Running Test HM125K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000045 starts, 2 max read set, 30000000 commits, 45 (0.000%) aborts
+$ 3 (6.667%) of aborts at commit time
+	$ 30000003 commit attempts, 24140915 (80.470%) nonopaque
+	$ 30000048 starts, 2 max read set, 30000000 commits, 48 (0.000%) aborts
+	$ 30000000 commit attempts, 24140601 (80.469%) nonopaque
+	$ 30000048 starts, 2 max read set, 30000000 commits, 48 (0.000%) aborts
+$ 2 (4.167%) of aborts at commit time
+	$ 30000002 commit attempts, 24140890 (80.470%) nonopaque
+	$ 30000050 starts, 2 max read set, 30000000 commits, 50 (0.000%) aborts
+$ 1 (2.000%) of aborts at commit time
+	$ 30000001 commit attempts, 24140704 (80.469%) nonopaque
+	$ 30000049 starts, 2 max read set, 30000000 commits, 49 (0.000%) aborts
+	$ 30000000 commit attempts, 24140797 (80.469%) nonopaque
+154117424.000000,163956576.000000,172926160.000000,183398880.000000,194357424.000000,:0.000150,0.000160,0.000160,0.000167,0.000163,;
+Running Test HM125K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000024 starts, 2 max read set, 30000000 commits, 24 (0.000%) aborts
+$ 1 (4.167%) of aborts at commit time
+	$ 30000001 commit attempts, 24140597 (80.469%) nonopaque
+	$ 30000035 starts, 2 max read set, 30000000 commits, 35 (0.000%) aborts
+	$ 30000000 commit attempts, 24140589 (80.469%) nonopaque
+	$ 30000016 starts, 2 max read set, 30000000 commits, 16 (0.000%) aborts
+	$ 30000000 commit attempts, 24140906 (80.470%) nonopaque
+	$ 30000026 starts, 2 max read set, 30000000 commits, 26 (0.000%) aborts
+$ 3 (11.538%) of aborts at commit time
+	$ 30000003 commit attempts, 24140799 (80.469%) nonopaque
+	$ 30000035 starts, 2 max read set, 30000000 commits, 35 (0.000%) aborts
+$ 3 (8.571%) of aborts at commit time
+	$ 30000003 commit attempts, 24141171 (80.471%) nonopaque
+268115616.000000,281895168.000000,292440800.000000,305741696.000000,314852704.000000,:0.000080,0.000117,0.000053,0.000087,0.000117,;
+Running Test HM125K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+610139072.000000,626271360.000000,655299200.000000,680708928.000000,702083200.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 12
+	$ 60000827 starts, 1 max read set, 60000000 commits, 827 (0.001%) aborts
+$ 819 (99.033%) of aborts at commit time
+	$ 60000819 commit attempts, 49263131 (82.104%) nonopaque
+	$ 60000828 starts, 1 max read set, 60000000 commits, 828 (0.001%) aborts
+$ 817 (98.671%) of aborts at commit time
+	$ 60000817 commit attempts, 49262926 (82.104%) nonopaque
+	$ 60000849 starts, 1 max read set, 60000000 commits, 849 (0.001%) aborts
+$ 841 (99.058%) of aborts at commit time
+	$ 60000841 commit attempts, 49262054 (82.102%) nonopaque
+	$ 60000806 starts, 1 max read set, 60000000 commits, 806 (0.001%) aborts
+$ 796 (98.759%) of aborts at commit time
+	$ 60000796 commit attempts, 49262498 (82.103%) nonopaque
+	$ 60000864 starts, 1 max read set, 60000000 commits, 864 (0.001%) aborts
+$ 851 (98.495%) of aborts at commit time
+	$ 60000851 commit attempts, 49262579 (82.103%) nonopaque
+137051968.000000,134972048.000000,144474944.000000,150096800.000000,157896784.000000,:0.001378,0.001380,0.001415,0.001343,0.001440,;
+Running Test HM125K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000173 starts, 2 max read set, 60000000 commits, 173 (0.000%) aborts
+$ 9 (5.202%) of aborts at commit time
+	$ 60000009 commit attempts, 49198079 (81.997%) nonopaque
+	$ 60000163 starts, 2 max read set, 60000000 commits, 163 (0.000%) aborts
+$ 7 (4.294%) of aborts at commit time
+	$ 60000007 commit attempts, 49196467 (81.994%) nonopaque
+	$ 60000168 starts, 2 max read set, 60000000 commits, 168 (0.000%) aborts
+$ 3 (1.786%) of aborts at commit time
+	$ 60000003 commit attempts, 49196112 (81.994%) nonopaque
+	$ 60000183 starts, 2 max read set, 60000000 commits, 183 (0.000%) aborts
+$ 4 (2.186%) of aborts at commit time
+	$ 60000004 commit attempts, 49198304 (81.997%) nonopaque
+	$ 60000184 starts, 2 max read set, 60000000 commits, 184 (0.000%) aborts
+$ 4 (2.174%) of aborts at commit time
+	$ 60000004 commit attempts, 49195269 (81.992%) nonopaque
+285924128.000000,300112320.000000,311812064.000000,329251456.000000,340498752.000000,:0.000288,0.000272,0.000280,0.000305,0.000307,;
+Running Test HM125K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000126 starts, 2 max read set, 60000000 commits, 126 (0.000%) aborts
+$ 7 (5.556%) of aborts at commit time
+	$ 60000007 commit attempts, 49196097 (81.993%) nonopaque
+	$ 60000103 starts, 2 max read set, 60000000 commits, 103 (0.000%) aborts
+$ 3 (2.913%) of aborts at commit time
+	$ 60000003 commit attempts, 49196282 (81.994%) nonopaque
+	$ 60000124 starts, 2 max read set, 60000000 commits, 124 (0.000%) aborts
+$ 11 (8.871%) of aborts at commit time
+	$ 60000011 commit attempts, 49195810 (81.993%) nonopaque
+	$ 60000142 starts, 2 max read set, 60000000 commits, 142 (0.000%) aborts
+$ 10 (7.042%) of aborts at commit time
+	$ 60000010 commit attempts, 49195474 (81.992%) nonopaque
+	$ 60000145 starts, 2 max read set, 60000000 commits, 145 (0.000%) aborts
+$ 10 (6.897%) of aborts at commit time
+	$ 60000010 commit attempts, 49196378 (81.994%) nonopaque
+510700064.000000,530182976.000000,549180032.000000,573810176.000000,595572352.000000,:0.000210,0.000172,0.000207,0.000237,0.000242,;
+Running Test HM125K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+1176249344.000000,1220849408.000000,1255651456.000000,1293714560.000000,1331460864.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 18
+	$ 90001813 starts, 1 max read set, 90000000 commits, 1813 (0.002%) aborts
+$ 1785 (98.456%) of aborts at commit time
+	$ 90001785 commit attempts, 74377069 (82.640%) nonopaque
+	$ 90001868 starts, 1 max read set, 90000000 commits, 1868 (0.002%) aborts
+$ 1844 (98.715%) of aborts at commit time
+	$ 90001844 commit attempts, 74376483 (82.639%) nonopaque
+	$ 90001826 starts, 1 max read set, 90000000 commits, 1826 (0.002%) aborts
+$ 1797 (98.412%) of aborts at commit time
+	$ 90001797 commit attempts, 74374084 (82.636%) nonopaque
+	$ 90001854 starts, 1 max read set, 90000000 commits, 1854 (0.002%) aborts
+$ 1831 (98.759%) of aborts at commit time
+	$ 90001831 commit attempts, 74374221 (82.636%) nonopaque
+	$ 90001875 starts, 1 max read set, 90000000 commits, 1875 (0.002%) aborts
+$ 1848 (98.560%) of aborts at commit time
+	$ 90001848 commit attempts, 74375890 (82.638%) nonopaque
+278210784.000000,286808160.000000,293774016.000000,303712992.000000,312653856.000000,:0.002014,0.002076,0.002029,0.002060,0.002083,;
+Running Test HM125K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000429 starts, 2 max read set, 90000000 commits, 429 (0.000%) aborts
+$ 24 (5.594%) of aborts at commit time
+	$ 90000024 commit attempts, 74245301 (82.495%) nonopaque
+	$ 90000449 starts, 2 max read set, 90000000 commits, 449 (0.000%) aborts
+$ 38 (8.463%) of aborts at commit time
+	$ 90000038 commit attempts, 74244794 (82.494%) nonopaque
+	$ 90000386 starts, 2 max read set, 90000000 commits, 386 (0.000%) aborts
+$ 30 (7.772%) of aborts at commit time
+	$ 90000030 commit attempts, 74246329 (82.496%) nonopaque
+	$ 90000369 starts, 2 max read set, 90000000 commits, 369 (0.000%) aborts
+$ 12 (3.252%) of aborts at commit time
+	$ 90000012 commit attempts, 74247018 (82.497%) nonopaque
+	$ 90000427 starts, 2 max read set, 90000000 commits, 427 (0.000%) aborts
+$ 27 (6.323%) of aborts at commit time
+	$ 90000027 commit attempts, 74246245 (82.496%) nonopaque
+489018624.000000,511915872.000000,529709632.000000,542314304.000000,560853056.000000,:0.000477,0.000499,0.000429,0.000410,0.000474,;
+Running Test HM125K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000250 starts, 2 max read set, 90000000 commits, 250 (0.000%) aborts
+$ 14 (5.600%) of aborts at commit time
+	$ 90000014 commit attempts, 74243469 (82.493%) nonopaque
+	$ 90000286 starts, 2 max read set, 90000000 commits, 286 (0.000%) aborts
+$ 18 (6.294%) of aborts at commit time
+	$ 90000018 commit attempts, 74245522 (82.495%) nonopaque
+	$ 90000292 starts, 2 max read set, 90000000 commits, 292 (0.000%) aborts
+$ 23 (7.877%) of aborts at commit time
+	$ 90000023 commit attempts, 74247594 (82.497%) nonopaque
+	$ 90000269 starts, 2 max read set, 90000000 commits, 269 (0.000%) aborts
+$ 10 (3.717%) of aborts at commit time
+	$ 90000010 commit attempts, 74247554 (82.497%) nonopaque
+	$ 90000283 starts, 2 max read set, 90000000 commits, 283 (0.000%) aborts
+$ 18 (6.360%) of aborts at commit time
+	$ 90000018 commit attempts, 74247873 (82.498%) nonopaque
+911893376.000000,949871424.000000,969087616.000000,1000075200.000000,1023188800.000000,:0.000278,0.000318,0.000324,0.000299,0.000314,;
+Running Test HM125K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+2149881856.000000,2188962048.000000,2237978368.000000,2303145216.000000,2344742400.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+HM125K:F90,I5,E5
+
+Running Test HM125K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+4376332800.000000,4452467712.000000,4470077440.000000,4493595136.000000,4485074944.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM125K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+3077537024.000000,3244955392.000000,3236696576.000000,3233713920.000000,3246730752.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM125K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4757827 (95.157%) nonopaque
+2907350784.000000,3404610304.000000,3396437504.000000,3349516800.000000,3164304128.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM125K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+3992887808.000000,3993825024.000000,3999236864.000000,4002499328.000000,4010855936.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 2
+	$ 10000006 starts, 1 max read set, 10000000 commits, 6 (0.000%) aborts
+$ 6 (100.000%) of aborts at commit time
+	$ 10000006 commit attempts, 9529474 (95.295%) nonopaque
+	$ 10000002 starts, 1 max read set, 10000000 commits, 2 (0.000%) aborts
+$ 2 (100.000%) of aborts at commit time
+	$ 10000002 commit attempts, 9529474 (95.295%) nonopaque
+	$ 10000003 starts, 1 max read set, 10000000 commits, 3 (0.000%) aborts
+$ 3 (100.000%) of aborts at commit time
+	$ 10000003 commit attempts, 9529473 (95.295%) nonopaque
+	$ 10000004 starts, 1 max read set, 10000000 commits, 4 (0.000%) aborts
+$ 4 (100.000%) of aborts at commit time
+	$ 10000004 commit attempts, 9529475 (95.295%) nonopaque
+	$ 10000007 starts, 1 max read set, 10000000 commits, 7 (0.000%) aborts
+$ 7 (100.000%) of aborts at commit time
+	$ 10000007 commit attempts, 9529476 (95.295%) nonopaque
+3056180736.000000,3223756544.000000,3221336832.000000,3253807104.000000,3249628160.000000,:0.000060,0.000020,0.000030,0.000040,0.000070,;
+Running Test HM125K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000006 starts, 2 max read set, 10000000 commits, 6 (0.000%) aborts
+	$ 10000000 commit attempts, 9529468 (95.295%) nonopaque
+	$ 10000002 starts, 2 max read set, 10000000 commits, 2 (0.000%) aborts
+	$ 10000000 commit attempts, 9529470 (95.295%) nonopaque
+	$ 10000002 starts, 2 max read set, 10000000 commits, 2 (0.000%) aborts
+	$ 10000000 commit attempts, 9529467 (95.295%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 9529470 (95.295%) nonopaque
+	$ 10000003 starts, 2 max read set, 10000000 commits, 3 (0.000%) aborts
+	$ 10000000 commit attempts, 9529471 (95.295%) nonopaque
+2707165696.000000,2756504576.000000,2759886592.000000,2764509696.000000,2785152512.000000,:0.000060,0.000020,0.000020,0.000010,0.000030,;
+Running Test HM125K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000003 starts, 2 max read set, 10000000 commits, 3 (0.000%) aborts
+	$ 10000000 commit attempts, 9529468 (95.295%) nonopaque
+	$ 10000003 starts, 2 max read set, 10000000 commits, 3 (0.000%) aborts
+	$ 10000000 commit attempts, 9529471 (95.295%) nonopaque
+	$ 10000002 starts, 2 max read set, 10000000 commits, 2 (0.000%) aborts
+	$ 10000000 commit attempts, 9529471 (95.295%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 9529469 (95.295%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9529470 (95.295%) nonopaque
+3049583104.000000,3059345664.000000,3105869824.000000,3096132096.000000,3115668736.000000,:0.000030,0.000030,0.000020,0.000010,0.000000,;
+Running Test HM125K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+3705036288.000000,3729097472.000000,3720734720.000000,3730210304.000000,3728560640.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 6
+	$ 30000070 starts, 1 max read set, 30000000 commits, 70 (0.000%) aborts
+$ 70 (100.000%) of aborts at commit time
+	$ 30000070 commit attempts, 28731849 (95.773%) nonopaque
+	$ 30000069 starts, 1 max read set, 30000000 commits, 69 (0.000%) aborts
+$ 69 (100.000%) of aborts at commit time
+	$ 30000069 commit attempts, 28731861 (95.773%) nonopaque
+	$ 30000056 starts, 1 max read set, 30000000 commits, 56 (0.000%) aborts
+$ 56 (100.000%) of aborts at commit time
+	$ 30000056 commit attempts, 28731834 (95.773%) nonopaque
+	$ 30000063 starts, 1 max read set, 30000000 commits, 63 (0.000%) aborts
+$ 63 (100.000%) of aborts at commit time
+	$ 30000063 commit attempts, 28731847 (95.773%) nonopaque
+	$ 30000067 starts, 1 max read set, 30000000 commits, 67 (0.000%) aborts
+$ 67 (100.000%) of aborts at commit time
+	$ 30000067 commit attempts, 28731893 (95.773%) nonopaque
+1703582720.000000,1714086784.000000,1725694720.000000,1728066176.000000,1726734976.000000,:0.000233,0.000230,0.000187,0.000210,0.000223,;
+Running Test HM125K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000031 starts, 2 max read set, 30000000 commits, 31 (0.000%) aborts
+$ 3 (9.677%) of aborts at commit time
+	$ 30000003 commit attempts, 28731775 (95.773%) nonopaque
+	$ 30000034 starts, 2 max read set, 30000000 commits, 34 (0.000%) aborts
+$ 1 (2.941%) of aborts at commit time
+	$ 30000001 commit attempts, 28731765 (95.773%) nonopaque
+	$ 30000037 starts, 2 max read set, 30000000 commits, 37 (0.000%) aborts
+$ 2 (5.405%) of aborts at commit time
+	$ 30000002 commit attempts, 28731761 (95.773%) nonopaque
+	$ 30000024 starts, 2 max read set, 30000000 commits, 24 (0.000%) aborts
+$ 1 (4.167%) of aborts at commit time
+	$ 30000001 commit attempts, 28731765 (95.773%) nonopaque
+	$ 30000042 starts, 2 max read set, 30000000 commits, 42 (0.000%) aborts
+	$ 30000000 commit attempts, 28731769 (95.773%) nonopaque
+2341850880.000000,2409146624.000000,2427613440.000000,2443149056.000000,2452921856.000000,:0.000103,0.000113,0.000123,0.000080,0.000140,;
+Running Test HM125K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000030 starts, 2 max read set, 30000000 commits, 30 (0.000%) aborts
+$ 1 (3.333%) of aborts at commit time
+	$ 30000001 commit attempts, 28731782 (95.773%) nonopaque
+	$ 30000031 starts, 2 max read set, 30000000 commits, 31 (0.000%) aborts
+$ 1 (3.226%) of aborts at commit time
+	$ 30000001 commit attempts, 28731789 (95.773%) nonopaque
+	$ 30000025 starts, 2 max read set, 30000000 commits, 25 (0.000%) aborts
+$ 1 (4.000%) of aborts at commit time
+	$ 30000001 commit attempts, 28731784 (95.773%) nonopaque
+	$ 30000032 starts, 2 max read set, 30000000 commits, 32 (0.000%) aborts
+$ 1 (3.125%) of aborts at commit time
+	$ 30000001 commit attempts, 28731786 (95.773%) nonopaque
+	$ 30000022 starts, 2 max read set, 30000000 commits, 22 (0.000%) aborts
+$ 1 (4.545%) of aborts at commit time
+	$ 30000001 commit attempts, 28731796 (95.773%) nonopaque
+3058322688.000000,3101289472.000000,3123976448.000000,3121511680.000000,3162040832.000000,:0.000100,0.000103,0.000083,0.000107,0.000073,;
+Running Test HM125K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+4080791552.000000,4153653760.000000,4179351040.000000,4196330496.000000,4217765120.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 12
+	$ 60000310 starts, 1 max read set, 60000000 commits, 310 (0.001%) aborts
+$ 310 (100.000%) of aborts at commit time
+	$ 60000310 commit attempts, 57806433 (96.344%) nonopaque
+	$ 60000309 starts, 1 max read set, 60000000 commits, 309 (0.001%) aborts
+$ 308 (99.676%) of aborts at commit time
+	$ 60000308 commit attempts, 57806821 (96.344%) nonopaque
+	$ 60000332 starts, 1 max read set, 60000000 commits, 332 (0.001%) aborts
+$ 330 (99.398%) of aborts at commit time
+	$ 60000330 commit attempts, 57806852 (96.344%) nonopaque
+	$ 60000311 starts, 1 max read set, 60000000 commits, 311 (0.001%) aborts
+$ 311 (100.000%) of aborts at commit time
+	$ 60000311 commit attempts, 57806911 (96.344%) nonopaque
+	$ 60000270 starts, 1 max read set, 60000000 commits, 270 (0.000%) aborts
+$ 269 (99.630%) of aborts at commit time
+	$ 60000269 commit attempts, 57806707 (96.344%) nonopaque
+1045865664.000000,1121735936.000000,1133233152.000000,1147505280.000000,1159622016.000000,:0.000517,0.000515,0.000553,0.000518,0.000450,;
+Running Test HM125K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000139 starts, 2 max read set, 60000000 commits, 139 (0.000%) aborts
+$ 5 (3.597%) of aborts at commit time
+	$ 60000005 commit attempts, 57809806 (96.350%) nonopaque
+	$ 60000134 starts, 2 max read set, 60000000 commits, 134 (0.000%) aborts
+$ 16 (11.940%) of aborts at commit time
+	$ 60000016 commit attempts, 57804772 (96.341%) nonopaque
+	$ 60000129 starts, 2 max read set, 60000000 commits, 129 (0.000%) aborts
+$ 14 (10.853%) of aborts at commit time
+	$ 60000014 commit attempts, 57804904 (96.341%) nonopaque
+	$ 60000133 starts, 2 max read set, 60000000 commits, 133 (0.000%) aborts
+$ 8 (6.015%) of aborts at commit time
+	$ 60000008 commit attempts, 57804816 (96.341%) nonopaque
+	$ 60000134 starts, 2 max read set, 60000000 commits, 134 (0.000%) aborts
+$ 11 (8.209%) of aborts at commit time
+	$ 60000011 commit attempts, 57804813 (96.341%) nonopaque
+1734624384.000000,1903720448.000000,1930794624.000000,1939806080.000000,1964172416.000000,:0.000232,0.000223,0.000215,0.000222,0.000223,;
+Running Test HM125K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000074 starts, 2 max read set, 60000000 commits, 74 (0.000%) aborts
+$ 4 (5.405%) of aborts at commit time
+	$ 60000004 commit attempts, 57803758 (96.340%) nonopaque
+	$ 60000069 starts, 2 max read set, 60000000 commits, 69 (0.000%) aborts
+$ 3 (4.348%) of aborts at commit time
+	$ 60000003 commit attempts, 57803803 (96.340%) nonopaque
+	$ 60000091 starts, 2 max read set, 60000000 commits, 91 (0.000%) aborts
+$ 6 (6.593%) of aborts at commit time
+	$ 60000006 commit attempts, 57803848 (96.340%) nonopaque
+	$ 60000106 starts, 2 max read set, 60000000 commits, 106 (0.000%) aborts
+$ 4 (3.774%) of aborts at commit time
+	$ 60000004 commit attempts, 57803859 (96.340%) nonopaque
+	$ 60000080 starts, 2 max read set, 60000000 commits, 80 (0.000%) aborts
+$ 8 (10.000%) of aborts at commit time
+	$ 60000008 commit attempts, 57803818 (96.340%) nonopaque
+2636230912.000000,2636384256.000000,2722438656.000000,2719971840.000000,2749569280.000000,:0.000123,0.000115,0.000152,0.000177,0.000133,;
+Running Test HM125K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+4174865920.000000,4266830592.000000,4272798976.000000,4301903360.000000,4391710720.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM125K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 18
+	$ 90000553 starts, 1 max read set, 90000000 commits, 553 (0.001%) aborts
+$ 549 (99.277%) of aborts at commit time
+	$ 90000549 commit attempts, 87005852 (96.673%) nonopaque
+	$ 90000657 starts, 1 max read set, 90000000 commits, 657 (0.001%) aborts
+$ 656 (99.848%) of aborts at commit time
+	$ 90000656 commit attempts, 86996536 (96.662%) nonopaque
+	$ 90000585 starts, 1 max read set, 90000000 commits, 585 (0.001%) aborts
+$ 584 (99.829%) of aborts at commit time
+	$ 90000584 commit attempts, 86999755 (96.666%) nonopaque
+	$ 90000549 starts, 1 max read set, 90000000 commits, 549 (0.001%) aborts
+$ 548 (99.818%) of aborts at commit time
+	$ 90000548 commit attempts, 87001715 (96.668%) nonopaque
+	$ 90000548 starts, 1 max read set, 90000000 commits, 548 (0.001%) aborts
+$ 546 (99.635%) of aborts at commit time
+	$ 90000546 commit attempts, 87001083 (96.667%) nonopaque
+905728960.000000,975957056.000000,1052634176.000000,1038945792.000000,1088242944.000000,:0.000614,0.000730,0.000650,0.000610,0.000609,;
+Running Test HM125K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000306 starts, 2 max read set, 90000000 commits, 306 (0.000%) aborts
+$ 22 (7.190%) of aborts at commit time
+	$ 90000022 commit attempts, 86992568 (96.658%) nonopaque
+	$ 90000277 starts, 2 max read set, 90000000 commits, 277 (0.000%) aborts
+$ 16 (5.776%) of aborts at commit time
+	$ 90000016 commit attempts, 87001179 (96.668%) nonopaque
+	$ 90000263 starts, 2 max read set, 90000000 commits, 263 (0.000%) aborts
+$ 14 (5.323%) of aborts at commit time
+	$ 90000014 commit attempts, 86989898 (96.655%) nonopaque
+	$ 90000268 starts, 2 max read set, 90000000 commits, 268 (0.000%) aborts
+$ 14 (5.224%) of aborts at commit time
+	$ 90000014 commit attempts, 86989580 (96.655%) nonopaque
+	$ 90000302 starts, 2 max read set, 90000000 commits, 302 (0.000%) aborts
+$ 22 (7.285%) of aborts at commit time
+	$ 90000022 commit attempts, 87000006 (96.667%) nonopaque
+1595984256.000000,1617162368.000000,1665591680.000000,1743153920.000000,1819852928.000000,:0.000340,0.000308,0.000292,0.000298,0.000336,;
+Running Test HM125K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000178 starts, 2 max read set, 90000000 commits, 178 (0.000%) aborts
+$ 16 (8.989%) of aborts at commit time
+	$ 90000016 commit attempts, 87003946 (96.671%) nonopaque
+	$ 90000173 starts, 2 max read set, 90000000 commits, 173 (0.000%) aborts
+$ 12 (6.936%) of aborts at commit time
+	$ 90000012 commit attempts, 86989915 (96.655%) nonopaque
+	$ 90000141 starts, 2 max read set, 90000000 commits, 141 (0.000%) aborts
+$ 12 (8.511%) of aborts at commit time
+	$ 90000012 commit attempts, 86989805 (96.655%) nonopaque
+	$ 90000153 starts, 2 max read set, 90000000 commits, 153 (0.000%) aborts
+$ 18 (11.765%) of aborts at commit time
+	$ 90000018 commit attempts, 86989631 (96.655%) nonopaque
+	$ 90000171 starts, 2 max read set, 90000000 commits, 171 (0.000%) aborts
+$ 21 (12.281%) of aborts at commit time
+	$ 90000021 commit attempts, 86989960 (96.655%) nonopaque
+2955201024.000000,3037820160.000000,3111762176.000000,3208916480.000000,3224108544.000000,:0.000198,0.000192,0.000157,0.000170,0.000190,;
+Running Test HM125K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+5185499648.000000,5250075136.000000,5353107456.000000,5380725248.000000,5440725504.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+HM1M:F34,I33,E33
+
+Running Test HM1M:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+5523530752.000000,5546892800.000000,5553169408.000000,5498777088.000000,5526178816.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM1M:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+4404935680.000000,4399533568.000000,4429419520.000000,4435680256.000000,4440493568.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM1M:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 3392963 (67.859%) nonopaque
+4215203840.000000,4199574272.000000,4240958976.000000,4233136896.000000,4235270656.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM1M:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+5267364864.000000,5264031744.000000,5271769088.000000,5273721856.000000,5277378560.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 2
+	$ 10000006 starts, 1 max read set, 10000000 commits, 6 (0.000%) aborts
+$ 6 (100.000%) of aborts at commit time
+	$ 10000006 commit attempts, 6862793 (68.628%) nonopaque
+	$ 10000001 starts, 1 max read set, 10000000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 10000001 commit attempts, 6862798 (68.628%) nonopaque
+	$ 10000003 starts, 1 max read set, 10000000 commits, 3 (0.000%) aborts
+$ 3 (100.000%) of aborts at commit time
+	$ 10000003 commit attempts, 6862783 (68.628%) nonopaque
+	$ 10000001 starts, 1 max read set, 10000000 commits, 1 (0.000%) aborts
+$ 1 (100.000%) of aborts at commit time
+	$ 10000001 commit attempts, 6862783 (68.628%) nonopaque
+	$ 10000005 starts, 1 max read set, 10000000 commits, 5 (0.000%) aborts
+$ 5 (100.000%) of aborts at commit time
+	$ 10000005 commit attempts, 6862781 (68.628%) nonopaque
+3723622144.000000,3723821056.000000,3746672640.000000,3761707264.000000,3749666048.000000,:0.000060,0.000010,0.000030,0.000010,0.000050,;
+Running Test HM1M:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 6862754 (68.628%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 6862750 (68.627%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 6862752 (68.628%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 6862751 (68.628%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 6862756 (68.628%) nonopaque
+3806833152.000000,3792668416.000000,3806720000.000000,3809976576.000000,3825931776.000000,:0.000010,0.000000,0.000010,0.000000,0.000000,;
+Running Test HM1M:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 6862748 (68.627%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 6862752 (68.628%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 6862753 (68.628%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 6862754 (68.628%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 6862755 (68.628%) nonopaque
+3907868160.000000,3903310848.000000,3909475584.000000,3917286912.000000,3906358016.000000,:0.000010,0.000010,0.000000,0.000010,0.000000,;
+Running Test HM1M:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+4869334528.000000,4889747456.000000,4901696000.000000,4903797248.000000,4925278720.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 6
+	$ 30000040 starts, 1 max read set, 30000000 commits, 40 (0.000%) aborts
+$ 40 (100.000%) of aborts at commit time
+	$ 30000040 commit attempts, 21384788 (71.283%) nonopaque
+	$ 30000036 starts, 1 max read set, 30000000 commits, 36 (0.000%) aborts
+$ 36 (100.000%) of aborts at commit time
+	$ 30000036 commit attempts, 21384768 (71.282%) nonopaque
+	$ 30000037 starts, 1 max read set, 30000000 commits, 37 (0.000%) aborts
+$ 37 (100.000%) of aborts at commit time
+	$ 30000037 commit attempts, 21384747 (71.282%) nonopaque
+	$ 30000039 starts, 1 max read set, 30000000 commits, 39 (0.000%) aborts
+$ 39 (100.000%) of aborts at commit time
+	$ 30000039 commit attempts, 21384782 (71.283%) nonopaque
+	$ 30000028 starts, 1 max read set, 30000000 commits, 28 (0.000%) aborts
+$ 28 (100.000%) of aborts at commit time
+	$ 30000028 commit attempts, 21384760 (71.282%) nonopaque
+2273251328.000000,2294461952.000000,2287102464.000000,2305954560.000000,2320217344.000000,:0.000133,0.000120,0.000123,0.000130,0.000093,;
+Running Test HM1M:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000011 starts, 2 max read set, 30000000 commits, 11 (0.000%) aborts
+	$ 30000000 commit attempts, 21384792 (71.283%) nonopaque
+	$ 30000008 starts, 2 max read set, 30000000 commits, 8 (0.000%) aborts
+$ 2 (25.000%) of aborts at commit time
+	$ 30000002 commit attempts, 21384846 (71.283%) nonopaque
+	$ 30000006 starts, 2 max read set, 30000000 commits, 6 (0.000%) aborts
+	$ 30000000 commit attempts, 21384745 (71.282%) nonopaque
+	$ 30000015 starts, 2 max read set, 30000000 commits, 15 (0.000%) aborts
+	$ 30000000 commit attempts, 21384728 (71.282%) nonopaque
+	$ 30000004 starts, 2 max read set, 30000000 commits, 4 (0.000%) aborts
+	$ 30000000 commit attempts, 21384747 (71.282%) nonopaque
+3242444544.000000,3262872064.000000,3269754880.000000,3273479936.000000,3295256064.000000,:0.000037,0.000027,0.000020,0.000050,0.000013,;
+Running Test HM1M:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000005 starts, 2 max read set, 30000000 commits, 5 (0.000%) aborts
+	$ 30000000 commit attempts, 21384759 (71.283%) nonopaque
+	$ 30000006 starts, 2 max read set, 30000000 commits, 6 (0.000%) aborts
+$ 1 (16.667%) of aborts at commit time
+	$ 30000001 commit attempts, 21384736 (71.282%) nonopaque
+	$ 30000009 starts, 2 max read set, 30000000 commits, 9 (0.000%) aborts
+$ 3 (33.333%) of aborts at commit time
+	$ 30000003 commit attempts, 21384723 (71.282%) nonopaque
+	$ 30000005 starts, 2 max read set, 30000000 commits, 5 (0.000%) aborts
+$ 1 (20.000%) of aborts at commit time
+	$ 30000001 commit attempts, 21384706 (71.282%) nonopaque
+	$ 30000004 starts, 2 max read set, 30000000 commits, 4 (0.000%) aborts
+$ 1 (25.000%) of aborts at commit time
+	$ 30000001 commit attempts, 21384770 (71.283%) nonopaque
+3764203264.000000,3844064000.000000,3865683968.000000,3866553344.000000,3898674688.000000,:0.000017,0.000020,0.000030,0.000017,0.000013,;
+Running Test HM1M:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+5427139584.000000,5444638208.000000,5467626496.000000,5482864128.000000,5502395904.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 12
+	$ 60000152 starts, 1 max read set, 60000000 commits, 152 (0.000%) aborts
+$ 150 (98.684%) of aborts at commit time
+	$ 60000150 commit attempts, 44834610 (74.724%) nonopaque
+	$ 60000153 starts, 1 max read set, 60000000 commits, 153 (0.000%) aborts
+$ 151 (98.693%) of aborts at commit time
+	$ 60000151 commit attempts, 44815977 (74.693%) nonopaque
+	$ 60000181 starts, 1 max read set, 60000000 commits, 181 (0.000%) aborts
+$ 180 (99.448%) of aborts at commit time
+	$ 60000180 commit attempts, 44836351 (74.727%) nonopaque
+	$ 60000165 starts, 1 max read set, 60000000 commits, 165 (0.000%) aborts
+$ 164 (99.394%) of aborts at commit time
+	$ 60000164 commit attempts, 44816901 (74.695%) nonopaque
+	$ 60000161 starts, 1 max read set, 60000000 commits, 161 (0.000%) aborts
+$ 161 (100.000%) of aborts at commit time
+	$ 60000161 commit attempts, 44835026 (74.725%) nonopaque
+1544448128.000000,1571994880.000000,1381777920.000000,1613709056.000000,1488160128.000000,:0.000253,0.000255,0.000302,0.000275,0.000268,;
+Running Test HM1M:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000025 starts, 2 max read set, 60000000 commits, 25 (0.000%) aborts
+$ 4 (16.000%) of aborts at commit time
+	$ 60000004 commit attempts, 44803552 (74.673%) nonopaque
+	$ 60000044 starts, 2 max read set, 60000000 commits, 44 (0.000%) aborts
+$ 3 (6.818%) of aborts at commit time
+	$ 60000003 commit attempts, 44803892 (74.673%) nonopaque
+	$ 60000029 starts, 2 max read set, 60000000 commits, 29 (0.000%) aborts
+$ 1 (3.448%) of aborts at commit time
+	$ 60000001 commit attempts, 44803848 (74.673%) nonopaque
+	$ 60000034 starts, 2 max read set, 60000000 commits, 34 (0.000%) aborts
+$ 5 (14.706%) of aborts at commit time
+	$ 60000005 commit attempts, 44804037 (74.673%) nonopaque
+	$ 60000034 starts, 2 max read set, 60000000 commits, 34 (0.000%) aborts
+$ 6 (17.647%) of aborts at commit time
+	$ 60000006 commit attempts, 44803828 (74.673%) nonopaque
+2431507456.000000,2445560576.000000,2461323520.000000,2479158016.000000,2493241600.000000,:0.000042,0.000073,0.000048,0.000057,0.000057,;
+Running Test HM1M:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000027 starts, 2 max read set, 60000000 commits, 27 (0.000%) aborts
+$ 7 (25.926%) of aborts at commit time
+	$ 60000007 commit attempts, 44802725 (74.671%) nonopaque
+	$ 60000054 starts, 2 max read set, 60000000 commits, 54 (0.000%) aborts
+$ 24 (44.444%) of aborts at commit time
+	$ 60000024 commit attempts, 44808057 (74.680%) nonopaque
+	$ 60000024 starts, 2 max read set, 60000000 commits, 24 (0.000%) aborts
+$ 7 (29.167%) of aborts at commit time
+	$ 60000007 commit attempts, 44845848 (74.743%) nonopaque
+	$ 60000066 starts, 2 max read set, 60000000 commits, 66 (0.000%) aborts
+$ 28 (42.424%) of aborts at commit time
+	$ 60000028 commit attempts, 44845193 (74.742%) nonopaque
+	$ 60000037 starts, 2 max read set, 60000000 commits, 37 (0.000%) aborts
+$ 15 (40.541%) of aborts at commit time
+	$ 60000015 commit attempts, 44801659 (74.669%) nonopaque
+3155786240.000000,2591957504.000000,3195968000.000000,2426801920.000000,3233228288.000000,:0.000045,0.000090,0.000040,0.000110,0.000062,;
+Running Test HM1M:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+5335527424.000000,5350914048.000000,5416685568.000000,5312859136.000000,5306902016.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 18
+	$ 90000222 starts, 1 max read set, 90000000 commits, 222 (0.000%) aborts
+$ 221 (99.550%) of aborts at commit time
+	$ 90000221 commit attempts, 69199011 (76.888%) nonopaque
+	$ 90000275 starts, 1 max read set, 90000000 commits, 275 (0.000%) aborts
+$ 270 (98.182%) of aborts at commit time
+	$ 90000270 commit attempts, 69064801 (76.738%) nonopaque
+	$ 90000293 starts, 1 max read set, 90000000 commits, 293 (0.000%) aborts
+$ 293 (100.000%) of aborts at commit time
+	$ 90000293 commit attempts, 68974494 (76.638%) nonopaque
+	$ 90000364 starts, 1 max read set, 90000000 commits, 364 (0.000%) aborts
+$ 359 (98.626%) of aborts at commit time
+	$ 90000359 commit attempts, 68972813 (76.636%) nonopaque
+	$ 90000340 starts, 1 max read set, 90000000 commits, 340 (0.000%) aborts
+$ 338 (99.412%) of aborts at commit time
+	$ 90000338 commit attempts, 68975069 (76.639%) nonopaque
+820592576.000000,876016192.000000,1173064320.000000,1213050752.000000,1311260032.000000,:0.000247,0.000306,0.000326,0.000404,0.000378,;
+Running Test HM1M:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000066 starts, 2 max read set, 90000000 commits, 66 (0.000%) aborts
+$ 1 (1.515%) of aborts at commit time
+	$ 90000001 commit attempts, 68988057 (76.653%) nonopaque
+	$ 90000079 starts, 2 max read set, 90000000 commits, 79 (0.000%) aborts
+	$ 90000000 commit attempts, 68963340 (76.626%) nonopaque
+	$ 90000071 starts, 2 max read set, 90000000 commits, 71 (0.000%) aborts
+$ 3 (4.225%) of aborts at commit time
+	$ 90000003 commit attempts, 68967790 (76.631%) nonopaque
+	$ 90000076 starts, 2 max read set, 90000000 commits, 76 (0.000%) aborts
+$ 4 (5.263%) of aborts at commit time
+	$ 90000004 commit attempts, 68962360 (76.625%) nonopaque
+	$ 90000060 starts, 2 max read set, 90000000 commits, 60 (0.000%) aborts
+$ 2 (3.333%) of aborts at commit time
+	$ 90000002 commit attempts, 68963996 (76.627%) nonopaque
+1754180736.000000,1755358336.000000,1857504512.000000,1941813632.000000,1980636416.000000,:0.000073,0.000088,0.000079,0.000084,0.000067,;
+Running Test HM1M:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000037 starts, 2 max read set, 90000000 commits, 37 (0.000%) aborts
+$ 7 (18.919%) of aborts at commit time
+	$ 90000007 commit attempts, 68993737 (76.660%) nonopaque
+	$ 90000042 starts, 2 max read set, 90000000 commits, 42 (0.000%) aborts
+$ 5 (11.905%) of aborts at commit time
+	$ 90000005 commit attempts, 68965480 (76.628%) nonopaque
+	$ 90000053 starts, 2 max read set, 90000000 commits, 53 (0.000%) aborts
+$ 14 (26.415%) of aborts at commit time
+	$ 90000014 commit attempts, 68995997 (76.662%) nonopaque
+	$ 90000065 starts, 2 max read set, 90000000 commits, 65 (0.000%) aborts
+$ 17 (26.154%) of aborts at commit time
+	$ 90000017 commit attempts, 68982950 (76.648%) nonopaque
+	$ 90000049 starts, 2 max read set, 90000000 commits, 49 (0.000%) aborts
+$ 6 (12.245%) of aborts at commit time
+	$ 90000006 commit attempts, 68988302 (76.654%) nonopaque
+3191130112.000000,3182467584.000000,3218874624.000000,3231536896.000000,3248765184.000000,:0.000041,0.000047,0.000059,0.000072,0.000054,;
+Running Test HM1M:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+6035117568.000000,6037102592.000000,6090016768.000000,6098408448.000000,6186082304.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+HM1M:F90,I5,E5
+
+Running Test HM1M:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+13348472832.000000,13438232576.000000,13450221568.000000,13446514688.000000,13445571584.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM1M:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+8061150720.000000,9096543232.000000,9156819968.000000,9161219072.000000,9171113984.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM1M:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4751469 (95.029%) nonopaque
+8858764288.000000,8652050432.000000,8707832832.000000,8613829632.000000,8589821952.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM1M:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+9814788096.000000,9818683392.000000,9719881728.000000,9829275648.000000,9826669568.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 2
+	$ 10000000 starts, 1 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503137 (95.031%) nonopaque
+	$ 10000000 starts, 1 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503137 (95.031%) nonopaque
+	$ 10000000 starts, 1 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503137 (95.031%) nonopaque
+	$ 10000002 starts, 1 max read set, 10000000 commits, 2 (0.000%) aborts
+$ 2 (100.000%) of aborts at commit time
+	$ 10000002 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000002 starts, 1 max read set, 10000000 commits, 2 (0.000%) aborts
+$ 2 (100.000%) of aborts at commit time
+	$ 10000002 commit attempts, 9503139 (95.031%) nonopaque
+11067877376.000000,11024361472.000000,11136936960.000000,11147473920.000000,11157163008.000000,:0.000000,0.000000,0.000000,0.000020,0.000020,;
+Running Test HM1M:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+8175373312.000000,8187645440.000000,8150064128.000000,8228092928.000000,7559495680.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM1M:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503140 (95.031%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000002 starts, 2 max read set, 10000000 commits, 2 (0.000%) aborts
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000001 starts, 2 max read set, 10000000 commits, 1 (0.000%) aborts
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+	$ 10000000 starts, 2 max read set, 10000000 commits
+	$ 10000000 commit attempts, 9503139 (95.031%) nonopaque
+5999932928.000000,8017734656.000000,8034994688.000000,8037723648.000000,8047554048.000000,:0.000000,0.000000,0.000020,0.000010,0.000000,;
+Running Test HM1M:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+8514531840.000000,8514825216.000000,8510279168.000000,8534285312.000000,8536281088.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 6
+	$ 30000011 starts, 1 max read set, 30000000 commits, 11 (0.000%) aborts
+$ 11 (100.000%) of aborts at commit time
+	$ 30000011 commit attempts, 28525671 (95.086%) nonopaque
+	$ 30000004 starts, 1 max read set, 30000000 commits, 4 (0.000%) aborts
+$ 4 (100.000%) of aborts at commit time
+	$ 30000004 commit attempts, 28525669 (95.086%) nonopaque
+	$ 30000008 starts, 1 max read set, 30000000 commits, 8 (0.000%) aborts
+$ 8 (100.000%) of aborts at commit time
+	$ 30000008 commit attempts, 28525670 (95.086%) nonopaque
+	$ 30000009 starts, 1 max read set, 30000000 commits, 9 (0.000%) aborts
+$ 9 (100.000%) of aborts at commit time
+	$ 30000009 commit attempts, 28525671 (95.086%) nonopaque
+	$ 30000007 starts, 1 max read set, 30000000 commits, 7 (0.000%) aborts
+$ 7 (100.000%) of aborts at commit time
+	$ 30000007 commit attempts, 28525670 (95.086%) nonopaque
+8644847616.000000,8600982528.000000,8673527808.000000,8678047744.000000,8692868096.000000,:0.000037,0.000013,0.000027,0.000030,0.000023,;
+Running Test HM1M:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000004 starts, 2 max read set, 30000000 commits, 4 (0.000%) aborts
+	$ 30000000 commit attempts, 28525668 (95.086%) nonopaque
+	$ 30000005 starts, 2 max read set, 30000000 commits, 5 (0.000%) aborts
+	$ 30000000 commit attempts, 28525667 (95.086%) nonopaque
+	$ 30000004 starts, 2 max read set, 30000000 commits, 4 (0.000%) aborts
+	$ 30000000 commit attempts, 28525667 (95.086%) nonopaque
+	$ 30000005 starts, 2 max read set, 30000000 commits, 5 (0.000%) aborts
+$ 1 (20.000%) of aborts at commit time
+	$ 30000001 commit attempts, 28525668 (95.086%) nonopaque
+	$ 30000005 starts, 2 max read set, 30000000 commits, 5 (0.000%) aborts
+	$ 30000000 commit attempts, 28525667 (95.086%) nonopaque
+7536704000.000000,7578018816.000000,7600147456.000000,7606787584.000000,7627050496.000000,:0.000013,0.000017,0.000013,0.000017,0.000017,;
+Running Test HM1M:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000000 starts, 2 max read set, 30000000 commits
+	$ 30000000 commit attempts, 28525674 (95.086%) nonopaque
+	$ 30000005 starts, 2 max read set, 30000000 commits, 5 (0.000%) aborts
+	$ 30000000 commit attempts, 28525666 (95.086%) nonopaque
+	$ 30000003 starts, 2 max read set, 30000000 commits, 3 (0.000%) aborts
+	$ 30000000 commit attempts, 28525668 (95.086%) nonopaque
+	$ 30000006 starts, 2 max read set, 30000000 commits, 6 (0.000%) aborts
+$ 1 (16.667%) of aborts at commit time
+	$ 30000001 commit attempts, 28525666 (95.086%) nonopaque
+	$ 30000002 starts, 2 max read set, 30000000 commits, 2 (0.000%) aborts
+	$ 30000000 commit attempts, 28525666 (95.086%) nonopaque
+6787189248.000000,7986109952.000000,8016920576.000000,7957308928.000000,8055503360.000000,:0.000000,0.000017,0.000010,0.000020,0.000007,;
+Running Test HM1M:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+8245546496.000000,8618008576.000000,8209824256.000000,8664361984.000000,8614958080.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 12
+	$ 60000035 starts, 1 max read set, 60000000 commits, 35 (0.000%) aborts
+$ 35 (100.000%) of aborts at commit time
+	$ 60000035 commit attempts, 57215242 (95.359%) nonopaque
+	$ 60000053 starts, 1 max read set, 60000000 commits, 53 (0.000%) aborts
+$ 53 (100.000%) of aborts at commit time
+	$ 60000053 commit attempts, 57215450 (95.359%) nonopaque
+	$ 60000041 starts, 1 max read set, 60000000 commits, 41 (0.000%) aborts
+$ 41 (100.000%) of aborts at commit time
+	$ 60000041 commit attempts, 57215423 (95.359%) nonopaque
+	$ 60000041 starts, 1 max read set, 60000000 commits, 41 (0.000%) aborts
+$ 40 (97.561%) of aborts at commit time
+	$ 60000040 commit attempts, 57215441 (95.359%) nonopaque
+	$ 60000033 starts, 1 max read set, 60000000 commits, 33 (0.000%) aborts
+$ 33 (100.000%) of aborts at commit time
+	$ 60000033 commit attempts, 57215407 (95.359%) nonopaque
+5591339520.000000,5886155264.000000,5990572032.000000,5974223872.000000,5979208192.000000,:0.000058,0.000088,0.000068,0.000068,0.000055,;
+Running Test HM1M:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000027 starts, 2 max read set, 60000000 commits, 27 (0.000%) aborts
+$ 2 (7.407%) of aborts at commit time
+	$ 60000002 commit attempts, 57215487 (95.359%) nonopaque
+	$ 60000019 starts, 2 max read set, 60000000 commits, 19 (0.000%) aborts
+$ 1 (5.263%) of aborts at commit time
+	$ 60000001 commit attempts, 57215493 (95.359%) nonopaque
+	$ 60000019 starts, 2 max read set, 60000000 commits, 19 (0.000%) aborts
+$ 3 (15.789%) of aborts at commit time
+	$ 60000003 commit attempts, 57215489 (95.359%) nonopaque
+	$ 60000018 starts, 2 max read set, 60000000 commits, 18 (0.000%) aborts
+$ 3 (16.667%) of aborts at commit time
+	$ 60000003 commit attempts, 57215497 (95.359%) nonopaque
+	$ 60000017 starts, 2 max read set, 60000000 commits, 17 (0.000%) aborts
+$ 2 (11.765%) of aborts at commit time
+	$ 60000002 commit attempts, 57215480 (95.359%) nonopaque
+5743288320.000000,5976846848.000000,5973464064.000000,6034384384.000000,6039461888.000000,:0.000045,0.000032,0.000032,0.000030,0.000028,;
+Running Test HM1M:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000015 starts, 2 max read set, 60000000 commits, 15 (0.000%) aborts
+$ 2 (13.333%) of aborts at commit time
+	$ 60000002 commit attempts, 57214943 (95.358%) nonopaque
+	$ 60000010 starts, 2 max read set, 60000000 commits, 10 (0.000%) aborts
+$ 2 (20.000%) of aborts at commit time
+	$ 60000002 commit attempts, 57214936 (95.358%) nonopaque
+	$ 60000013 starts, 2 max read set, 60000000 commits, 13 (0.000%) aborts
+$ 1 (7.692%) of aborts at commit time
+	$ 60000001 commit attempts, 57214944 (95.358%) nonopaque
+	$ 60000008 starts, 2 max read set, 60000000 commits, 8 (0.000%) aborts
+$ 2 (25.000%) of aborts at commit time
+	$ 60000002 commit attempts, 57214951 (95.358%) nonopaque
+	$ 60000008 starts, 2 max read set, 60000000 commits, 8 (0.000%) aborts
+	$ 60000000 commit attempts, 57214949 (95.358%) nonopaque
+6196469248.000000,6140248576.000000,6246739456.000000,6239999488.000000,6309126656.000000,:0.000025,0.000017,0.000022,0.000013,0.000013,;
+Running Test HM1M:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+7903552512.000000,7922468352.000000,7963020288.000000,7992269824.000000,7927612416.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM1M:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 18
+	$ 90000107 starts, 1 max read set, 90000000 commits, 107 (0.000%) aborts
+$ 105 (98.131%) of aborts at commit time
+	$ 90000105 commit attempts, 85969069 (95.521%) nonopaque
+	$ 90000093 starts, 1 max read set, 90000000 commits, 93 (0.000%) aborts
+$ 93 (100.000%) of aborts at commit time
+	$ 90000093 commit attempts, 85968785 (95.521%) nonopaque
+	$ 90000071 starts, 1 max read set, 90000000 commits, 71 (0.000%) aborts
+$ 71 (100.000%) of aborts at commit time
+	$ 90000071 commit attempts, 85970978 (95.523%) nonopaque
+	$ 90000095 starts, 1 max read set, 90000000 commits, 95 (0.000%) aborts
+$ 95 (100.000%) of aborts at commit time
+	$ 90000095 commit attempts, 85968902 (95.521%) nonopaque
+	$ 90000099 starts, 1 max read set, 90000000 commits, 99 (0.000%) aborts
+$ 99 (100.000%) of aborts at commit time
+	$ 90000099 commit attempts, 85968814 (95.521%) nonopaque
+4822398976.000000,5289530368.000000,5402112512.000000,5343313920.000000,5521706496.000000,:0.000119,0.000103,0.000079,0.000106,0.000110,;
+Running Test HM1M:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000065 starts, 2 max read set, 90000000 commits, 65 (0.000%) aborts
+$ 4 (6.154%) of aborts at commit time
+	$ 90000004 commit attempts, 85971326 (95.524%) nonopaque
+	$ 90000065 starts, 2 max read set, 90000000 commits, 65 (0.000%) aborts
+$ 7 (10.769%) of aborts at commit time
+	$ 90000007 commit attempts, 85968580 (95.521%) nonopaque
+	$ 90000051 starts, 2 max read set, 90000000 commits, 51 (0.000%) aborts
+$ 7 (13.725%) of aborts at commit time
+	$ 90000007 commit attempts, 85968709 (95.521%) nonopaque
+	$ 90000046 starts, 2 max read set, 90000000 commits, 46 (0.000%) aborts
+$ 3 (6.522%) of aborts at commit time
+	$ 90000003 commit attempts, 85968609 (95.521%) nonopaque
+	$ 90000064 starts, 2 max read set, 90000000 commits, 64 (0.000%) aborts
+$ 7 (10.938%) of aborts at commit time
+	$ 90000007 commit attempts, 85968596 (95.521%) nonopaque
+5174435840.000000,5716699136.000000,5840430592.000000,5844191744.000000,5916447232.000000,:0.000072,0.000072,0.000057,0.000051,0.000071,;
+Running Test HM1M:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90000030 starts, 2 max read set, 90000000 commits, 30 (0.000%) aborts
+$ 9 (30.000%) of aborts at commit time
+	$ 90000009 commit attempts, 85968250 (95.520%) nonopaque
+	$ 90000027 starts, 2 max read set, 90000000 commits, 27 (0.000%) aborts
+$ 3 (11.111%) of aborts at commit time
+	$ 90000003 commit attempts, 85968504 (95.521%) nonopaque
+	$ 90000032 starts, 2 max read set, 90000000 commits, 32 (0.000%) aborts
+$ 7 (21.875%) of aborts at commit time
+	$ 90000007 commit attempts, 85968260 (95.520%) nonopaque
+	$ 90000028 starts, 2 max read set, 90000000 commits, 28 (0.000%) aborts
+$ 1 (3.571%) of aborts at commit time
+	$ 90000001 commit attempts, 85968386 (95.520%) nonopaque
+	$ 90000030 starts, 2 max read set, 90000000 commits, 30 (0.000%) aborts
+$ 1 (3.333%) of aborts at commit time
+	$ 90000001 commit attempts, 85968435 (95.520%) nonopaque
+6074308096.000000,6088688128.000000,6101544448.000000,6143964160.000000,6191474176.000000,:0.000033,0.000030,0.000036,0.000031,0.000033,;
+Running Test HM1M:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+8371334656.000000,8420859392.000000,8475926016.000000,8596043776.000000,8582881792.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+HM10K:F34,I33,E33
+
+Running Test HM10K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+7251098112.000000,7400847360.000000,7467755008.000000,7426139648.000000,7484528128.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM10K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+10660611072.000000,10711788544.000000,10740453376.000000,10717802496.000000,10739613696.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM10K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4111620 (82.232%) nonopaque
+11993916416.000000,11895591936.000000,12002736128.000000,12007146496.000000,11989517312.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM10K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+21010855936.000000,21017892864.000000,21025071104.000000,21030785024.000000,21059778560.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 2
+	$ 10000123 starts, 1 max read set, 10000000 commits, 123 (0.001%) aborts
+$ 120 (97.561%) of aborts at commit time
+	$ 10000120 commit attempts, 8298699 (82.986%) nonopaque
+	$ 10000105 starts, 1 max read set, 10000000 commits, 105 (0.001%) aborts
+$ 104 (99.048%) of aborts at commit time
+	$ 10000104 commit attempts, 8298731 (82.986%) nonopaque
+	$ 10000125 starts, 1 max read set, 10000000 commits, 125 (0.001%) aborts
+$ 120 (96.000%) of aborts at commit time
+	$ 10000120 commit attempts, 8298874 (82.988%) nonopaque
+	$ 10000122 starts, 1 max read set, 10000000 commits, 122 (0.001%) aborts
+$ 120 (98.361%) of aborts at commit time
+	$ 10000120 commit attempts, 8298688 (82.986%) nonopaque
+	$ 10000148 starts, 1 max read set, 10000000 commits, 148 (0.001%) aborts
+$ 142 (95.946%) of aborts at commit time
+	$ 10000142 commit attempts, 8298756 (82.986%) nonopaque
+5457937408.000000,5440838144.000000,5459465216.000000,5490090496.000000,5499275264.000000,:0.001230,0.001050,0.001250,0.001220,0.001480,;
+Running Test HM10K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000020 starts, 2 max read set, 10000000 commits, 20 (0.000%) aborts
+	$ 10000000 commit attempts, 8297893 (82.979%) nonopaque
+	$ 10000028 starts, 2 max read set, 10000000 commits, 28 (0.000%) aborts
+	$ 10000000 commit attempts, 8297924 (82.979%) nonopaque
+	$ 10000025 starts, 2 max read set, 10000000 commits, 25 (0.000%) aborts
+	$ 10000000 commit attempts, 8297932 (82.979%) nonopaque
+	$ 10000011 starts, 2 max read set, 10000000 commits, 11 (0.000%) aborts
+	$ 10000000 commit attempts, 8297963 (82.980%) nonopaque
+	$ 10000024 starts, 2 max read set, 10000000 commits, 24 (0.000%) aborts
+$ 1 (4.167%) of aborts at commit time
+	$ 10000001 commit attempts, 8298002 (82.980%) nonopaque
+7824830976.000000,7843281920.000000,7838427136.000000,7852881408.000000,7827009536.000000,:0.000200,0.000280,0.000250,0.000110,0.000240,;
+Running Test HM10K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000008 starts, 2 max read set, 10000000 commits, 8 (0.000%) aborts
+	$ 10000000 commit attempts, 8297511 (82.975%) nonopaque
+	$ 10000011 starts, 2 max read set, 10000000 commits, 11 (0.000%) aborts
+$ 2 (18.182%) of aborts at commit time
+	$ 10000002 commit attempts, 8297529 (82.975%) nonopaque
+	$ 10000012 starts, 2 max read set, 10000000 commits, 12 (0.000%) aborts
+	$ 10000000 commit attempts, 8297561 (82.976%) nonopaque
+	$ 10000015 starts, 2 max read set, 10000000 commits, 15 (0.000%) aborts
+	$ 10000000 commit attempts, 8297543 (82.975%) nonopaque
+	$ 10000013 starts, 2 max read set, 10000000 commits, 13 (0.000%) aborts
+	$ 10000000 commit attempts, 8297576 (82.976%) nonopaque
+8203964416.000000,8202364416.000000,8214841344.000000,8222142976.000000,8248020992.000000,:0.000080,0.000110,0.000120,0.000150,0.000130,;
+Running Test HM10K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+13326798848.000000,13339663360.000000,13349953536.000000,13359472640.000000,13376742400.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 6
+	$ 30001924 starts, 1 max read set, 30000000 commits, 1924 (0.006%) aborts
+$ 1882 (97.817%) of aborts at commit time
+	$ 30001882 commit attempts, 25049491 (83.493%) nonopaque
+	$ 30001813 starts, 1 max read set, 30000000 commits, 1813 (0.006%) aborts
+$ 1765 (97.352%) of aborts at commit time
+	$ 30001765 commit attempts, 25049139 (83.492%) nonopaque
+	$ 30001985 starts, 1 max read set, 30000000 commits, 1985 (0.007%) aborts
+$ 1953 (98.388%) of aborts at commit time
+	$ 30001953 commit attempts, 25049409 (83.493%) nonopaque
+	$ 30001910 starts, 1 max read set, 30000000 commits, 1910 (0.006%) aborts
+$ 1864 (97.592%) of aborts at commit time
+	$ 30001864 commit attempts, 25048980 (83.491%) nonopaque
+	$ 30001933 starts, 1 max read set, 30000000 commits, 1933 (0.006%) aborts
+$ 1883 (97.413%) of aborts at commit time
+	$ 30001883 commit attempts, 25049937 (83.495%) nonopaque
+5267452928.000000,5298544640.000000,5276016640.000000,5275072512.000000,5314128384.000000,:0.006413,0.006043,0.006616,0.006366,0.006443,;
+Running Test HM10K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000368 starts, 2 max read set, 30000000 commits, 368 (0.001%) aborts
+$ 11 (2.989%) of aborts at commit time
+	$ 30000011 commit attempts, 25047317 (83.491%) nonopaque
+	$ 30000346 starts, 2 max read set, 30000000 commits, 346 (0.001%) aborts
+$ 8 (2.312%) of aborts at commit time
+	$ 30000008 commit attempts, 25046564 (83.489%) nonopaque
+	$ 30000343 starts, 2 max read set, 30000000 commits, 343 (0.001%) aborts
+$ 18 (5.248%) of aborts at commit time
+	$ 30000018 commit attempts, 25046857 (83.489%) nonopaque
+	$ 30000323 starts, 2 max read set, 30000000 commits, 323 (0.001%) aborts
+$ 6 (1.858%) of aborts at commit time
+	$ 30000006 commit attempts, 25047535 (83.492%) nonopaque
+	$ 30000338 starts, 2 max read set, 30000000 commits, 338 (0.001%) aborts
+$ 13 (3.846%) of aborts at commit time
+	$ 30000013 commit attempts, 25046308 (83.488%) nonopaque
+7579780096.000000,7652931584.000000,7577366528.000000,7384585216.000000,7645347840.000000,:0.001227,0.001153,0.001143,0.001077,0.001127,;
+Running Test HM10K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000284 starts, 2 max read set, 30000000 commits, 284 (0.001%) aborts
+$ 18 (6.338%) of aborts at commit time
+	$ 30000018 commit attempts, 25047026 (83.490%) nonopaque
+	$ 30000298 starts, 2 max read set, 30000000 commits, 298 (0.001%) aborts
+$ 11 (3.691%) of aborts at commit time
+	$ 30000011 commit attempts, 25046669 (83.489%) nonopaque
+	$ 30000306 starts, 2 max read set, 30000000 commits, 306 (0.001%) aborts
+$ 13 (4.248%) of aborts at commit time
+	$ 30000013 commit attempts, 25048158 (83.494%) nonopaque
+	$ 30000324 starts, 2 max read set, 30000000 commits, 324 (0.001%) aborts
+$ 6 (1.852%) of aborts at commit time
+	$ 30000006 commit attempts, 25047791 (83.493%) nonopaque
+	$ 30000321 starts, 2 max read set, 30000000 commits, 321 (0.001%) aborts
+$ 5 (1.558%) of aborts at commit time
+	$ 30000005 commit attempts, 25047120 (83.490%) nonopaque
+8295327744.000000,8084412416.000000,8022374400.000000,8101704704.000000,8239303680.000000,:0.000947,0.000993,0.001020,0.001080,0.001070,;
+Running Test HM10K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+13888352256.000000,13645757440.000000,14219329536.000000,14177246208.000000,14686095360.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 12
+	$ 60008532 starts, 1 max read set, 60000000 commits, 8532 (0.014%) aborts
+$ 8307 (97.363%) of aborts at commit time
+	$ 60008307 commit attempts, 50177300 (83.617%) nonopaque
+	$ 60008539 starts, 1 max read set, 60000000 commits, 8539 (0.014%) aborts
+$ 8323 (97.470%) of aborts at commit time
+	$ 60008323 commit attempts, 50176608 (83.616%) nonopaque
+	$ 60008656 starts, 1 max read set, 60000000 commits, 8656 (0.014%) aborts
+$ 8437 (97.470%) of aborts at commit time
+	$ 60008437 commit attempts, 50178212 (83.619%) nonopaque
+	$ 60008559 starts, 1 max read set, 60000000 commits, 8559 (0.014%) aborts
+$ 8347 (97.523%) of aborts at commit time
+	$ 60008347 commit attempts, 50177625 (83.618%) nonopaque
+	$ 60008586 starts, 1 max read set, 60000000 commits, 8586 (0.014%) aborts
+$ 8387 (97.682%) of aborts at commit time
+	$ 60008387 commit attempts, 50176611 (83.616%) nonopaque
+4385202176.000000,4396928000.000000,4384184320.000000,4443887616.000000,4664064000.000000,:0.014218,0.014230,0.014425,0.014263,0.014308,;
+Running Test HM10K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60001722 starts, 2 max read set, 60000000 commits, 1722 (0.003%) aborts
+$ 162 (9.408%) of aborts at commit time
+	$ 60000162 commit attempts, 50170341 (83.617%) nonopaque
+	$ 60001658 starts, 2 max read set, 60000000 commits, 1658 (0.003%) aborts
+$ 122 (7.358%) of aborts at commit time
+	$ 60000122 commit attempts, 50169064 (83.615%) nonopaque
+	$ 60001629 starts, 2 max read set, 60000000 commits, 1629 (0.003%) aborts
+$ 184 (11.295%) of aborts at commit time
+	$ 60000184 commit attempts, 50169244 (83.615%) nonopaque
+	$ 60001603 starts, 2 max read set, 60000000 commits, 1603 (0.003%) aborts
+$ 199 (12.414%) of aborts at commit time
+	$ 60000199 commit attempts, 50166614 (83.611%) nonopaque
+	$ 60001549 starts, 2 max read set, 60000000 commits, 1549 (0.003%) aborts
+$ 154 (9.942%) of aborts at commit time
+	$ 60000154 commit attempts, 50169287 (83.615%) nonopaque
+6227742720.000000,6151365632.000000,5986017792.000000,6168645632.000000,6128479744.000000,:0.002870,0.002763,0.002715,0.002672,0.002582,;
+Running Test HM10K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60001507 starts, 2 max read set, 60000000 commits, 1507 (0.003%) aborts
+$ 122 (8.096%) of aborts at commit time
+	$ 60000122 commit attempts, 50170463 (83.617%) nonopaque
+	$ 60001464 starts, 2 max read set, 60000000 commits, 1464 (0.002%) aborts
+$ 177 (12.090%) of aborts at commit time
+	$ 60000177 commit attempts, 50169509 (83.616%) nonopaque
+	$ 60001529 starts, 2 max read set, 60000000 commits, 1529 (0.003%) aborts
+$ 136 (8.895%) of aborts at commit time
+	$ 60000136 commit attempts, 50168432 (83.614%) nonopaque
+	$ 60001671 starts, 2 max read set, 60000000 commits, 1671 (0.003%) aborts
+$ 168 (10.054%) of aborts at commit time
+	$ 60000168 commit attempts, 50170024 (83.616%) nonopaque
+	$ 60001578 starts, 2 max read set, 60000000 commits, 1578 (0.003%) aborts
+$ 179 (11.343%) of aborts at commit time
+	$ 60000179 commit attempts, 50170904 (83.618%) nonopaque
+7033720320.000000,6778303488.000000,6738503168.000000,6767963136.000000,6954942464.000000,:0.002512,0.002440,0.002548,0.002785,0.002630,;
+Running Test HM10K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+12776784896.000000,12739205120.000000,13340302336.000000,13190804480.000000,13376215040.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F34,I33,E33 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 18
+	$ 90006928 starts, 1 max read set, 90000000 commits, 6928 (0.008%) aborts
+$ 6816 (98.383%) of aborts at commit time
+	$ 90006816 commit attempts, 75303821 (83.665%) nonopaque
+	$ 90012389 starts, 1 max read set, 90000000 commits, 12389 (0.014%) aborts
+$ 12169 (98.224%) of aborts at commit time
+	$ 90012169 commit attempts, 75331019 (83.690%) nonopaque
+	$ 90020237 starts, 1 max read set, 90000000 commits, 20237 (0.022%) aborts
+$ 19852 (98.098%) of aborts at commit time
+	$ 90019852 commit attempts, 75315555 (83.665%) nonopaque
+	$ 90020468 starts, 1 max read set, 90000000 commits, 20468 (0.023%) aborts
+$ 20096 (98.183%) of aborts at commit time
+	$ 90020096 commit attempts, 75317539 (83.667%) nonopaque
+	$ 90020988 starts, 1 max read set, 90000000 commits, 20988 (0.023%) aborts
+$ 20588 (98.094%) of aborts at commit time
+	$ 90020588 commit attempts, 75316260 (83.666%) nonopaque
+1112635520.000000,1294866688.000000,2673149440.000000,2693812992.000000,3044080384.000000,:0.007697,0.013764,0.022481,0.022737,0.023315,;
+Running Test HM10K:F34,I33,E33 on STO IE CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90003139 starts, 2 max read set, 90000000 commits, 3139 (0.003%) aborts
+$ 134 (4.269%) of aborts at commit time
+	$ 90000134 commit attempts, 75290995 (83.657%) nonopaque
+	$ 90003044 starts, 2 max read set, 90000000 commits, 3044 (0.003%) aborts
+$ 64 (2.102%) of aborts at commit time
+	$ 90000064 commit attempts, 75287062 (83.652%) nonopaque
+	$ 90002976 starts, 2 max read set, 90000000 commits, 2976 (0.003%) aborts
+$ 128 (4.301%) of aborts at commit time
+	$ 90000128 commit attempts, 75287812 (83.653%) nonopaque
+	$ 90003071 starts, 2 max read set, 90000000 commits, 3071 (0.003%) aborts
+$ 192 (6.252%) of aborts at commit time
+	$ 90000192 commit attempts, 75286251 (83.651%) nonopaque
+	$ 90002957 starts, 2 max read set, 90000000 commits, 2957 (0.003%) aborts
+$ 124 (4.193%) of aborts at commit time
+	$ 90000124 commit attempts, 75291556 (83.657%) nonopaque
+4535381504.000000,4488692736.000000,4528274432.000000,4480153088.000000,4646851584.000000,:0.003488,0.003382,0.003307,0.003412,0.003285,;
+Running Test HM10K:F34,I33,E33 on STO KF CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90003415 starts, 2 max read set, 90000000 commits, 3415 (0.004%) aborts
+$ 104 (3.045%) of aborts at commit time
+	$ 90000104 commit attempts, 75289528 (83.655%) nonopaque
+	$ 90002841 starts, 2 max read set, 90000000 commits, 2841 (0.003%) aborts
+$ 159 (5.597%) of aborts at commit time
+	$ 90000159 commit attempts, 75289429 (83.655%) nonopaque
+	$ 90003303 starts, 2 max read set, 90000000 commits, 3303 (0.004%) aborts
+$ 134 (4.057%) of aborts at commit time
+	$ 90000134 commit attempts, 75289123 (83.654%) nonopaque
+	$ 90003326 starts, 2 max read set, 90000000 commits, 3326 (0.004%) aborts
+$ 142 (4.269%) of aborts at commit time
+	$ 90000142 commit attempts, 75290523 (83.656%) nonopaque
+	$ 90003234 starts, 2 max read set, 90000000 commits, 3234 (0.004%) aborts
+$ 138 (4.267%) of aborts at commit time
+	$ 90000138 commit attempts, 75292320 (83.658%) nonopaque
+6004661248.000000,6074198016.000000,6214369792.000000,6205775360.000000,6148895232.000000,:0.003794,0.003157,0.003670,0.003695,0.003593,;
+Running Test HM10K:F34,I33,E33 on CuckooMapNT	 init_keys: 0, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+13412469760.000000,13316794368.000000,13584879616.000000,13748274176.000000,13797450752.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+
+HM10K:F90,I5,E5
+
+Running Test HM10K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 1 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+11657362432.000000,11812131840.000000,11957824512.000000,12209613824.000000,12396798976.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM10K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+17472913408.000000,17928857600.000000,17918300160.000000,18126419968.000000,18180460544.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM10K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 1
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+	$ 5000000 starts, 2 max read set, 5000000 commits
+	$ 5000000 commit attempts, 4816823 (96.336%) nonopaque
+20963956736.000000,21231869952.000000,21217443840.000000,21135745024.000000,21236326400.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+Running Test HM10K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 1
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+30180521984.000000,30210254848.000000,30220064768.000000,30239952896.000000,30316867584.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 2
+	$ 10000023 starts, 1 max read set, 10000000 commits, 23 (0.000%) aborts
+$ 23 (100.000%) of aborts at commit time
+	$ 10000023 commit attempts, 9689666 (96.896%) nonopaque
+	$ 10000037 starts, 1 max read set, 10000000 commits, 37 (0.000%) aborts
+$ 37 (100.000%) of aborts at commit time
+	$ 10000037 commit attempts, 9689633 (96.896%) nonopaque
+	$ 10000035 starts, 1 max read set, 10000000 commits, 35 (0.000%) aborts
+$ 34 (97.143%) of aborts at commit time
+	$ 10000034 commit attempts, 9689619 (96.896%) nonopaque
+	$ 10000036 starts, 1 max read set, 10000000 commits, 36 (0.000%) aborts
+$ 34 (94.444%) of aborts at commit time
+	$ 10000034 commit attempts, 9689624 (96.896%) nonopaque
+	$ 10000038 starts, 1 max read set, 10000000 commits, 38 (0.000%) aborts
+$ 38 (100.000%) of aborts at commit time
+	$ 10000038 commit attempts, 9689669 (96.896%) nonopaque
+9184336896.000000,9107604480.000000,9254265856.000000,9286310912.000000,9480436736.000000,:0.000230,0.000370,0.000350,0.000360,0.000380,;
+Running Test HM10K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000023 starts, 2 max read set, 10000000 commits, 23 (0.000%) aborts
+	$ 10000000 commit attempts, 9689552 (96.896%) nonopaque
+	$ 10000016 starts, 2 max read set, 10000000 commits, 16 (0.000%) aborts
+	$ 10000000 commit attempts, 9689556 (96.896%) nonopaque
+	$ 10000020 starts, 2 max read set, 10000000 commits, 20 (0.000%) aborts
+	$ 10000000 commit attempts, 9689564 (96.896%) nonopaque
+	$ 10000015 starts, 2 max read set, 10000000 commits, 15 (0.000%) aborts
+	$ 10000000 commit attempts, 9689537 (96.895%) nonopaque
+	$ 10000019 starts, 2 max read set, 10000000 commits, 19 (0.000%) aborts
+	$ 10000000 commit attempts, 9689557 (96.896%) nonopaque
+14187100160.000000,14360315904.000000,14521122816.000000,14584157184.000000,14628467712.000000,:0.000230,0.000160,0.000200,0.000150,0.000190,;
+Running Test HM10K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 2
+	$ 10000012 starts, 2 max read set, 10000000 commits, 12 (0.000%) aborts
+	$ 10000000 commit attempts, 9689547 (96.895%) nonopaque
+	$ 10000007 starts, 2 max read set, 10000000 commits, 7 (0.000%) aborts
+	$ 10000000 commit attempts, 9689527 (96.895%) nonopaque
+	$ 10000014 starts, 2 max read set, 10000000 commits, 14 (0.000%) aborts
+	$ 10000000 commit attempts, 9689542 (96.895%) nonopaque
+	$ 10000014 starts, 2 max read set, 10000000 commits, 14 (0.000%) aborts
+$ 1 (7.143%) of aborts at commit time
+	$ 10000001 commit attempts, 9689546 (96.895%) nonopaque
+	$ 10000012 starts, 2 max read set, 10000000 commits, 12 (0.000%) aborts
+	$ 10000000 commit attempts, 9689571 (96.896%) nonopaque
+17234929664.000000,17364979712.000000,17484871680.000000,17386893312.000000,17472294912.000000,:0.000120,0.000070,0.000140,0.000140,0.000120,;
+Running Test HM10K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 2
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+25479323648.000000,25495341056.000000,25761081344.000000,25769306112.000000,25783234560.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 6
+	$ 30000491 starts, 1 max read set, 30000000 commits, 491 (0.002%) aborts
+$ 482 (98.167%) of aborts at commit time
+	$ 30000482 commit attempts, 29239985 (97.465%) nonopaque
+	$ 30000473 starts, 1 max read set, 30000000 commits, 473 (0.002%) aborts
+$ 464 (98.097%) of aborts at commit time
+	$ 30000464 commit attempts, 29239852 (97.465%) nonopaque
+	$ 30000514 starts, 1 max read set, 30000000 commits, 514 (0.002%) aborts
+$ 504 (98.054%) of aborts at commit time
+	$ 30000504 commit attempts, 29239818 (97.464%) nonopaque
+	$ 30000483 starts, 1 max read set, 30000000 commits, 483 (0.002%) aborts
+$ 481 (99.586%) of aborts at commit time
+	$ 30000481 commit attempts, 29239789 (97.464%) nonopaque
+	$ 30000474 starts, 1 max read set, 30000000 commits, 474 (0.002%) aborts
+$ 469 (98.945%) of aborts at commit time
+	$ 30000469 commit attempts, 29239829 (97.465%) nonopaque
+6432106496.000000,6870797824.000000,6864420352.000000,6987408896.000000,7072320512.000000,:0.001637,0.001577,0.001713,0.001610,0.001580,;
+Running Test HM10K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000161 starts, 2 max read set, 30000000 commits, 161 (0.001%) aborts
+$ 1 (0.621%) of aborts at commit time
+	$ 30000001 commit attempts, 29239077 (97.464%) nonopaque
+	$ 30000149 starts, 2 max read set, 30000000 commits, 149 (0.000%) aborts
+	$ 30000000 commit attempts, 29239015 (97.463%) nonopaque
+	$ 30000131 starts, 2 max read set, 30000000 commits, 131 (0.000%) aborts
+	$ 30000000 commit attempts, 29239088 (97.464%) nonopaque
+	$ 30000151 starts, 2 max read set, 30000000 commits, 151 (0.001%) aborts
+	$ 30000000 commit attempts, 29239026 (97.463%) nonopaque
+	$ 30000131 starts, 2 max read set, 30000000 commits, 131 (0.000%) aborts
+$ 1 (0.763%) of aborts at commit time
+	$ 30000001 commit attempts, 29239045 (97.463%) nonopaque
+11142696960.000000,11416384512.000000,11834686464.000000,11727697920.000000,11951192064.000000,:0.000537,0.000497,0.000437,0.000503,0.000437,;
+Running Test HM10K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 6
+	$ 30000115 starts, 2 max read set, 30000000 commits, 115 (0.000%) aborts
+	$ 30000000 commit attempts, 29239084 (97.464%) nonopaque
+	$ 30000124 starts, 2 max read set, 30000000 commits, 124 (0.000%) aborts
+	$ 30000000 commit attempts, 29238905 (97.463%) nonopaque
+	$ 30000141 starts, 2 max read set, 30000000 commits, 141 (0.000%) aborts
+	$ 30000000 commit attempts, 29239261 (97.464%) nonopaque
+	$ 30000141 starts, 2 max read set, 30000000 commits, 141 (0.000%) aborts
+	$ 30000000 commit attempts, 29239100 (97.464%) nonopaque
+	$ 30000139 starts, 2 max read set, 30000000 commits, 139 (0.000%) aborts
+$ 1 (0.719%) of aborts at commit time
+	$ 30000001 commit attempts, 29239152 (97.464%) nonopaque
+16461554688.000000,15392737280.000000,16170070016.000000,16353200128.000000,16377449472.000000,:0.000383,0.000413,0.000470,0.000470,0.000463,;
+Running Test HM10K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 6
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+25768290304.000000,25870903296.000000,25855729664.000000,25907959808.000000,25939089408.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 12
+	$ 60001950 starts, 1 max read set, 60000000 commits, 1950 (0.003%) aborts
+$ 1924 (98.667%) of aborts at commit time
+	$ 60001924 commit attempts, 58572718 (97.618%) nonopaque
+	$ 60002143 starts, 1 max read set, 60000000 commits, 2143 (0.004%) aborts
+$ 2120 (98.927%) of aborts at commit time
+	$ 60002120 commit attempts, 58573007 (97.618%) nonopaque
+	$ 60001952 starts, 1 max read set, 60000000 commits, 1952 (0.003%) aborts
+$ 1932 (98.975%) of aborts at commit time
+	$ 60001932 commit attempts, 58572691 (97.618%) nonopaque
+	$ 60001810 starts, 1 max read set, 60000000 commits, 1810 (0.003%) aborts
+$ 1784 (98.564%) of aborts at commit time
+	$ 60001784 commit attempts, 58572643 (97.618%) nonopaque
+	$ 60001943 starts, 1 max read set, 60000000 commits, 1943 (0.003%) aborts
+$ 1916 (98.610%) of aborts at commit time
+	$ 60001916 commit attempts, 58572727 (97.618%) nonopaque
+5464487424.000000,5426117120.000000,5747057152.000000,5864445440.000000,5950095872.000000,:0.003250,0.003572,0.003253,0.003017,0.003238,;
+Running Test HM10K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000607 starts, 2 max read set, 60000000 commits, 607 (0.001%) aborts
+$ 22 (3.624%) of aborts at commit time
+	$ 60000022 commit attempts, 58569112 (97.615%) nonopaque
+	$ 60000614 starts, 2 max read set, 60000000 commits, 614 (0.001%) aborts
+$ 11 (1.792%) of aborts at commit time
+	$ 60000011 commit attempts, 58568827 (97.615%) nonopaque
+	$ 60000522 starts, 2 max read set, 60000000 commits, 522 (0.001%) aborts
+$ 20 (3.831%) of aborts at commit time
+	$ 60000020 commit attempts, 58569064 (97.615%) nonopaque
+	$ 60000537 starts, 2 max read set, 60000000 commits, 537 (0.001%) aborts
+$ 24 (4.469%) of aborts at commit time
+	$ 60000024 commit attempts, 58568866 (97.615%) nonopaque
+	$ 60000566 starts, 2 max read set, 60000000 commits, 566 (0.001%) aborts
+$ 28 (4.947%) of aborts at commit time
+	$ 60000028 commit attempts, 58568752 (97.615%) nonopaque
+8531886080.000000,9482704896.000000,9632958464.000000,9700131840.000000,9752289280.000000,:0.001012,0.001023,0.000870,0.000895,0.000943,;
+Running Test HM10K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 12
+	$ 60000489 starts, 2 max read set, 60000000 commits, 489 (0.001%) aborts
+$ 14 (2.863%) of aborts at commit time
+	$ 60000014 commit attempts, 58569291 (97.615%) nonopaque
+	$ 60000508 starts, 2 max read set, 60000000 commits, 508 (0.001%) aborts
+$ 12 (2.362%) of aborts at commit time
+	$ 60000012 commit attempts, 58569449 (97.616%) nonopaque
+	$ 60000543 starts, 2 max read set, 60000000 commits, 543 (0.001%) aborts
+$ 15 (2.762%) of aborts at commit time
+	$ 60000015 commit attempts, 58569402 (97.616%) nonopaque
+	$ 60000560 starts, 2 max read set, 60000000 commits, 560 (0.001%) aborts
+$ 12 (2.143%) of aborts at commit time
+	$ 60000012 commit attempts, 58569259 (97.615%) nonopaque
+	$ 60000551 starts, 2 max read set, 60000000 commits, 551 (0.001%) aborts
+$ 14 (2.541%) of aborts at commit time
+	$ 60000014 commit attempts, 58569212 (97.615%) nonopaque
+13572425728.000000,13350145024.000000,13368829952.000000,13538540544.000000,13565924352.000000,:0.000815,0.000847,0.000905,0.000933,0.000918,;
+Running Test HM10K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 12
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+22014824448.000000,21668380672.000000,21711923200.000000,21940496384.000000,22112403456.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+
+Running Test HM10K:F90,I5,E5 on STO Nonopaque Hashtable	 init_keys: 0, nthreads: 18
+	$ 90003872 starts, 1 max read set, 90000000 commits, 3872 (0.004%) aborts
+$ 3820 (98.657%) of aborts at commit time
+	$ 90003820 commit attempts, 87908521 (97.672%) nonopaque
+	$ 90004548 starts, 1 max read set, 90000000 commits, 4548 (0.005%) aborts
+$ 4506 (99.077%) of aborts at commit time
+	$ 90004506 commit attempts, 87908124 (97.671%) nonopaque
+	$ 90004511 starts, 1 max read set, 90000000 commits, 4511 (0.005%) aborts
+$ 4476 (99.224%) of aborts at commit time
+	$ 90004476 commit attempts, 87907736 (97.670%) nonopaque
+	$ 90004470 starts, 1 max read set, 90000000 commits, 4470 (0.005%) aborts
+$ 4424 (98.971%) of aborts at commit time
+	$ 90004424 commit attempts, 87907494 (97.670%) nonopaque
+	$ 90004400 starts, 1 max read set, 90000000 commits, 4400 (0.005%) aborts
+$ 4348 (98.818%) of aborts at commit time
+	$ 90004348 commit attempts, 87908196 (97.671%) nonopaque
+3399854336.000000,3714813440.000000,4441393664.000000,4487223296.000000,4500192256.000000,:0.004302,0.005053,0.005012,0.004966,0.004889,;
+Running Test HM10K:F90,I5,E5 on STO IE CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90001268 starts, 2 max read set, 90000000 commits, 1268 (0.001%) aborts
+$ 52 (4.101%) of aborts at commit time
+	$ 90000052 commit attempts, 87897941 (97.664%) nonopaque
+	$ 90001306 starts, 2 max read set, 90000000 commits, 1306 (0.001%) aborts
+$ 29 (2.221%) of aborts at commit time
+	$ 90000029 commit attempts, 87898761 (97.665%) nonopaque
+	$ 90001240 starts, 2 max read set, 90000000 commits, 1240 (0.001%) aborts
+$ 56 (4.516%) of aborts at commit time
+	$ 90000056 commit attempts, 87898476 (97.665%) nonopaque
+	$ 90001235 starts, 2 max read set, 90000000 commits, 1235 (0.001%) aborts
+$ 51 (4.130%) of aborts at commit time
+	$ 90000051 commit attempts, 87898486 (97.665%) nonopaque
+	$ 90001231 starts, 2 max read set, 90000000 commits, 1231 (0.001%) aborts
+$ 46 (3.737%) of aborts at commit time
+	$ 90000046 commit attempts, 87898558 (97.665%) nonopaque
+6890155520.000000,6965718528.000000,7028646912.000000,7053867008.000000,7090274304.000000,:0.001409,0.001451,0.001378,0.001372,0.001368,;
+Running Test HM10K:F90,I5,E5 on STO KF CuckooMap	 init_keys: 0, nthreads: 18
+	$ 90001112 starts, 2 max read set, 90000000 commits, 1112 (0.001%) aborts
+$ 46 (4.137%) of aborts at commit time
+	$ 90000046 commit attempts, 87898957 (97.665%) nonopaque
+	$ 90000991 starts, 2 max read set, 90000000 commits, 991 (0.001%) aborts
+$ 49 (4.945%) of aborts at commit time
+	$ 90000049 commit attempts, 87900196 (97.667%) nonopaque
+	$ 90001174 starts, 2 max read set, 90000000 commits, 1174 (0.001%) aborts
+$ 37 (3.152%) of aborts at commit time
+	$ 90000037 commit attempts, 87900323 (97.667%) nonopaque
+	$ 90001179 starts, 2 max read set, 90000000 commits, 1179 (0.001%) aborts
+$ 43 (3.647%) of aborts at commit time
+	$ 90000043 commit attempts, 87899987 (97.667%) nonopaque
+	$ 90001150 starts, 2 max read set, 90000000 commits, 1150 (0.001%) aborts
+$ 42 (3.652%) of aborts at commit time
+	$ 90000042 commit attempts, 87899921 (97.667%) nonopaque
+12269230080.000000,12656555008.000000,12787896320.000000,12815043584.000000,12765779968.000000,:0.001236,0.001101,0.001304,0.001310,0.001278,;
+Running Test HM10K:F90,I5,E5 on CuckooMapNT	 init_keys: 0, nthreads: 18
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+	$ 0 starts, 0 max read set, 0 commits
+	$ 0 commit attempts, 0 (-nan%) nonopaque
+22654789632.000000,22760873984.000000,22975229952.000000,22920654848.000000,22821173248.000000,:0.000000,0.000000,0.000000,0.000000,0.000000,;
+

@@ -4,6 +4,7 @@ import matplotlib.colors as pcolors
 from collections import defaultdict
 from numpy import median
 import numpy as np
+import math
 
 TESTS = ["PQRandSingleOps:R","PQRandSingleOps:D","PQPushPop:R",
             "PQPushPop:D", "PQPushOnly:R", "PQPushOnly:D", 
@@ -15,6 +16,7 @@ TESTS = ["PQRandSingleOps:R","PQRandSingleOps:D","PQPushPop:R",
         ]
 CONCURRENT_BENCHMARK_FILE = "concurrent/concurrent.data"
 FCQUEUES_BENCHMARK_FILE = "fcqueues/fcqueues.data"
+HM_BENCHMARK_FILE = "maps/maps_%s.data"
 INIT_SIZES = [10000, 100000]
 NTHREADS = [1,2,6,12,18]
 MEASURES = {
@@ -22,6 +24,8 @@ MEASURES = {
     "aborts": " (%)",
 }
 QMETRICS = ['speed', 'aborts']
+MAPMETRICS = ['speed', 'aborts']
+LOADS = [5, 10, 15, 20]
 
 class Plotter():
     def __init__(self):
@@ -90,6 +94,9 @@ class Plotter():
 
         self.ctests = _construct_test_data(CONCURRENT_BENCHMARK_FILE)
         self.ttests = _construct_test_data(FCQUEUES_BENCHMARK_FILE)
+        self.hmtests = {}
+        for load in LOADS:
+            self.hmtests[load] = _construct_test_data(HM_BENCHMARK_FILE % load)
 
     def get_pushpop_graphs(self, queues, filename, colors, results):
         width = 0.07
@@ -117,10 +124,10 @@ class Plotter():
                 qbars.append(ax.bar(x, medians, width, color=colors[index], yerr=[err_low, err_high], ecolor='black'))
                 x = [v+width for v in x]
 
-            legend = ax.legend(qbars, queues, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=3, borderaxespad=0, prop={'size':10})
+            legend = ax.legend(qbars, queues, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=int(math.ceil(len(queues)/2)), borderaxespad=0, prop={'size':10})
             ax.set_xlabel('Initial Size')
             ax.set_ylabel(metric + MEASURES[metric])
-            ax.set_xticks(np.arange(len(INIT_SIZES)) + 3*width)
+            ax.set_xticks(np.arange(len(INIT_SIZES)) + (len(queues)/2)*width)
             ax.set_xticklabels(INIT_SIZES)
            
             box = ax.get_position()
@@ -130,7 +137,7 @@ class Plotter():
             plt.show()
             plt.close()
 
-    def get_randops_graphs(self, ds, filename, colors, results, testname, metrics):    
+    def get_randops_graphs(self, ds, filename, colors, results, testname, metrics, args=None):    
         for size, data_lists in results.items():
             assert(len(ds) == len(data_lists['speed']))
 
@@ -147,18 +154,21 @@ class Plotter():
                 ax = fig.add_subplot(111)
                 for i in range(len(ds)):
                     ax.errorbar(NTHREADS, [median(x) for x in data[i][metric]], label=ds[i], color=colors[i], 
-                            yerr=[[median(x)-min(x) for x in data[i][metric]], 
+                            linewidth=2, yerr=[[median(x)-min(x) for x in data[i][metric]], 
                                 [max(x)-median(x) for x in data[i][metric]]])
 
                 ax.set_xlabel("Number of Threads")
                 ax.set_ylabel(metric + MEASURES[metric])
 
-                legend = ax.legend(ds, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=3, borderaxespad=0, prop={'size':10})
+                legend = ax.legend(ds, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=int(math.ceil(len(ds)/2.0)), borderaxespad=0, prop={'size':10})
 
                 box = ax.get_position()
                 ax.set_position([box.x0, box.y0, box.width, box.height*.85])
-                
-                plt.savefig(filename+"%s%d.png" % (testname, size))
+               
+                if args != None:
+                    plt.savefig(filename+"%s%s%s.png" % (args, testname, metric))
+                else:
+                    plt.savefig(filename+"%s%d%s.png" % (testname, size, metric))
                 plt.show()
                 plt.close()
 
@@ -179,7 +189,7 @@ class Plotter():
     def fcqueues_graphs(self):
         queues = ["STO1", "STO2", "FCQueue NT", "Wrapped-FCQueueNT", "FCQueueT", "FCQueueLP"]
         filename='fcqueues/'
-        colors = ["red","orange","white","grey","green","blue"]
+        colors = ["red","orange","brown","grey","green","blue"]
         results = self.ttests['Q:PushPop']
 
         # PUSH POP TEST: SPEED 
@@ -191,9 +201,24 @@ class Plotter():
             results = self.ttests[name]
             self.get_randops_graphs(queues, filename, colors, results, name, QMETRICS)
 
+    def hashmaps_graphs(self):
+        maps = ["Chaining", "Cuckoo IE", "Cuckoo KF", "CuckooNT"]
+        filename='maps/'
+        colors = ["red","green","blue","gray"]
+        test_names = [
+            "HM1M:F34,I33,E33","HM1M:F90,I5,E5",
+            "HM1MMultiOp:F34,I33,E33","HM1MMultiOp:F90,I5,E5",
+            "HM125K:F34,I33,E33","HM125K:F90,I5,E5",
+            "HM10K:F34,I33,E33","HM10K:F90,I5,E5",
+        ]
+
+        for name in test_names:
+            for load in LOADS:
+                results = self.hmtests[load][name]
+                self.get_randops_graphs(maps, filename, colors, results, name, MAPMETRICS, load)
+
 def main():
     p = Plotter()
-    p.concurrent_queues_graphs()
     p.fcqueues_graphs()
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 \chapter{Commutativity and Weakly Transactional Queues}
 \label{commutativity}
 
-In this chapter, we first describe the commutativity of queue operations in high-concurrent, non-transactional settings and compare it to the commutativity of queue operations in a fully-transactional setting. We then argue that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better in a transactional data structure than a naive synchronization technique such as that used in the STO1 and STO2 queues. To demonstrate this point, we propose a transactional specification that allows the flat combining technique to be used to greater effectiveness in a transactional setting and illustrate experimentally how the commutativity of operations in this new setting is essential for the effectiveness of the flat combining technique.
+In this chapter, we first describe the commutativity of queue operations in high-concurrent, non-transactional settings and compare it to the commutativity of queue operations in a fully-transactional setting. We then argue that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better in a transactional data structure than a naive synchronization technique such as that used in the STO1 and STO2 queues: the flat combining algorithm's high performance comes from exploiting greater operation commutativity in a non-transactional setting. To demonstrate this point, we propose a transactional specification that allows the flat combining technique to be used to greater effectiveness and illustrate through experimental results how the commutativity of operations in this new setting is essential for the effectiveness of the flat combining technique.
 
 \section{Terminology}
 We first introduce some basic terminology (as defined in \cite{schwarz} and \cite{weihl}) that will occur in our discussion.
@@ -47,7 +47,7 @@ $H$ is a serializable history given $H'$. $H''$ represents a serial but inconsis
 \end{eg}
 
 \begin{defn}
-    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all operations are linearizable. Informally, the serial order of transactions corresponds to the real time at which the transactions commit.
+    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all operations are linearizable. Informally, this means that the serial order of transactions corresponds to the real time at which the transactions commit.
 \end{defn}
 \lyt{examples?}
 
