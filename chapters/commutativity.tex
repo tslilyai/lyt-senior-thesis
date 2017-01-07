@@ -18,6 +18,7 @@ We first introduce some basic terminology (as defined in \cite{schwarz} and \cit
     (T1, Q.pop(), true)
     (T2, Q.push(c), ())
     (T1, Q.pop(), true)
+    // Final State: Q.size() == 0 
     \end{lstlisting}
 \end{eg}
 
@@ -91,7 +92,7 @@ These results are well-known in the literature about transactional data structur
 \section{Commutativity of Concurrent and Transactional Queues}
 
 For generality, we reduce each queue operation to a read or write of a particular semantic object: the head, the tail, or the empty? predicate of the queue. This allows for our reasoning to be applied to operations that differ from our current specification of \texttt{pop} or \texttt{push}. For example, we can imagine an alternative \texttt{pop} operation that returns \texttt{void} regardless of whether the queue was empty. We summarize our \texttt{pop} and \texttt{push} reads and writes in Table \ref{table:qrw}.
-\begin{table}
+\begin{table}[h!]
 \centering
 \begin{tabular}{c||c|c}
     Operation & Read & Write\\
@@ -105,7 +106,14 @@ For generality, we reduce each queue operation to a read or write of a particula
 
 \subsection{Concurrent Non-Transactional Queues}
 
-\begin{table}
+
+The guarantees of concurrent, non-transactional queues are \emph{nearly} equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable, since the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned), may not be visible to an operation that is performed after $P$ returns.
+
+The flat combining technique provides serializable, atomic, \emph{and} linearizable singleton transactions\cite{flatcombining}. Therefore, we can reason about the commutativity and therefore scalability of a concurrent, non-transactional flat combining queue using notions of transactional dependencies.
+
+We start by defining the dependency relations between single operations (Table~\ref{table:simpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, any concurrency bottlenecks occur due to the synchronization required to ensure correctness when two threads attempt to write to or simultaneously write/read the same object. As we have shown, the flat combining approach works particularly well to minimize the overhead of this synchronization cost.
+
+\begin{table}[h!]
     \centering
 \begin{tabular}{c||c|c|c|c}
     Object & Pop-Pop & Pop-Push & Push-Pop & Push-Push\\
@@ -118,12 +126,6 @@ For generality, we reduce each queue operation to a read or write of a particula
     \caption{Dependencies of Simple Operations}
     \label{table:simpledeps}
 \end{table}
-
-The guarantees of concurrent, non-transactional queues are \emph{nearly} equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable, since the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned), may not be visible to an operation that is performed after $P$ returns.
-
-The flat combining technique provides serializable, atomic, \emph{and} linearizable singleton transactions\cite{flatcombining}. Therefore, we can reason about the commutativity and therefore scalability of a concurrent, non-transactional flat combining queue using notions of transactional dependencies.
-
-We start by defining the dependency relations between single operations (Table~\ref{table:simpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, any concurrency bottlenecks occur due to the synchronization required to ensure correctness when two threads attempt to write to or simultaneously write/read the same object. As we have shown, the flat combining approach works particularly well to minimize the overhead of this synchronization cost.
 
 \subsection{Transactional Queues}
 

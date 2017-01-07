@@ -226,9 +226,10 @@ class Plotter():
 
         patterns = ['--','solid','--','solid', 'solid', 'solid', 'solid', 'solid', 'solid', 'solid']
         test_names = ['Q:RandSingleOps']
+        queues = ["STO1", "STO2", "FCQueueNT", "", "Max Performance of other queues","","","","",""]
         for name in test_names:
             results = self.ctests[name]
-            self.get_randops_graphs(queues, range(len(queues))[1:], filename, colors, patterns, results, name, QMETRICS)
+            self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name, QMETRICS)
 
     def fcqueues_graphs(self):
         queues = ["STO1", "STO2", "FCQueueNT", "Wrapped-FCQueueNT", "STO-FCQueue", "FCQueueWT"]
