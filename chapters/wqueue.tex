@@ -27,15 +27,29 @@ The FCQueueWT modifies the nontransactional, flat combining technique as follows
 
 
 \subsection{Evaluation}
-%\input{figures/wtxnal_queues.fig}
 
-We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section \ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue and our other STO queues.
+We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section~\ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue (STO-FCQueue), the STO2 queue, and the WrappedFCQueueNT. Results are shown in Figure~\ref{lpfcqueues}.
 
-\subsubsection{2-Thread Push-Pop Test}
-
-\subsubsection{Multi-Thread Random Singleton Transactions Test}
-
-\subsubsection{Multi-Thread Random Multi-Operation Transactions Test}
+\floatstyle{plain} 
+\restylefloat{figure}
+\begin{figure}[ht!]
+\caption{FCQueueWT Performance}
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline&\\
+        Speed (ops/s) & Aborts (\% Transactions)\\
+        \includegraphics[height=2.25in]{fcqueues/lpQ:PushPopspeed.png} &
+        \includegraphics[height=2.25in]{fcqueues/lpQ:PushPopaborts.png}\\
+        \includegraphics[height=2.25in]{fcqueues/lpQ:RandSingleOps10000speed.png} &
+        \includegraphics[height=2.25in]{fcqueues/lpQ:RandSingleOps10000aborts.png}\\
+        \includegraphics[height=2.25in]{fcqueues/lpQ:RandSingleOps100000speed.png} &
+    \includegraphics[height=2.25in]{fcqueues/lpQ:RandSingleOps100000aborts.png}\\
+        \hline
+    \end{tabular}
+\label{fig:lpfcqueues}
+\end{figure}
 
 \subsection{Discussion}
 While the weakly-transaction, flat combining queue does not perform as well as its nontransactional counterpart, we note that the performance exceeds that of the fully transactional STO1, STO2, and flat combining queues. In addition, FCQueueWT outperforms its STO counterpart (STO-WT), demonstrating the effectiveness of the flat combining technique in this weakly transactional setting.
+
+\lyt{TODO ADD MORE}

@@ -93,13 +93,11 @@ These results are well-known in the literature about transactional data structur
 For generality, we reduce each queue operation to a read or write of a particular semantic object: the head, the tail, or the empty? predicate of the queue. This allows for our reasoning to be applied to operations that differ from our current specification of \texttt{pop} or \texttt{push}. For example, we can imagine an alternative \texttt{pop} operation that returns \texttt{void} regardless of whether the queue was empty. We summarize our \texttt{pop} and \texttt{push} reads and writes in Table \ref{table:qrw}.
 \begin{table}
 \centering
-\begin{tabular}{c|cc}
-    \hline
+\begin{tabular}{c||c|c}
     Operation & Read & Write\\
     \hline
     \texttt{pop} & empty? & head, empty?\\
     \texttt{push} & & tail, empty?\\
-    \hline
 \end{tabular}
     \caption{Queue Operation Semantics in terms of reads and writes}
     \label{table:qrw}
@@ -109,20 +107,15 @@ For generality, we reduce each queue operation to a read or write of a particula
 
 \begin{table}
     \centering
-\begin{tabular}{|c||c|c|c|c|}
-    \hline
+\begin{tabular}{c||c|c|c|c}
     Object & Pop-Pop & Pop-Push & Push-Pop & Push-Push\\
     \hline
-    \hline
     head & W-W & & & \\
-    \hline
     tail & & & & W-W\\
-    \hline
     empty & W$^e$-R & R-W$^e$ & W$^e$-R, W$^e$-W$^e$ & \\
-    \hline
 \end{tabular}
+    \caption*{X-Y represents an operation X performed by one thread and an operation Y performed by another thread.\\$^e$ indicates that the operation modifies the empty status of the queue.}
     \caption{Dependencies of Simple Operations}
-    \caption*{The pair of operations X-Y represents an operation X performed by one thread and an operation Y performed by another thread. $^e$ indicates that the operation modifies the empty status of the queue.}
     \label{table:simpledeps}
 \end{table}
 
