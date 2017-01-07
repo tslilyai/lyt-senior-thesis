@@ -42,14 +42,15 @@ As with the queue, all hashmaps queues are evaluated on a set of microbenchmarks
     \item Proportion of Finds/Inserts/Deletes: The ratio of inserts:deletes is kept at 1 to ensure that the hashmap does not always become empty or only grow in size. It is expected that half the inserts will succeed and half the deletes will succeed, since both are drawing key values from the same range. Tests of 5\% inserts, 5\% deletes, and 90\% finds simulate the most likely use cases for hashmaps\cite{hm1}. Tests of equal proportion (33\%) of all operations investigate how the hashmap reacts to an increased rate of inserts and deletes.
     \item Maximum Key Value: The max key value of inserted elements is twice the number of elements the hashmap will contain when it reaches a fixed point for its size. Thus, altering the maximum value changes the load on the hashmap
     \item Operations per transaction: We choose to run all tests comparing transactional to non-transactional (parallel-only) data structures using single-operation transactions. As discussed in Section~\ref{q_microbenchmarks}, this provides a more fair evaluation of transactional data structures against concurrent ones. In addition, it allows us to minimize the differences between transaction hashmap implementations so we can get a baseline comparison.
-    \item Capacity: the number of buckets of the hashmap and the number of items per bucket (adjustable for CuckooHashMaps only). This, along with the maximum key value, determines the load on the hashmap. It also affects the number of cache lines accessed during the test (for example, a larger hashmap may not be expected to fit into the L2 cache, whereas a small hashmap at full capacity will fit entirely in cache). During all tests, the size of the hashmap is not allowed to outgrow its capacity.
+    \item Capacity: the number of buckets $\times$ the number of items per bucket. With the Chaining hashmap, capacity is infinite (within memory constraints) because buckets can grow arbitrarily large. The CuckooHashMaps have a fixed size bucket, and therefore a finite capacity. 
+        The number of buckets and the size of each bucket affects the number of cache lines accessed during the test (for example, a larger hashmap may not be expected to fit into the L2 cache, whereas a small hashmap at full capacity will fit entirely in cache). During all tests, the number of keys present in the hashmap is not allowed to outgrow its capacity.
+    \item Load: The number of keys : capacity ratio. This determines the average length of chains in a chaining hashmap and the average number of items to be found per bucket. At steady state, load is expected to be half of maximum load. 
 \end{itemize}
 Note that the initial size of the data structure should not affect performance as the test proceeds for a longer period of time and reaches a steady state. Therefore, we do not include the initial size as a benchmark parameter.
 
-\subsubsection{Test}
-\paragraph{Multi-Thread, Variable-Capacity Singletons Test} 
+\subsubsection{Multi-Thread, Variable-Capacity Singletons Test} 
 This test is run with different numbers of threads and with different proportions of finds/inserts/deletes. Each thread runs 5 million singleton transactions.
-The test is run twice, once with a probability of 33\% insert, 33\% delete, and 34\% find, and again with a probability of 5\% insert, 5\% delete, and 90\% find. The steady-state final size is 50\% capacity.
+The test is run twice, once with a probability of 33\% insert, 33\% delete, and 34\% find, and again with a probability of 5\% insert, 5\% delete, and 90\% find. The steady-state final size is 50\% maximum load.
 
 \subsection{Results}
 

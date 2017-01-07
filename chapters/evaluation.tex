@@ -3,7 +3,7 @@
 \subsection{Microbenchmarks}
 \label{q_microbenchmarks}
 
-All queues are evaluated on a set of microbenchmarks to demonstrate their scalability and performance. The controlled nature of these microbenchmarks allow us to easily compare particular aspects of each algorithm, such as transactional overhead introduced by STO. All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with g++-5.3. In all graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.\lyt{TODO}
+All queues are evaluated on a set of microbenchmarks to demonstrate their scalability and performance. The controlled nature of these microbenchmarks allow us to easily compare particular aspects of each algorithm, such as transactional overhead introduced by STO. All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with g++-5.3. In all graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
 
 \subsubsection{Parameters}
 
@@ -31,45 +31,53 @@ All queues are evaluated on a set of microbenchmarks to demonstrate their scalab
 
 \subsection{Results}
 
-We describe the results of these benchmarks for two sets of queues. The first is a set of high-concurrency, non-transactional queues, and the second is a set of variations of the flat-combining queue (transactional and non-transactional). Both sets are measured along with our STO1 and STO2 queues as baseline references.
+We describe the results of these benchmarks for different sets of queues. We first compare the STO1 and STO2 queues, then a set of high-concurrency, non-transactional queues, and lastly different variants of the flat-combining queue (transactional and non-transactional). The latter two sets are measured along with our STO2 queue as a baseline reference.
 
-\subsubsection{Concurrent Queues}
+\subsubsection{STO1 Queue vs. STO2 Queue}
 
-We benchmark a set of the best-performing high-concurrency queue algorithms against our two STO queue implementations in order to determine which high-concurrency algorithm would be best suited to integration with STO. We look for both the most scalable and the highest-performing queue (even when contention is low).
+\floatstyle{plain} 
+\restylefloat{figure}
+\begin{figure}[ht!]
+\caption{STO1 Queue vs. STO2 Queue}
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline&\\
+        Speed (ops/s) & Aborts (\% Transactions)\\
+        \includegraphics[height=2.25in]{fcqueues/stoQ:PushPopspeed.png} &
+        \includegraphics[height=2.25in]{fcqueues/stoQ:PushPopaborts.png}\\
+        \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps10000speed.png} &
+        \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps10000aborts.png}\\
+        \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps100000speed.png} &
+    \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps100000aborts.png}\\
+        \hline
+    \end{tabular}
+\label{fig:stoqueues}
+\end{figure}
+
+The performance results of STO1 and STO2 Queues (Figure~\ref{fig:stoqueues}) can be compared to measure the effectiveness of a pessimistic approach to the pop operation. We use the better performing queue, the STO2 Queue, as the baseline reference in all future benchmarks.
+
+\subsubsection{Concurrent, Non-transactional Queues}
+
+We benchmark a set of the best-performing high-concurrency queue algorithms against the better performing STO queue implementation, the STO2 queue. This helps determine which high-concurrency algorithm would be best suited to integration with STO. We look for both the most scalable and the highest-performing queue.
  
  Our implementation of the flat combining queue modifies the implementation of the flat combining queue from the authors of the flat combining paper\cite{flatcombining}. Our implementation of the other high-concurrency queues are taken from the Concurrent Data Structures (CDS) library implementations online\cite{libcds}. The performance of these implementations on our tests the performance results given in the papers that originally proposed the algorithms.\lyt{CHECK}
 
-
-\paragraph{2-Thread Push-Pop Test}
-\begin{figure}[ht!]
+\floatstyle{boxed} 
+\restylefloat{figure}
+\begin{figure}[h!]
 \centering
-    \includegraphics[height=3in]{concurrent/Q:PushPopspeed.png}
-\caption{2-Thread Push-Pop Test Results of Various Concurrent Queues}
+    \includegraphics[height=3in]{concurrent/Q:PushPopspeed.png}\\
+    \includegraphics[height=3in]{concurrent/Q:RandSingleOps10000speed.png}
+    \includegraphics[height=3in]{concurrent/Q:RandSingleOps100000speed.png}
+\caption{Performance of Various Concurrent Queues}
 \label{fig:concurrent_queues}
 \end{figure}
 
-\paragraph{Multi-Thread Random Singleton Transactions Test}
-\begin{figure}[ht!]
-\centering
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[height=2.5in]{concurrent/Q:RandSingleOps10000speed.png}
-        \caption*{Initial Queue Size of 10000.\\Performance (ops/s) (higher is better)}
-    \end{minipage}
-    \begin{minipage}{0.45\textwidth}
-        \centering
-        \includegraphics[height=2.5in]{concurrent/Q:RandSingleOps100000speed.png}
-        \caption*{Initial Queue Size of 100000.\\Performance (ops/s) (higher is better)}
-    \end{minipage}
-\caption{Multi-Thread Singletons Test Results of Various Flat-Combining and Transactional Queues}
-\label{fig:concurrent_queues}
-\end{figure}
+Out of the concurrent data structures tested, the Moir queue\cite{queue2} consistently performs best on the 2-Thread Push-Pop Test. On the Multi-Thread Random Singleton Test, the flat combining queue achieves performance over 2.5$\times$ greater than any other concurrent, non-transactional queue as the number of threads increases above 2.
 
-Out of the concurrent data structures tested, the read-write queue\cite{queue1} and the flat combining queue consistently perform best on the 2-Thread Push-Pop Test. On the Multi-Thread Random Singleton Test, the flat combining queue achieves performance over $2.5\times$ greater than any other queue as the number of threads increases above 2.
+The STO2 queue outperforms all queues on the 2-thread Push-Pop test. This test incurs the least contention and transactional overhead to track simply how fast the data structure can handle pushes and pops. It is unsurprising that, on this test, a simple synchronization strategy, such as that used in the STO queues, outperforms the majority of high-concurrency algorithms which are optimized for scalability. The Multi-Thread Random Singleton Transaction test demonstrate that as contention and transactional overhead (abort rate) increases, the flat combining queue reaches performance approximately 1.75$\times$ greater than that of the STO queues. In addition, the flat combinig queue is the only queue that scales. All the other high-concurrency algorithms perform worse than our STO2 queue regardless of number of threads accessing the queue or initial queue size.
 
-For these reasons, as well as the algorithmic benefits of the flat combining technique described in Section~\ref{fcqueuent}, we focus our work on the flat combining queue.
-
-We include the STO1 and STO2 queues in these benchmarks to measure the signficance of the gap between transactional and concurrent data structures. The STO queues---particularly the STO2 queue---outperform all but the read-write queue and flat combining queues on the 2-thread Push-Pop test. This test incurs the least contention and transactional overhead to track simply how fast the data structure can handle pushes and pops. It is unsurprising that, on this test, a simple synchronization strategy, such as that used in the STO queues, outperforms the majority of high-concurrency algorithms which are optimized for scalability. The Multi-Thread Random Singleton Transaction test demonstrate that as contention and transactional overhead (abort rate) increases, the flat combining queue maintains performance approximately 2.5$\times$ greater than that of the STO queues, although neither algorithm scales. However, the other high-concurrency algorithms appear to perform worse than our STO queues. We conjecture this may be due to the implementation of the algorithm used in our benchmarks\cite{libcds}.
+Given these results, as well as the algorithmic benefits of the flat combining technique described in Section~\ref{fcqueuent}, we focus our work on the flat combining queue.
 
 \subsubsection{Flat Combining Queue Variants}
 
@@ -80,50 +88,35 @@ We benchmark several variants of the flat combining queue against our STO1 and S
     \item WrappedFCQueueNT: the non-transactional flat combining queue that invokes STO \texttt{start\_transaction} and \texttt{commit\_transaction} calls, but does not do any of the transactional bookkeeping necessary to provide transactional guarantees.
 \end{itemize}
 
-The relative performance of the WrappedFCQueueNT to the FCQueueNT indicates how much of the overhead added by the STO system is unavoidable (without modifications to STO itself). A data structure must always invoke the STO wrapper calls to support transactions. 
+The relative performance of the WrappedFCQueueNT to the FCQueueNT indicates how much of the overhead added by the STO system is unavoidable (without modifications to STO itself). A data structure must always invoke the STO wrapper calls to support transactions. Results are shown in Figure~\ref{fig:ntqueues}. The WrappedFCQueueNT provides and upper bound on what performance we can expect from a fully transactional flat combining queue.
 
-\paragraph{2-Thread Push-Pop Test}
-\begin{figure}[ht!]
+\begin{figure}[h!]
     \centering
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[height=2in]{fcqueues/Q:PushPopspeed.png}
-    \caption*{Performance (ops/s)\\(higher is better)}
-    \end{minipage}
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[height=2in]{fcqueues/Q:PushPopaborts.png}
-    \caption*{\%Aborts\\(lower is better)}
-    \end{minipage}
-\caption{2-Thread Push-Pop Test Results of Various Flat-Combining and Transactional Queues}
-\label{fig:fcqueues_queues}
-\end{figure}
-
-\paragraph{Multi-Thread Singletons Test}
-\begin{figure}[ht!]
-    \centering
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps10000speed.png}
-    \caption*{Initial Queue Size of 10000.\\Performance (ops/s) (higher is better)}
-    \end{minipage}
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps100000speed.png}
-    \caption*{Initial Queue Size of 100000.\\Performance (ops/s) (higher is better)}
-    \end{minipage}
+    \includegraphics[height=3in]{fcqueues/ntQ:PushPopspeed.png}
     \\
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps10000aborts.png}
-    \caption*{Initial Queue Size of 10000.\\\%Aborts (lower is better)}
-    \end{minipage}
-    \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[height=2.5in]{fcqueues/Q:RandSingleOps100000aborts.png}
-    \caption*{Initial Queue Size of 100000.\\\%Aborts (lower is better)}
-    \end{minipage}
-\caption{Multi-Thread Singletons Test Results of Various Flat-Combining and Transactional Queues}
-\label{fig:txnal_queues}
+    \includegraphics[height=3in]{fcqueues/ntQ:RandSingleOps10000speed.png}
+    \includegraphics[height=3in]{fcqueues/ntQ:RandSingleOps100000speed.png}
+\caption{WrappedFCQueueNT vs. FCQueueNT}
+\label{fig:ntqueues}
 \end{figure}
 
+We compare the STO-FCQueue against the WrappedFCQueueNT and the STO2 Queue to measure how the flat combining transactional approach described in Section~\ref{fcqueuet} performs. Results are shown in Figure~\ref{fig:tfcqueues}.
+
+\floatstyle{plain} 
+\restylefloat{figure}
+\begin{figure}[ht!]
+\caption{STO-FCQueue Performance}
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline&\\
+        Speed (ops/s) & Aborts (\% Transactions)\\
+        \includegraphics[height=2.25in]{fcqueues/tQ:PushPopspeed.png} &
+        \includegraphics[height=2.25in]{fcqueues/tQ:PushPopaborts.png}\\
+        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps10000speed.png} &
+        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps10000aborts.png}\\
+        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps100000speed.png} &
+    \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps100000aborts.png}\\
+        \hline
+    \end{tabular}
+\label{fig:tfcqueues}
+\end{figure}

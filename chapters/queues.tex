@@ -79,6 +79,7 @@ When a thread T wishes to do an operation O:
 In the context of the queue, flat combining proves to be an effective technique to handle the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses ``fat nodes'' (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the STO1 and STO2 queues suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that flat combining's alternative synchronization paradigm might improve the performance of a transactional queue as much as it does for a concurrent queue.
 
 \subsection{Flat Combining Queue (Transactional)}
+\label{fcqueuet}
 
 Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there must be a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two pushes push consecutive values at the tail of the queue.
 
