@@ -216,7 +216,7 @@ class Plotter():
 
 
     def concurrent_queues_graphs(self):
-        queues = ["STO1", "STO2", "FCQueueNT", "Basket", "Moir","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
+        queues = ["STO-Queue1", "STO-Queue2", "FCQueueNT", "Basket", "Moir","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
         filename='concurrent/'
         colors = ["red", "red","green"] + [(0.15*i,0.15*i, 0.15*i) for i in range(7)]
         results = self.ctests['Q:PushPop']
@@ -226,31 +226,31 @@ class Plotter():
 
         patterns = ['--','solid','--','solid', 'solid', 'solid', 'solid', 'solid', 'solid', 'solid']
         test_names = ['Q:RandSingleOps']
-        queues = ["STO1", "STO2", "FCQueueNT", "", "Max Performance of other queues","","","","",""]
+        queues = ["STO-Queue1", "STO-Queue2", "FCQueueNT", "", "Max Performance of other queues","","","","",""]
         for name in test_names:
             results = self.ctests[name]
             self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name, QMETRICS)
 
     def fcqueues_graphs(self):
-        queues = ["STO1", "STO2", "FCQueueNT", "Wrapped-FCQueueNT", "STO-FCQueue", "FCQueueWT"]
+        queues = ["STO-Queue1", "STO-Queue2", "FCQueueNT", "Wrapped-FCQueueNT", "STO-FCQueue", "FCQueueWT", "STO-QueueLP"]
         stoindices = [0,1]
         ntindices = [2,3]
         tindices = [1,3,4]
-        lpindices = [1,3,4,5]
+        lpindices = [1,3,4,5,6]
 
         filename='fcqueues/'
-        colors = ["red","red","green","green","purple","blue"]
+        colors = ["red","red","green","green","purple","blue","red"]
         results = self.ttests['Q:PushPop']
 
         # PUSH POP TEST: SPEED 
-        patterns = ['//','','//','', '', '']
+        patterns = ['//','','//','', '', '',".."]
         self.get_pushpop_graphs(queues, stoindices, filename+"sto", colors, patterns, results)
         self.get_pushpop_graphs(queues, ntindices, filename+"nt", colors, patterns, results)
         self.get_pushpop_graphs(queues, tindices, filename+"t", colors, patterns, results)
         self.get_pushpop_graphs(queues, lpindices, filename+"lp", colors, patterns, results)
 
         # RAND OPS TEST
-        patterns = ['--','solid','--','solid', 'solid', 'solid']
+        patterns = ['--','solid','--','solid', 'solid', 'solid', ':']
         test_names = ['Q:RandSingleOps']
         for name in test_names:
             results = self.ttests[name]

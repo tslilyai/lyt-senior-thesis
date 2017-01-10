@@ -4,11 +4,11 @@ The Weakly Transactional Queue (FCQueueWT) demonstrates how the flat combining t
 \begin{itemize}
     \item Instead of the normal pops, the queue executes \emph{LazyPops} with the following specification:
         \begin{itemize}
-            \item Any two \texttt{pops} within the transaction do not need to pop consecutive values off the queue.
+            \item Any two pops within the transaction do not need to pop consecutive values off the queue.
             \item A pop's return value \emph{cannot} be accessed during the transaction. The pops are applied and their return values determined only at commit time (hence the name LazyPop). 
         \end{itemize}
     \item A pop cannot remove an uninstalled value (i.e., a value pushed earlier in the same transaction).
-    \item The \emph{atomic} property thus becomes: A transaction with multiple pops and multiple pushes guarantees that the operations will either all occur or that none will occur.
+    \item The \emph{atomic} property thus becomes: a transaction with multiple pops and multiple pushes guarantees that the operations will either all occur or that none will occur.
 \end{itemize}
 
 Given this specification, interleavings 1, 2, and 3 in Table~\ref{tab:interleavings} are allowable if the return value of the pop is not used within same transaction. This is because two pops in a transaction do not need to pop consecutive values off the queue. Interleaving 4 is prevented by installing all pushes in the same transaction together at commit time, and interleaving 5 is allowed because $T1$'s pop cannot see its earlier pushed value.
@@ -19,16 +19,18 @@ Our specification differs from that of Schwarz\cite{schwarz}, however, by preven
 \subsection{Algorithm}
 
 The FCQueueWT modifies the nontransactional, flat combining technique as follows:
-   \subsubsection{Pops} 
-    Executing a pop returns a LazyPop value but does not generate a flat combining request or access the queue itself. At commit time, all LazyPops are instantiated with values: for each LazyPop, the thread makes a \texttt{<POP>} flat combining request. This request is completed using the original \texttt{<POP>} flat combining implementation, which pops an item off the queue.
+   \subsubsection{Pops}
+    Executing a pop returns a LazyPop value. It does not generate a flat combining request or access the queue itself. At commit time, all LazyPops are instantiated with values: for each LazyPop, the thread makes a \texttt{<POP>} flat combining request. This request is completed using the vanilla, concurrent \texttt{<POP>} flat combining implementation, which simply pops an item off the queue.
 
     \subsubsection{Pushes}
-    Executing a push merely adds the value onto a \texttt{write\_list\_item}. Pushes from the same transaction are installed together, using the \texttt{<PUSH, list>} flat combining implementation from the transactional flat combining queue that takes the entire list and pushes each value onto the queue.
+    Executing a push merely adds the value onto a \texttt{write\_list\_item} and does not access the queue. Pushes from the same transaction are installed together, using the \texttt{<PUSH, list>} flat combining implementation from the transactional flat combining queue that takes the entire list and pushes each value onto the queue.
+
+For comparison, we also implement a weakly transactional queue using the naive synchronization strategy used in the STO-Queue1 and STO-Queue2 queues, in which the headversion (for pops) or tailversion (for pushes) is locked prior to actually performing the push or pop at commit time. We call this queue the \emph{STO-QueueLP}.
 
 
-\subsection{Evaluation}
+\subsection{Evaluation and Results}
 
-We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section~\ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue (STO-FCQueue), the STO2 queue, and the WrappedFCQueueNT. Results are shown in Figure~\ref{lpfcqueues}.
+We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section~\ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue (STO-FCQueue), the STO-Queue2 queue, and the WrappedFCQueueNT. Results are shown in Figure~\ref{fig:lpfcqueues}.
 
 \floatstyle{plain} 
 \restylefloat{figure}
@@ -46,10 +48,11 @@ We evaluate the weakly transactional flat-combining queue on the same benchmarks
     \includegraphics[height=2.25in]{fcqueues/lpQ:RandSingleOps100000aborts.png}\\
         \hline
     \end{tabular}
-\label{fig:lpfcqueues}
+    \label{fig:lpfcqueues}
 \end{figure}
 
-\subsection{Discussion}
-While the weakly-transaction, flat combining queue does not perform as well as its nontransactional counterpart, we note that the performance exceeds that of the fully transactional STO1, STO2, and flat combining queues. In addition, FCQueueWT outperforms its STO counterpart (STO-WT), demonstrating the effectiveness of the flat combining technique in this weakly transactional setting.
+While the weakly-transaction, flat combining queue (FCQueueWT) does not perform as well as its nontransactional counterpart, FCQueueNT, the performance of the FCQueueWT exceeds that of the STO-Queue1 Queue, the STO-Queue2 Queue, and the STO-FCQueue, which all provide full-transactional guarantees. We see gains in performance over the STO-Queue2 queue up to 1.5$\times$ as the number of threads accessing the queue increases to 18; the FCQueueWT begins to outperform the STO queue as the number of threads increases past 7. The FCQueueWT outperforms the STO-FCQueue starting at 4 threads and achieves performance up to about 3$\times$ by 18 threads.
+
+In addition, the FCQueueWT outperforms its counterpart, the STO-QueueWT, which demonstrates the effectiveness of the flat combining technique in this weakly transactional setting. The STO-QueueWT performs the worst out of all queues measured because of its high abort rate at commit time (100\% of aborts occur at commit time). This is caused by contention on the headversion and tailversion locks; while the actual pop function called during a transaction's execution is much simpler since it does not access the queue to check if the queue is empty, the installation procedure is more complicated because it requires instantiating all LazyPops. Unlike the FCQueueWT, the STO-QueueWT holds a global lock during the entire installation, causing other transactions attempting to commit to abort.
 
 \lyt{TODO ADD MORE}

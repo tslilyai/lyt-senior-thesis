@@ -5,7 +5,7 @@ This chapter investigates different concurrent and transactional algorithms for 
 
 \section{Algorithms}
 
-We present the concurrency and transactional algorithms we analyzed, created, and implemented in our work. SOme general terminology: an \emph{element} refers to the key-value pair inserted into the hashmap. A \emph{bucket} is a container of elements, and a hashmap consists of a set of buckets. The algorithms differ in the methods used to place elements in buckets and track how buckets and elements are modified.
+We present the concurrency and transactional algorithms we analyzed, created, and implemented in our work. Some general terminology: an \emph{element} refers to the key-value pair inserted into the hashmap. A \emph{bucket} is a container of elements, and a hashmap consists of a set of buckets. The algorithms differ in the methods used to place elements in buckets and track how buckets and elements are modified.
 
 \subsection{STO Chaining HashMap}
 The STO Chaining HashMap (ChainingHashmap) is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list. Thus, the worst case lookup/delete is $O(n)$. Inserts are always constant time and require allocating an element. Each bucket is associated with a \emph{bucketversion} that increments upon any committed addition or removal from the bucket. The bucketversion is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{elementversion} that tracks if the value to the element has been modified or if the element has been removed.
@@ -52,6 +52,82 @@ Note that the initial size of the data structure should not affect performance a
 This test is run with different numbers of threads and with different proportions of finds/inserts/deletes. Each thread runs 5 million singleton transactions.
 The test is run twice, once with a probability of 33\% insert, 33\% delete, and 34\% find, and again with a probability of 5\% insert, 5\% delete, and 90\% find. The steady-state final size is 50\% maximum load.
 
-\subsection{Results}
+\subsection{Results and Discussion}
 
 We measure all hashmap's performance in terms of operations per second, abort rates, and cache performance (number of cache misses). 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=2in]{maps/5HM1M:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/10HM1M:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/15HM1M:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/20HM1M:F34,I33,E33speed.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM1M:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/10HM1M:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/15HM1M:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/20HM1M:F34,I33,E33aborts.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM1M:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/10HM1M:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/15HM1M:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/20HM1M:F90,I5,E5speed.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM1M:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/10HM1M:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/15HM1M:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/20HM1M:F90,I5,E5aborts.png}
+\caption{Hashmap with 1 Million Buckets}
+\label{fig:ntqueues}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=2in]{maps/5HM125K:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/10HM125K:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/15HM125K:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/20HM125K:F34,I33,E33speed.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM125K:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/10HM125K:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/15HM125K:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/20HM125K:F34,I33,E33aborts.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM125K:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/10HM125K:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/15HM125K:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/20HM125K:F90,I5,E5speed.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM125K:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/10HM125K:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/15HM125K:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/20HM125K:F90,I5,E5aborts.png}
+\caption{Hashmap with 125K Million Buckets}
+\label{fig:ntqueues}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=2in]{maps/5HM10K:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/10HM10K:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/15HM10K:F34,I33,E33speed.png}
+    \includegraphics[height=2in]{maps/20HM10K:F34,I33,E33speed.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM10K:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/10HM10K:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/15HM10K:F34,I33,E33aborts.png}
+    \includegraphics[height=2in]{maps/20HM10K:F34,I33,E33aborts.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM10K:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/10HM10K:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/15HM10K:F90,I5,E5speed.png}
+    \includegraphics[height=2in]{maps/20HM10K:F90,I5,E5speed.png}
+    \\
+    \includegraphics[height=2in]{maps/5HM10K:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/10HM10K:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/15HM10K:F90,I5,E5aborts.png}
+    \includegraphics[height=2in]{maps/20HM10K:F90,I5,E5aborts.png}
+\caption{Hashmap with 10K Buckets}
+\label{fig:ntqueues}
+\end{figure}
+
