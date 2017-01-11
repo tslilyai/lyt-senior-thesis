@@ -232,7 +232,7 @@ class Plotter():
             self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name, QMETRICS)
 
     def fcqueues_graphs(self):
-        queues = ["STO-Queue1", "STO-Queue2", "FCQueueNT", "Wrapped-FCQueueNT", "STO-FCQueue", "FCQueueWT", "STO-QueueLP"]
+        queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "NT-FCQueueWrapped", "T-FCQueue", "WT-FCQueue", "WT-Queue"]
         stoindices = [0,1]
         ntindices = [2,3]
         tindices = [1,3,4]
