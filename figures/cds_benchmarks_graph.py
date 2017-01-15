@@ -18,14 +18,14 @@ CONCURRENT_BENCHMARK_FILE = "concurrent/concurrent.data"
 FCQUEUES_BENCHMARK_FILE = "fcqueues/fcqueues.data"
 HM_BENCHMARK_FILE = "maps/maps_%s.data"
 INIT_SIZES = [10000, 100000]
-NTHREADS = [1,2,6,12,18]
+NTHREADS = [1,2,4,8,12,16,20]
 MEASURES = {
     "speed": " (ops/s)", 
     "aborts": " (%)",
 }
 QMETRICS = ['speed', 'aborts']
 MAPMETRICS = ['speed', 'aborts']
-LOADS = [5, 10, 15, 20]
+LOADS = [5, 10, 15]#, 20]
 
 class Plotter():
     def __init__(self):
@@ -197,15 +197,15 @@ class Plotter():
                
                 if 'map' in filename:
                     if metric == 'speed':
-                        ax.set_ylim(0, 3e10)
+                        ax.set_ylim(0, 1.5e8)
                     ax.set_title("Multi-Threaded Singletons Test %s, Max Load %s" % (metric, args), y=1.15)
                 else:
                     if metric == 'speed':
-                        ax.set_ylim(0, 1.5e7)
+                        ax.set_ylim(0, 2e7)
                     elif metric == 'aborts':
-                        ax.set_ylim(0, 8)
+                        ax.set_ylim(0, 10)
 
-                ax.set_xlim(0, 20)
+                ax.set_xlim(0, 21)
 
                 if args != None:
                     plt.savefig(filename+"%s%s%s.png" % (args, testname, metric))
@@ -279,7 +279,7 @@ def main():
     p = Plotter()
     #p.hashmaps_graphs()
     p.fcqueues_graphs()
-    p.concurrent_queues_graphs()
+    #p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()

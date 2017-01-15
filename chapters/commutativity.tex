@@ -131,45 +131,44 @@ We start by defining the dependency relations between single operations (Table~\
 
 \begin{table}
     \centering
-    \begin{tabular}{|l|l|l|}
+    \begin{tabular}{|l|l|}
         \hline
 \begin{lstlisting}
 1)  // Q.size() > 1 
-    (T1, Q.pop(), true)        
-    (T2, Q.pop(), true)        
-    (T1, Q.pop(), *)
+    (T1, Q.pop(), true) // Q empty 
+    (T2, Q.pop(), true) // W-W
+    (T1, Q.pop(), *)    // W-W
 \end{lstlisting}
         &
-\begin{lstlisting}
-    2)  // Q.size() == 1  
-        (T1, Q.pop(), true)     
-        (T2, Q.push(a), ())             
-        (T1, Q.pop(), true)
-    \end{lstlisting}
-        &
-    \begin{lstlisting}
-    3)  // Q.size() == 1  
-        (T1, Q.pop(), true)     
-        (T2, Q.pop(), false)     
-        (T1, Q.push(a), ())             
-\end{lstlisting}
-    \\
-    \hline
 \begin{lstlisting}
 4)  // Q.size() >= 0 
-    (T1, Q.push(a), ())
-    (T2, Q.push(a), ())             
-    (T1, Q.push(a), ())             
+    (T1, Q.push(a), ()) 
+    (T2, Q.push(a), ()) // W-W
+    (T1, Q.push(a), ()) // W-W
 \end{lstlisting}
-        &
-    \begin{lstlisting}
-    5)  // Q.size() == 0 
-        (T1, Q.push(a), ())             
-        (T2, Q.pop(), true)
-        (T1, Q.pop(), false)
-\end{lstlisting}
-&
 \\
+\hline
+\begin{lstlisting}
+2)  // Q.size() == 1  
+    (T1, Q.pop(), true) // Q empty  
+    (T2, Q.push(a), ()) // R-W
+    (T1, Q.pop(), true) // W-R
+    \end{lstlisting}
+        &
+\begin{lstlisting}
+5)  // Q.size() == 0 
+    (T1, Q.push(a), ())       
+    (T2, Q.pop(), true)  // W-R, Q empty
+    (T1, Q.pop(), false) // W-W
+\end{lstlisting}
+\\
+    \hline
+    \begin{lstlisting}
+3)  // Q.size() == 1  
+    (T1, Q.pop(), true)  // Q empty  
+    (T2, Q.pop(), false) // W-W     
+    (T1, Q.push(a), ())  // R-W     
+    \end{lstlisting} &\\
         \hline
 \end{tabular}
     \caption{Operation interleavings generating dependency cycles. Interleavings that create no dependencies are left out.}

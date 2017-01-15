@@ -24,7 +24,7 @@ For comparison, we implement two weakly transactional queues. This allows us to 
 The WT-Queue uses the naive synchronization strategy from the T-Queue1 and T-Queue2. The headversion (for pops) or tailversion (for pushes) is locked prior to actually performing the push or pop at commit time. A call to pop or push at execution time does not require any access to the queue state, but merely returns a LazyPop (pop) or adds an item to the \texttt{write\_list} (push).
 
 \subsubsection{WT-FCQueue}
-WT-FCQueue which uses the flat combining synchornization algorithm. We modify the nontransactional, flat combining technique as follows:
+The WT-FCQueue uses the flat combining synchornization algorithm. We modify the nontransactional, flat combining technique as follows:
 \begin{itemize}
     \item \emph{Pops}: 
     Executing a pop returns a LazyPop value. It does not generate a flat combining request or access the queue itself. At commit time, all LazyPops are instantiated with values: for each LazyPop, the thread makes a \texttt{<POP>} flat combining request. This request is completed using the vanilla, concurrent \texttt{<POP>} flat combining implementation, which simply pops an item off the queue.
