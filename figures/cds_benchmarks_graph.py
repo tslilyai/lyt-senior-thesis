@@ -278,8 +278,8 @@ class Plotter():
 def main():
     p = Plotter()
     #p.hashmaps_graphs()
-    p.fcqueues_graphs()
-    #p.concurrent_queues_graphs()
+    #p.fcqueues_graphs()
+    p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()
