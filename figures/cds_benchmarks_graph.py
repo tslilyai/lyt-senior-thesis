@@ -198,6 +198,8 @@ class Plotter():
                 if 'map' in filename:
                     if metric == 'speed':
                         ax.set_ylim(0, 1.5e8)
+                    else:
+                        ax.set_ylim(0, 0.035)
                     ax.set_title("Multi-Threaded Singletons Test %s, Max Load %s" % (metric, args), y=1.15)
                 else:
                     if metric == 'speed':
@@ -277,9 +279,9 @@ class Plotter():
 
 def main():
     p = Plotter()
-    #p.hashmaps_graphs()
+    p.hashmaps_graphs()
     #p.fcqueues_graphs()
-    p.concurrent_queues_graphs()
+    #p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()

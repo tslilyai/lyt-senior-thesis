@@ -11,7 +11,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{harvard-thesis}[2012/04/05 v0.4 Harvard University Thesis Class]
-\LoadClass[12pt, oneside, letterpaper]{book}
+\LoadClass[10pt, oneside, letterpaper]{book}
 
 % Required packages
 \RequirePackage{graphicx}

@@ -40,11 +40,10 @@ As with the queue, all hashmaps queues are evaluated on a set of microbenchmarks
 
 \begin{itemize}
     \item Proportion of Finds/Inserts/Deletes: The ratio of inserts:deletes is kept at 1 to ensure that the hashmap does not always become empty or only grow in size. It is expected that half the inserts will succeed and half the deletes will succeed, since both are drawing key values from the same range. Tests of 5\% inserts, 5\% deletes, and 90\% finds simulate the most likely use cases for hashmaps\cite{hm1}. Tests of equal proportion (33\%) of all operations investigate how the hashmap reacts to an increased rate of inserts and deletes.
-    \item Maximum Key Value: The max key value of inserted elements is twice the number of elements the hashmap will contain when it reaches a fixed point for its size. Thus, altering the maximum value changes the load on the hashmap
     \item Operations per transaction: We choose to run all tests comparing transactional to non-transactional (parallel-only) data structures using single-operation transactions. As discussed in Section~\ref{q_microbenchmarks}, this provides a more fair evaluation of transactional data structures against concurrent ones. In addition, it allows us to minimize the differences between transaction hashmap implementations so we can get a baseline comparison.
     \item Capacity: the number of buckets $\times$ the number of items per bucket. With the Chaining hashmap, capacity is infinite (within memory constraints) because buckets can grow arbitrarily large. The CuckooHashMaps have a fixed size bucket, and therefore a finite capacity. 
         The number of buckets and the size of each bucket affects the number of cache lines accessed during the test (for example, a larger hashmap may not be expected to fit into the L2 cache, whereas a small hashmap at full capacity will fit entirely in cache). During all tests, the number of keys present in the hashmap is not allowed to outgrow its capacity.
-    \item Load: The number of keys : capacity ratio. This determines the average length of chains in a chaining hashmap and the average number of items to be found per bucket. At steady state, load is expected to be half of maximum load. 
+    \item Load: The number of keys : capacity ratio. This determines the average length of chains in a chaining hashmap and the average number of items to be found per bucket. At steady state, load is expected to be half of maximum load.  We control this by picking a maximum key value. The maximum key value of inserted elements is twice the number of elements the hashmap will contain when it reaches a fixed point for its size. Thus, altering the maximum value changes the load on the hashmap.
 \end{itemize}
 Note that the initial size of the data structure should not affect performance as the test proceeds for a longer period of time and reaches a steady state. Therefore, we do not include the initial size as a benchmark parameter.
 
@@ -56,125 +55,36 @@ The test is run twice, once with a probability of 33\% insert, 33\% delete, and 
 
 We measure all hashmap's performance in terms of operations per second, abort rates, and cache performance (number of cache misses). 
 
-Load amount does not appear to change results.
+\begin{itemize}
+    \item Proportion of Finds/Inserts/Deletes: Increasing the number of finds, as compared to insertions and deletions, increases the performance of all hashmaps. by nearly 100\% in certain cases. This is expected, since a find only performs a read of a bucket and can abort a transaction only if an insertion or deletion of an element in the same bucket simultaneously occurs.
+    \item Load: As load increases, the performance of all hashmaps on both the 33\%Find/33\%Insert/33\%Erase test and the 90\%Find/5\%Insert/5\%Erase test decreases for all size hashmaps. Performance drops most during an increase from maximum load 5 to maximum load 10. This is expected since increased load results in increased numbers of cache misses \lyt{numbers?}, a constant multiplier on the time it takes to look up an element in the CuckooHashMaps, and a greater possibility for longer chains in the chaining hashmap. 
+    \item Number of Buckets: Increase in the number of buckets decreases the abort rates, since the probability that two threads will simultaneously attempt to read/modify the same bucket decreases. However, performance is more heavily affected by the number of cache misses, as we see the performance drop as size increases and the number of cache misses also increases. 
+\end{itemize}
 
-\begin{figure}[h!]
+The relative performance of the different hashmaps remains consistent as load changes, with the 
+
+The chaining hashmap is least affected by changes in size, whereas the CuckooHashMap variants are heavily influence by cache performance. This is due to the differences in the algorithms: \lyt{TODO}
+
+\lyt{TODO: cache misses, what fits in cache lines/etc? is this even interesting?}
+
+We note that the transactional cuckoohashmaps still perform as expected compared to the STO chaining hashmap: they outperform the chaining hashmap when run on large loads with a small hashmap. Thus, integrating the CuckooHashMap into a transactional setting did not cripple the cuckoohashmap's performance as with the flat combining queue.
+
+The cuckoohashmap algorithm's optimizations are not crippled by the transactional setting as the flat combining algorithm's were. The optimizations still pertain in the transactional setting: the speedup of the cuckoohashmap algorithm results from the constant time lookups and deletes, and amortized constant time insertions. These asymptotic time bounds still hold for our transactional algorithms for cuckoohashmap operations.
+
+Furthermore, the overhead incurred by adding transactional guarantees to the cuckoohashmap is no more than the overhead incurred by adding the same guarantees to the chaining hashmap. A transactional find in a cuckoohashmap and a chaining hashmap adds to the read set an object representing the bucket in which the object should be (or is) located.  A transactional insert requires adding a read (and write, depending if the inserted key is already present) of the bucket in which the object should be located. A transactional erase requires adding a read (and write, depending if the key to erase is present) of the bucket the object should be located. Thus, the granularity of conflicts is still per-bucket, and the core optimizations which the cuckoohashmap takes to achieve better performance than the chaining hashmap in particular scenarios are still applicable.
+
+\input{figures/hashmaps.tex}
+
+\iffalse
+\begin{table}[h!]
     \centering
-    \caption{33\% Find, 33\% Insert, 33\% Erase: 1 Million Buckets}
-    \begin{tabular}{|cc|}
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 5}}\\
-        \includegraphics[height=2.25in]{maps/5HM1M:F34,I33,E33speed.png} &
-        \includegraphics[height=2.25in]{maps/5HM1M:F34,I33,E33aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 10}}\\
-        \includegraphics[height=2.25in]{maps/10HM1M:F34,I33,E33speed.png} &
-        \includegraphics[height=2.25in]{maps/10HM1M:F34,I33,E33aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 15}}\\
-        \includegraphics[height=2.25in]{maps/15HM1M:F34,I33,E33speed.png} &
-    \includegraphics[height=2.25in]{maps/15HM1M:F34,I33,E33aborts.png}\\
-    \hline 
-    \end{tabular}
-\label{fig:ntqueues}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \caption{33\% Find, 33\% Insert, 33\% Erase: 125K Buckets}
-    \begin{tabular}{|cc|}
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 5}}\\
-        \includegraphics[height=2.25in]{maps/5HM125K:F34,I33,E33speed.png} &
-        \includegraphics[height=2.25in]{maps/5HM125K:F34,I33,E33aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 10}}\\
-        \includegraphics[height=2.25in]{maps/10HM125K:F34,I33,E33speed.png} &
-        \includegraphics[height=2.25in]{maps/10HM125K:F34,I33,E33aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 15}}\\
-        \includegraphics[height=2.25in]{maps/15HM125K:F34,I33,E33speed.png} &
-    \includegraphics[height=2.25in]{maps/15HM125K:F34,I33,E33aborts.png}\\
-    \hline 
-    \end{tabular}
-\label{fig:ntqueues}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \caption{33\% Find, 33\% Insert, 33\% Erase: 10K Buckets}
-    \begin{tabular}{|cc|}
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 5}}\\
-        \includegraphics[height=2.25in]{maps/5HM10K:F34,I33,E33speed.png} &
-        \includegraphics[height=2.25in]{maps/5HM10K:F34,I33,E33aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 10}}\\
-        \includegraphics[height=2.25in]{maps/10HM10K:F34,I33,E33speed.png} &
-        \includegraphics[height=2.25in]{maps/10HM10K:F34,I33,E33aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 15}}\\
-        \includegraphics[height=2.25in]{maps/15HM10K:F34,I33,E33speed.png} &
-    \includegraphics[height=2.25in]{maps/15HM10K:F34,I33,E33aborts.png}\\
-    \hline 
-    \end{tabular}
-\label{fig:ntqueues}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \caption{90\% Find, 5\% Insert, 5\% Erase: 1 Million Buckets}
-    \begin{tabular}{|cc|}
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 5}}\\
-        \includegraphics[height=2.25in]{maps/5HM1M:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/5HM1M:F90,I5,E5aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 10}}\\
-        \includegraphics[height=2.25in]{maps/10HM1M:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/10HM1M:F90,I5,E5aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 15}}\\
-        \includegraphics[height=2.25in]{maps/15HM1M:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/15HM1M:F90,I5,E5aborts.png}\\
-    \hline 
-    \end{tabular}
-\label{fig:ntqueues}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \caption{90\% Find, 5\% Insert, 5\% Erase: 125K Buckets}
-    \begin{tabular}{|cc|}
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 5}}\\
-        \includegraphics[height=2.25in]{maps/5HM125K:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/5HM125K:F90,I5,E5aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 10}}\\
-        \includegraphics[height=2.25in]{maps/10HM125K:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/10HM125K:F90,I5,E5aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 15}}\\
-        \includegraphics[height=2.25in]{maps/15HM125K:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/15HM125K:F90,I5,E5aborts.png}\\
-    \hline 
-    \end{tabular}
-\label{fig:ntqueues}
-\end{figure}
-\begin{figure}[h!]
-    \centering
-    \caption{90\% Find, 5\% Insert, 5\% Erase: 10K Buckets}
-    \begin{tabular}{|cc|}
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 5}}\\
-        \includegraphics[height=2.25in]{maps/5HM10K:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/5HM10K:F90,I5,E5aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 10}}\\
-        \includegraphics[height=2.25in]{maps/10HM10K:F90,I5,E5speed.png} &
-        \includegraphics[height=2.25in]{maps/10HM10K:F90,I5,E5aborts.png}\\
-        \hline 
-        \multicolumn{2}{|c|}{{\footnotesize Maximum Load: 15}}\\
-        \includegraphics[height=2.25in]{maps/15HM10K:F90,I5,E5speed.png} &
-    \includegraphics[height=2.25in]{maps/15HM10K:F90,I5,E5aborts.png}\\
-    \hline 
-    \end{tabular}
-\label{fig:ntqueues}
-\end{figure}
+\begin{tabular}{|c|c|c|c|c|c|}
+    find(x)-find(x) & insert(x)-insert(x) & erase(x)-erase(x) & find(x)-insert(x) & find(x)-erase(x) & insert(x)-erase(x)\\
+    \hline
+    & W-W, W-R & W-W, W-R & R-W & R-W & W-W, W-R
+\end{tabular}
+    \caption*{R-R relations are not shown.}
+    \caption{Dependencies of pairs of hashmap operations}
+    \label{table:hashmapsimpledeps}
+\end{table}
+\fi

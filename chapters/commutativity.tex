@@ -100,7 +100,7 @@ For generality, we reduce each queue operation to a read or write of a particula
     pop & empty? & head, empty?\\
     push & & tail, empty?\\
 \end{tabular}
-    \caption{Queue Operation Semantics in terms of reads and writes}
+    \caption{Read and writes of queue operations}
     \label{table:qrw}
 \end{table}
 
@@ -111,7 +111,7 @@ The guarantees of concurrent, non-transactional queues are \emph{nearly} equival
 
 The flat combining technique provides serializable, atomic, \emph{and} linearizable singleton transactions\cite{flatcombining}. Therefore, we can reason about the commutativity and therefore scalability of a concurrent, non-transactional flat combining queue using notions of transactional dependencies.
 
-We start by defining the dependency relations between single operations (Table~\ref{table:simpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, synchronization is only necessary to ensure correctness when two threads attempt to write (W-W) or simultaneously write/read (W-R or R-W) the same object: the performance bottleneck is only caused by concurrent access synchronization. As we have shown, the flat combining approach works particularly well to minimize the overhead of this synchronization cost.
+We start by defining the dependency relations between single operations (Table~\ref{table:queuesimpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, synchronization is only necessary to ensure correctness when two threads attempt to write (W-W) or simultaneously write/read (W-R or R-W) the same object: the performance bottleneck is only caused by concurrent access synchronization. As we have shown, the flat combining approach works particularly well to minimize the overhead of this synchronization cost.
 
 \begin{table}[h!]
     \centering
@@ -122,9 +122,9 @@ We start by defining the dependency relations between single operations (Table~\
     tail & & & & W-W\\
     empty & W$^e$-R & R-W$^e$ & W$^e$-R, W$^e$-W$^e$ & \\
 \end{tabular}
-    \caption*{X-Y represents an operation X performed by one thread and an operation Y performed by another thread.\\$^e$ indicates that the operation modifies the empty status of the queue.}
-    \caption{Dependencies of Simple Operations}
-    \label{table:simpledeps}
+    \caption*{X-Y represents an operation X performed by one thread and an operation Y performed by another thread.\\$^e$ indicates that the operation modifies the empty status of the queue.\\R-R relations are not shown.}
+    \caption{Dependencies of pairs of queue operations}
+    \label{table:queuesimpledeps}
 \end{table}
 
 \subsection{Transactional Queues}
@@ -171,7 +171,8 @@ We start by defining the dependency relations between single operations (Table~\
     \end{lstlisting} &\\
         \hline
 \end{tabular}
-    \caption{Operation interleavings generating dependency cycles. Interleavings that create no dependencies are left out.}
+    \caption*{Interleavings that create no dependencies are left out.}
+    \caption{Operation interleavings generating dependency cycles.}
     \label{tab:interleavings}
 \end{table}
 
