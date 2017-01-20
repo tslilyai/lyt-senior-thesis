@@ -53,7 +53,7 @@ The test is run twice, once with a probability of 33\% insert, 33\% delete, and 
 
 \subsection{Results and Discussion}
 
-We measure all hashmap's performance in terms of operations per second, abort rates, and cache performance (number of cache misses). 
+We measure all hashmap's performance in terms of operations per second, abort rates, and cache performance (number of cache misses). The full results presented as graphs and tables can be found in Appendix A.
 
 \begin{itemize}
     \item Proportion of Finds/Inserts/Deletes: Increasing the number of finds, as compared to insertions and deletions, increases the performance of all hashmaps. by nearly 100\% in certain cases. This is expected, since a find only performs a read of a bucket and can abort a transaction only if an insertion or deletion of an element in the same bucket simultaneously occurs.
@@ -65,26 +65,7 @@ The relative performance of the different hashmaps remains consistent as load ch
 
 The chaining hashmap is least affected by changes in size, whereas the CuckooHashMap variants are heavily influence by cache performance. This is due to the differences in the algorithms: \lyt{TODO}
 
-\lyt{TODO: cache misses, what fits in cache lines/etc? is this even interesting?}
-
-We note that the transactional cuckoohashmaps still perform as expected compared to the STO chaining hashmap: they outperform the chaining hashmap when run on large loads with a small hashmap. Thus, integrating the CuckooHashMap into a transactional setting did not cripple the cuckoohashmap's performance as with the flat combining queue.
-
-The cuckoohashmap algorithm's optimizations are not crippled by the transactional setting as the flat combining algorithm's were. The optimizations still pertain in the transactional setting: the speedup of the cuckoohashmap algorithm results from the constant time lookups and deletes, and amortized constant time insertions. These asymptotic time bounds still hold for our transactional algorithms for cuckoohashmap operations.
+We note that the transactional cuckoohashmaps still perform as expected compared to the STO chaining hashmap: they outperform the chaining hashmap when run on large loads with a small hashmap. Thus, integrating the CuckooHashMap into a transactional setting did not cripple the cuckoohashmap's performance as with the flat combining queue. This is because the cuckoohashmap algorithm's optimizations still pertain in the transactional setting: the speedup of the cuckoohashmap algorithm results from the constant time lookups and deletes, and amortized constant time insertions. These asymptotic time bounds still hold for our transactional algorithms for cuckoohashmap operations.
 
 Furthermore, the overhead incurred by adding transactional guarantees to the cuckoohashmap is no more than the overhead incurred by adding the same guarantees to the chaining hashmap. A transactional find in a cuckoohashmap and a chaining hashmap adds to the read set an object representing the bucket in which the object should be (or is) located.  A transactional insert requires adding a read (and write, depending if the inserted key is already present) of the bucket in which the object should be located. A transactional erase requires adding a read (and write, depending if the key to erase is present) of the bucket the object should be located. Thus, the granularity of conflicts is still per-bucket, and the core optimizations which the cuckoohashmap takes to achieve better performance than the chaining hashmap in particular scenarios are still applicable.
 
-\input{figures/hashmaps.tex}
-
-\iffalse
-\begin{table}[h!]
-    \centering
-\begin{tabular}{|c|c|c|c|c|c|}
-    find(x)-find(x) & insert(x)-insert(x) & erase(x)-erase(x) & find(x)-insert(x) & find(x)-erase(x) & insert(x)-erase(x)\\
-    \hline
-    & W-W, W-R & W-W, W-R & R-W & R-W & W-W, W-R
-\end{tabular}
-    \caption*{R-R relations are not shown.}
-    \caption{Dependencies of pairs of hashmap operations}
-    \label{table:hashmapsimpledeps}
-\end{table}
-\fi

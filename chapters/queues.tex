@@ -1,9 +1,10 @@
 \chapter{FIFO Queue Algorithms and Analysis}
 \label{Queue}
 
-This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently unsuited to be converted for use as a fully transactional queue algorithm.
+This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently unsuited to be converted for use as a fully transactional queue algorithm; the reasoning which allows for the optimizations taken by these algorithms directly conflicts with the reasoning necessary to provide transactional guarantees.
 
-\section{Transactional Queue Specification}
+\section[Transactional Queue Specification]{Transactional Queue Specification
+\footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from those used for pop.}}
 
 A concurrent queue must adhere to the following specification, in which all operations can be ordered such that:
 \begin{itemize}
@@ -21,15 +22,12 @@ A transactional queue adds the following invariants to the specification. There 
 To satisfy these invariants, transactional data structures must support \emph{read-my-writes}. This is when a thread sees and modifies or returns the value from a previous operation in the transaction.
 
 
-\emph{In the following discussion of our queue algorithms, we omit the discussion of the \texttt{front} operation to simplify reasoning about the state of the queue. An appropriate algorithm for \texttt{front} can be easily inferred from those used for pop.}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Naive Synchronization Queue Algorithms}
 
-STO provides a transactional FIFO queue that adheres to the interface exposed by the \texttt
-r{C++} standard library queue. The following transactional queue algorithms are designed with transactional correctness in mind, and concurrency as a secondary concern. 
+STO provides two transactional FIFO queues that adhere to the interface exposed by the \texttt{C++} standard library queue. These transactional queue algorithms are designed with transactional correctness in mind, and concurrency as a secondary concern. 
 
-The STO data type algorithms enforce transactional correctness using \emph{versions}. A version can act as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure because it monotonically increases when a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. The first instance of the version observed by a thread during a transaction is checked when the transaction commits. This ensures that all observations are valid. Note that we cannot update the read version to an instance of the version observed later in the transaction. This is because we need to validate the first time we see the version in the transaction. 
+These two algorithms enforce transactional correctness using \emph{versions}. A version can act as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure because it monotonically increases when a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. The first instance of the version observed by a thread during a transaction is checked when the transaction commits. This ensures that all observations are valid. Note that we cannot update the read version to an instance of the version observed later in the transaction. This is because we need to validate the first time we see the version in the transaction. 
 
 \subsection{T-Queue1}
 The T-Queue1 is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size transactional queue.

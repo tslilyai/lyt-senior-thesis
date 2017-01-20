@@ -122,11 +122,21 @@ Results are shown in Figure~\ref{fig:tfcqueues}.
         \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps10000speed.png} &
         \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps10000aborts.png}\\
         \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps100000speed.png} &
-    \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps100000aborts.png}\\
+        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps100000aborts.png}\\
         \hline
     \end{tabular}
 \label{fig:tfcqueues}
 \end{figure}
+
+\floatstyle{plain} 
+\restylefloat{figure}
+\begin{figure}[ht!]
+\caption{Queue Cache Misses}
+    \centering
+    \includegraphics[height=3in]{fcqueues/cm.png}
+\label{fig:cm_queues}
+\end{figure}
+\lyt{TODO}
 
 In the Push-Pop Test, the T-Queue2 outperforms both flat combining variants, an unsurprising result given our results from the concurrent queues benchmark in Figure~\ref{fig:ntqueues}. We also note that only the T-Queue2 experiences aborts (at approximately 1.2\% abort rates). We hypothesize this is due to a ``no-starvation'' aspect of the flat combining algorithm: the T-Queue2's pop or push operations acquire a global queue lock. This means that the push-only or pop-only thread may continuously succeed in acquiring the lock, leading to a large sequence of pops or pushes. This can lead to the queue reaching an empty state more often, which is the only state that can cause commit-time checks to fail and the transaction to abort. The flat combining algorithm, however, applies the operations of both requesting threads during one combiner pass. Since one thread only pushes and the other only pops, no thread aborts due to seeing a marked pop, and the queue rarely reaches an empty state since both one push and one pop are applied during each pass.
 
@@ -137,4 +147,4 @@ Analysis with the \texttt{perf} tool indicates that the majority of the overhead
 \item \emph{Higher Complexity}: each flat combining call requires executing instructions, which makes each operation request more expensive.
 \end{enumerate}
 
-We conclude that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better in a transactional setting than a naive synchronization technique such as that used in the T-Queue1 and T-Queue2. This is because the flat combining algorithm must track the transaction state (e.g., going to perform two pops, one of which observes an empty queue) in order to provide transactional guarantees. In the next chapter, we formalize this argument using a commutativity discussion and claim that the higher quantity of more complex flat combining calls is necessary for flat combining to be used in a transactional setting: the flat combining technique depends on operation commutativity present in only a non-transactional setting to achieve its high performance. 
+We conclude that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better in a transactional setting than a naive synchronization technique such as that used in the T-Queue1 and T-Queue2. This is because the flat combining algorithm must track the transaction state (e.g., going to perform two pops, one of which observes an empty queue) in order to provide transactional guarantees. This requires modifying the flat combining algorithm itself, reducing the performance benefits from the algorithm's optimizations. In the next chapter, we formalize this argument using a commutativity discussion and claim that the higher quantity of more complex flat combining calls is necessary for flat combining to be used in a transactional setting: the flat combining technique depends on operation commutativity present in only a non-transactional setting to achieve its high performance. 

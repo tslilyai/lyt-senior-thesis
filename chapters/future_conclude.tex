@@ -10,4 +10,5 @@ To further increase performance, we can specialize for singleton transactions...
 
 We can also further test the idea that we can increase the performance of transactional STO data structures by incorporating high-concurrency algorithms only if the data structure experiences little to no reduction of operation commutativity in a transactional setting as compared to a concurrent one.
 
-For data structures in which operation commutativity is crippled in order to provide transactional guarantees (such as the FIFO queue or priority queue), we can explore further different, weaker transactional specifications that may provide some useful guarantees beyond that of a simple concurrent data structure and allow optimizations by concurrency algorithms to increase performance.
+\lyt{todo}
+For data structures in which operation commutativity crippled the optimizations in order to provide transactional guarantees (such as the FIFO queue or priority queue), we can explore further different, weaker transactional specifications that may provide some useful guarantees beyond that of a simple concurrent data structure and allow optimizations by concurrency algorithms to increase performance.

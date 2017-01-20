@@ -27,11 +27,31 @@ QMETRICS = ['speed', 'aborts']
 MAPMETRICS = ['speed', 'aborts']
 LOADS = [5, 10, 15]#, 20]
 
+#run with 10000000 transactions per thread
+#perf catches every 1000th cache miss
+#load of 5
+#put in bar graphs
+map_cache_misses = {
+    "T-Chaining":[1,1,3],
+    "T-CuckooIE":[1,3,3],
+    "T-CuckooKF":[1,2,2],
+    "NT-Cuckoo": [.601,1,1],
+}
+
+queue_cache_misses = {
+    "WT-FCQueue" : [1],
+    "T-FCQueue": [3],
+    "NT-FCQueue": [.742],
+    "NT-FCQueueWrapped": [.908],
+    "WT-Queue": [2],
+    "T-Queue1": [1],
+    "T-Queue2": [.945],
+}
+
 class Plotter():
     def __init__(self):
         self._parse_stats_file()
     
-
     def _parse_stats_file(self):
         '''
         The data file cds_benchmarks_stats.txt should be parsed into 
@@ -98,6 +118,48 @@ class Plotter():
         for load in LOADS:
             self.hmtests[load] = _construct_test_data(HM_BENCHMARK_FILE % load)
 
+    def get_cm_graphs(self, ds, colors, patterns, filename, cm_map):
+        width = 0.5/len(ds)
+        fig = plt.figure(figsize=(8,7))
+        ax = fig.add_subplot(111)
+        bars = []
+        labels = []
+        num_entries = (len(list(cm_map.values())[0]))
+        x = range(num_entries)
+
+        if num_entries == 1:
+            order = [0,1,6,2,3,4,5]
+        else:
+            order = range(len(ds))
+        for i in order:
+            labels.append(ds[i])
+            bars.append(ax.bar(x, cm_map[ds[i]], width, color=colors[i], hatch=patterns[i]))
+            x = [v+width for v in x]
+        
+        if len(ds) < 5:
+            ncols = len(ds)
+            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            ax.set_title("Cache Misses", y=1.15)
+        else:
+            ncols = int(math.ceil(len(ds)/3.0))
+            ax.set_title("Cache Misses", y=1.25)
+        legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+       
+        ax.set_ylabel("Cache Misses (millions)")
+        if len(x) > 1:
+            ax.set_xlabel('Number of Buckets')
+            ax.set_xticks(np.arange(3) + (len(ds)/2)*width)
+            ax.set_xticklabels(["10K", "125K", "1M"])
+       
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width, box.height*.85])
+        ax.set_xlim(-width, x[num_entries-1]+ width)
+        
+        plt.savefig(filename+"cm.png")
+        #plt.show()
+        plt.close()
+
+
     def get_pushpop_graphs(self, queues, indices, filename, colors, patterns, results):
         width = 0.5/len(indices)
         qdata = defaultdict(dict)
@@ -117,9 +179,8 @@ class Plotter():
                 fig = plt.figure(figsize=(8,7))
                 ax = fig.add_subplot(111)
                 qbars = []
-                for index, data in qdata.items():
-                    if index not in indices:
-                        continue
+                for index in indices:
+                    data = qdata[index]
                     medians = [median(metrics) for metrics in data[metric]]
                     err_low = [medians[i]-min(metrics) for i,metrics in enumerate(data[metric])]
                     err_high = [max(metrics)-medians[i] for i,metrics in enumerate(data[metric])]
@@ -168,9 +229,7 @@ class Plotter():
             for metric in metrics:
                 fig = plt.figure(figsize=(8,7))
                 ax = fig.add_subplot(111)
-                for index in range(len(ds)):
-                    if index not in indices:
-                        continue
+                for index in indices:
                     datum = data[index]
                     medians = [median(mets) for mets in datum[metric]]
                     err_low = [medians[i]-min(mets) for i,mets in enumerate(datum[metric])]
@@ -218,13 +277,13 @@ class Plotter():
 
 
     def concurrent_queues_graphs(self):
-        queues = ["STO-Queue1", "STO-Queue2", "FCQueueNT", "Basket", "Moir","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
+        queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "Basket", "Max Performance of other queues","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
         filename='concurrent/'
         colors = ["red", "red","green"] + [(0.15*i,0.15*i, 0.15*i) for i in range(7)]
         results = self.ctests['Q:PushPop']
 
         patterns = ['//','','//','', '', '', '', '', '', '']
-        self.get_pushpop_graphs(queues, range(len(queues))[1:], filename, colors, patterns, results)
+        self.get_pushpop_graphs(queues, [1,2,4], filename, colors, patterns, results)
 
         patterns = ['--','solid','--','solid', 'solid', 'solid', 'solid', 'solid', 'solid', 'solid']
         test_names = ['Q:RandSingleOps']
@@ -238,21 +297,25 @@ class Plotter():
         stoindices = [0,1]
         ntindices = [2,3]
         tindices = [1,3,4]
-        lpindices = [1,3,4,5,6]
+        lpindices = [1,6,3,4,5]
 
         filename='fcqueues/'
-        colors = ["red","red","green","green","purple","blue","red"]
+        colors = ["red","red","green","green","purple","purple","red"]
         results = self.ttests['Q:PushPop']
 
+        # CACHE MISSES
+        patterns = ['//','','//','', '', '..',".."]
+        self.get_cm_graphs(queues, colors, patterns, filename, queue_cache_misses)
+
         # PUSH POP TEST: SPEED 
-        patterns = ['//','','//','', '', '',".."]
+        patterns = ['//','','//','', '', '..',".."]
         self.get_pushpop_graphs(queues, stoindices, filename+"sto", colors, patterns, results)
         self.get_pushpop_graphs(queues, ntindices, filename+"nt", colors, patterns, results)
         self.get_pushpop_graphs(queues, tindices, filename+"t", colors, patterns, results)
         self.get_pushpop_graphs(queues, lpindices, filename+"lp", colors, patterns, results)
 
         # RAND OPS TEST
-        patterns = ['--','solid','--','solid', 'solid', 'solid', ':']
+        patterns = ['--','solid','--','solid', 'solid', ':', ':']
         test_names = ['Q:RandSingleOps']
         for name in test_names:
             results = self.ttests[name]
@@ -262,16 +325,19 @@ class Plotter():
             self.get_randops_graphs(queues, lpindices, filename+"lp", colors, patterns, results, name, QMETRICS)
 
     def hashmaps_graphs(self):
-        maps = ["Chaining", "Cuckoo IE", "Cuckoo KF", "CuckooNT"]
+        maps = ["T-Chaining", "T-CuckooIE", "T-CuckooKF", "NT-Cuckoo"]
         filename='maps/'
         colors = ["red","green","green","blue"]
-        patterns = ["solid","--","solid","solid"]
         test_names = [
             "HM1M:F34,I33,E33","HM1M:F90,I5,E5",
             "HM125K:F34,I33,E33","HM125K:F90,I5,E5",
             "HM10K:F34,I33,E33","HM10K:F90,I5,E5",
         ]
 
+        patterns = ['','//','','']
+        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses)
+        
+        patterns = ["solid","--","solid","solid"]
         for name in test_names:
             for load in LOADS:
                 results = self.hmtests[load][name]
@@ -279,9 +345,9 @@ class Plotter():
 
 def main():
     p = Plotter()
-    p.hashmaps_graphs()
-    #p.fcqueues_graphs()
-    #p.concurrent_queues_graphs()
+    #p.hashmaps_graphs()
+    p.fcqueues_graphs()
+    p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()
