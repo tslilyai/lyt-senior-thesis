@@ -1,0 +1,184 @@
+\chapter{Hashmap Results}
+
+\section{Cache Misses}
+
+The results are collected by evaluating the Multi-Thread Singletons Test with each thread running 10M transactions under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
+
+In these figures, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
+
+    \begin{figure}[H]
+    \centering
+        {\includegraphics[width=0.5\textwidth]{maps/5cm.png}}
+        \caption{Hashmap Cache Misses: Maximum Fullness 5}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+        {\includegraphics[width=0.5\textwidth]{maps/10cm.png}}
+        \caption{Hashmap Cache Misses: Maximum Fullness 10}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+        {\includegraphics[width=0.5\textwidth]{maps/15cm.png}}
+        \caption{Hashmap Cache Misses: Maximum Fullness 15}
+    \end{figure}
+
+
+\newpage
+\section{Multi-Thread Singleton Test Results: 33\% Find, 33\% Insert, 33\% Erase}
+
+\subsection{Maximum Fullness 5}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 10K Buckets, Maximum Fullness 5}
+    \includegraphics[width=0.5\textwidth]{maps/5HM10K:F34,I33,E33.png} 
+    \input{figures/maps/HM10K:F34,I33,E335_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 125K Buckets, Maximum Fullness 5}
+    \includegraphics[width=0.5\textwidth]{maps/10HM125K:F34,I33,E33.png} 
+    \input{figures/maps/HM125K:F34,I33,E335_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 1M Buckets, Maximum Fullness 5}
+    \includegraphics[width=0.5\textwidth]{maps/15HM1M:F34,I33,E33.png} 
+    \input{figures/maps/HM1M:F34,I33,E335_aborts.tex}
+\end{figure}
+
+\subsection{Maximum Fullness 10}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 10K Buckets, Maximum Fullness 10}
+    \includegraphics[width=0.5\textwidth]{maps/10HM10K:F34,I33,E33.png} 
+    \input{figures/maps/HM10K:F34,I33,E3310_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 125K Buckets, Maximum Fullness 10}
+    \includegraphics[width=0.5\textwidth]{maps/10HM125K:F34,I33,E33.png} 
+    \input{figures/maps/HM125K:F34,I33,E3310_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 1M Buckets, Maximum Fullness 10}
+    \includegraphics[width=0.5\textwidth]{maps/10HM1M:F34,I33,E33.png} 
+    \input{figures/maps/HM1M:F34,I33,E3310_aborts.tex}
+\end{figure}
+
+\subsection{Maximum Fullness 15}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 10K Buckets, Maximum Fullness 15}
+    \includegraphics[width=0.5\textwidth]{maps/15HM10K:F34,I33,E33.png} 
+    \input{figures/maps/HM10K:F34,I33,E3315_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 125K Buckets, Maximum Fullness 15}
+    \includegraphics[width=0.5\textwidth]{maps/15HM125K:F34,I33,E33.png} 
+    \input{figures/maps/HM125K:F34,I33,E3315_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (33F/33I/33E): 1M Buckets, Maximum Fullness 15}
+    \includegraphics[width=0.5\textwidth]{maps/15HM1M:F34,I33,E33.png} 
+    \input{figures/maps/HM1M:F34,I33,E3315_aborts.tex}
+\end{figure}
+
+\newpage
+\section{Multi-Thread Singleton Test Results: 90\% Find, 5\% Insert, 5\% Erase}
+
+\subsection{Maximum Fullness 5}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (34F/5I/5E): 10K Buckets, Maximum Fullness 5}
+    \includegraphics[width=0.5\textwidth]{maps/5HM10K:F90,I5,E5.png} 
+    \input{figures/maps/HM10K:F90,I5,E55_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (34F/5I/5E): 125K Buckets, Maximum Fullness 5}
+    \includegraphics[width=0.5\textwidth]{maps/10HM125K:F90,I5,E5.png} 
+    \input{figures/maps/HM125K:F90,I5,E55_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (34F/5I/5E): 1M Buckets, Maximum Fullness 5}
+    \includegraphics[width=0.5\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+    \input{figures/maps/HM1M:F90,I5,E55_aborts.tex}
+\end{figure}
+
+\subsection{Maximum Fullness 10}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (90F/5I/5E): 10K Buckets, Maximum Fullness 10}
+    \includegraphics[width=0.5\textwidth]{maps/10HM10K:F90,I5,E5.png} 
+    \input{figures/maps/HM10K:F90,I5,E510_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (90F/5I/5E): 125K Buckets, Maximum Fullness 10}
+    \includegraphics[width=0.5\textwidth]{maps/10HM125K:F90,I5,E5.png} 
+    \input{figures/maps/HM125K:F90,I5,E510_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (90F/5I/5E): 1M Buckets, Maximum Fullness 10}
+    \includegraphics[width=0.5\textwidth]{maps/10HM1M:F90,I5,E5.png} 
+    \input{figures/maps/HM1M:F90,I5,E510_aborts.tex}
+\end{figure}
+
+\subsection{Maximum Fullness 15}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (90F/5I/5E): 10K Buckets, Maximum Fullness 15}
+    \includegraphics[width=0.5\textwidth]{maps/15HM10K:F90,I5,E5.png} 
+    \input{figures/maps/HM10K:F90,I5,E515_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (90F/5I/5E): 125K Buckets, Maximum Fullness 15}
+    \includegraphics[width=0.5\textwidth]{maps/15HM125K:F90,I5,E5.png} 
+    \input{figures/maps/HM125K:F90,I5,E515_aborts.tex}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Hashmap Performance (90F/5I/5E): 1M Buckets, Maximum Fullness 15}
+    \includegraphics[width=0.5\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+    \input{figures/maps/HM1M:F90,I5,E515_aborts.tex}
+\end{figure}
+
+\iffalse
+\begin{table}[H]
+    \centering
+\begin{tabular}{|c|c|c|c|c|c|}
+    find(x)-find(x) & insert(x)-insert(x) & erase(x)-erase(x) & find(x)-insert(x) & find(x)-erase(x) & insert(x)-erase(x)\\
+    \hline
+    & W-W, W-R & W-W, W-R & R-W & R-W & W-W, W-R
+\end{tabular}
+    \caption*{R-R relations are not shown.}
+    \caption{Dependencies of pairs of hashmap operations}
+    \label{table:hashmapsimpledeps}
+\end{table}
+\fi

@@ -1,0 +1,121 @@
+\chapter{Queue Results}
+
+\section{Cache Misses}
+
+The results are collected by evaluating the Multi-Thread Singletons Test with each thread running 10M transactions under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
+
+In these figures, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fcqueues/cm.png}
+    \caption{Queue Cache Misses}
+\label{fig:cm_queues}
+\end{figure}
+
+\section{Push-Pop Test Results}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{concurrent/Q:PushPop.png}
+    \caption{Push-Pop Test: Concurrent, Non-transactional Queues}
+    \label{fig:concurrentqs_pushpop}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}
+	\includegraphics[width=\textwidth]{fcqueues/stoQ:PushPop.png}
+	\end{minipage}
+	\begin{minipage}{0.45\textwidth}
+		\input{figures/fcqueues/stopushpop_aborts.tex}
+	\end{minipage}
+    \caption{Push-Pop Test: T-Queue1 vs. T-Queue2}
+    \label{fig:stoqs_pushpop}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}
+    \includegraphics[width=\textwidth]{fcqueues/ntQ:PushPop.png}
+	\end{minipage}
+	\begin{minipage}{0.45\textwidth}
+    \input{figures/fcqueues/ntpushpop_aborts.tex}
+	\end{minipage}
+    \caption{Push-Pop Test: NT-FCQueueWrapped vs. NT-FCQueue}
+    \label{fig:ntqs_pushpop}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}
+    \includegraphics[width=\textwidth]{fcqueues/tQ:PushPop.png}
+	\end{minipage}
+	\begin{minipage}{0.45\textwidth}
+    \input{figures/fcqueues/tpushpop_aborts.tex}
+	\end{minipage}
+    \caption{Push-Pop Test: T-FCQueue}
+    \label{fig:tqs_pushpop}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}
+    \includegraphics[width=\textwidth]{fcqueues/lpQ:PushPop.png}
+	\end{minipage}
+	\begin{minipage}{0.45\textwidth}
+    \input{figures/fcqueues/lppushpop_aborts.tex}
+	\end{minipage}
+    \caption{Push-Pop Test: WT-FCQueue}
+    \label{fig:wtqs_pushpop}
+\end{figure}
+
+\section{Multi-Thread Singletons Test Results}
+
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.5\textwidth]{concurrent/Q:RandSingleOps10000.png}
+    \includegraphics[width=0.5\textwidth]{concurrent/Q:RandSingleOps100000.png}
+\caption{Multi-Thread Singletons Test: Concurrent, Non-transactional Queues}
+\label{fig:concurrent_qs}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{fcqueues/stoQ:RandSingleOps10000.png}
+    \input{figures/fcqueues/sto10000aborts.tex}
+    \includegraphics[width=0.5\textwidth]{fcqueues/stoQ:RandSingleOps100000.png}
+    \input{figures/fcqueues/sto100000aborts.tex}
+\caption{Multi-Thread Singletons Test: T-Queue1 vs. T-Queue2}
+\label{fig:stoqueues}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{fcqueues/ntQ:RandSingleOps10000.png}
+    \input{figures/fcqueues/nt10000aborts.tex}
+    \includegraphics[width=0.5\textwidth]{fcqueues/ntQ:RandSingleOps100000.png}
+    \input{figures/fcqueues/nt100000aborts.tex}
+\caption{Multi-Thread Singletons Test: NT-FCQueueWrapped vs. NT-FCQueue}
+\label{fig:ntqueues}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{fcqueues/tQ:RandSingleOps10000.png}
+    \input{figures/fcqueues/t10000aborts.tex}
+    \includegraphics[width=0.5\textwidth]{fcqueues/tQ:RandSingleOps100000.png}
+    \input{figures/fcqueues/t100000aborts.tex}
+\caption{Multi-Thread Singletons Test: T-FCQueue}
+\label{fig:tqueues}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{fcqueues/lpQ:RandSingleOps10000.png}
+    \input{figures/fcqueues/lp10000aborts.tex}
+    \includegraphics[width=0.5\textwidth]{fcqueues/lpQ:RandSingleOps100000.png}
+    \input{figures/fcqueues/lp100000aborts.tex}
+\caption{Multi-Thread Singletons Test: WT-FCQueue}
+\label{fig:wtqueues}
+\end{figure}
