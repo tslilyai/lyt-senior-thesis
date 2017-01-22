@@ -23,19 +23,29 @@ MEASURES = {
     "speed": " (ops/s)", 
     "aborts": " (%)",
 }
-QMETRICS = ['speed', 'aborts']
-MAPMETRICS = ['speed', 'aborts']
-LOADS = [5, 10, 15]#, 20]
+fullnesses = [5, 10, 15]#, 20]
 
 #run with 10000000 transactions per thread
 #perf catches every 1000th cache miss
-#load of 5
+#fullness of 5
 #put in bar graphs
-map_cache_misses = {
+map_cache_misses_5 = {
     "T-Chaining":[1,1,3],
     "T-CuckooIE":[1,3,3],
     "T-CuckooKF":[1,2,2],
     "NT-Cuckoo": [.601,1,1],
+}
+map_cache_misses_15 = {
+    "T-Chaining":[1,3,3],
+    "T-CuckooIE":[1,5,4],
+    "T-CuckooKF":[1,2,2],
+    "NT-Cuckoo": [.665,1,1],
+}
+map_cache_misses_10 = {
+    "T-Chaining":[1,2,2],
+    "T-CuckooIE":[1,4,4],
+    "T-CuckooKF":[1,2,2],
+    "NT-Cuckoo": [.525,1,1],
 }
 
 queue_cache_misses = {
@@ -115,12 +125,12 @@ class Plotter():
         self.ctests = _construct_test_data(CONCURRENT_BENCHMARK_FILE)
         self.ttests = _construct_test_data(FCQUEUES_BENCHMARK_FILE)
         self.hmtests = {}
-        for load in LOADS:
-            self.hmtests[load] = _construct_test_data(HM_BENCHMARK_FILE % load)
+        for fullness in fullnesses:
+            self.hmtests[fullness] = _construct_test_data(HM_BENCHMARK_FILE % fullness)
 
-    def get_cm_graphs(self, ds, colors, patterns, filename, cm_map):
+    def get_cm_graphs(self, ds, colors, patterns, filename, cm_map, args=None):
         width = 0.5/len(ds)
-        fig = plt.figure(figsize=(8,7))
+        fig = plt.figure(figsize=(7,5))
         ax = fig.add_subplot(111)
         bars = []
         labels = []
@@ -138,24 +148,28 @@ class Plotter():
         
         if len(ds) < 5:
             ncols = len(ds)
-            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
-            ax.set_title("Cache Misses", y=1.15)
+            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .0), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
         else:
             ncols = int(math.ceil(len(ds)/3.0))
-            ax.set_title("Cache Misses", y=1.25)
-        legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+        legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
        
         ax.set_ylabel("Cache Misses (millions)")
         if len(x) > 1:
             ax.set_xlabel('Number of Buckets')
             ax.set_xticks(np.arange(3) + (len(ds)/2)*width)
             ax.set_xticklabels(["10K", "125K", "1M"])
+        else:
+            plt.tick_params(axis='x',which='both',bottom='off',top='off',labelbottom='off')
        
         box = ax.get_position()
-        ax.set_position([box.x0, box.y0, box.width, box.height*.85])
+        ax.set_position([box.x0, box.y0, box.width, box.height])
         ax.set_xlim(-width, x[num_entries-1]+ width)
-        
-        plt.savefig(filename+"cm.png")
+        ax.set_ylim(0, 5)
+       
+        if args:
+            plt.savefig(filename+str(args)+"cm.png")
+        else:
+            plt.savefig(filename+"cm.png")
         #plt.show()
         plt.close()
 
@@ -173,48 +187,70 @@ class Plotter():
                 for i in range(len(data_lists)):
                     qdata[q_index]['speed'].append(data_lists['speed'][q_index][0])
                     qdata[q_index]['aborts'].append(data_lists['aborts'][q_index][0])
-        
-            for metric in QMETRICS:
-                x = range(len(INIT_SIZES)) 
-                fig = plt.figure(figsize=(8,7))
-                ax = fig.add_subplot(111)
-                qbars = []
-                for index in indices:
-                    data = qdata[index]
-                    medians = [median(metrics) for metrics in data[metric]]
-                    err_low = [medians[i]-min(metrics) for i,metrics in enumerate(data[metric])]
-                    err_high = [max(metrics)-medians[i] for i,metrics in enumerate(data[metric])]
-                    qbars.append(ax.bar(x, medians, width, color=colors[index],
-                        hatch=patterns[index],
-                        yerr=[err_low, err_high], ecolor='black'))
-                    x = [v+width for v in x]
+       
+            x = range(len(INIT_SIZES)) 
+            fig = plt.figure(figsize=(8,7))
+            ax = fig.add_subplot(111)
+            qbars = []
+            for index in indices:
+                data = qdata[index]
+                medians = [median(metrics) for metrics in data['speed']]
+                err_low = [medians[i]-min(metrics) for i,metrics in enumerate(data['speed'])]
+                err_high = [max(metrics)-medians[i] for i,metrics in enumerate(data['speed'])]
+                qbars.append(ax.bar(x, medians, width, color=colors[index],
+                    hatch=patterns[index],
+                    yerr=[err_low, err_high], ecolor='black'))
+                x = [v+width for v in x]
 
-                labels = [queues[i] for i in indices]
-                if len(labels) < 5:
-                    ncols = len(labels)
-                    legend = ax.legend(qbars, labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
-                    ax.set_title("Push-Pop Test %s" % metric, y=1.15)
-                else:
-                    ncols = int(math.ceil(len(labels)/3.0))
-                    ax.set_title("Push-Pop Test %s" % metric, y=1.25)
-                    legend = ax.legend(qbars, labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
-                ax.set_xlabel('Initial Size')
-                ax.set_ylabel(metric + MEASURES[metric])
-                ax.set_xticks(np.arange(len(INIT_SIZES)) + (len(labels)/2)*width)
-                ax.set_xticklabels(INIT_SIZES)
-               
-                box = ax.get_position()
-                ax.set_position([box.x0, box.y0, box.width, box.height*.85])
-                ax.set_xlim(-width, x[len(INIT_SIZES)-1]+ width)
-                
-                if metric == 'speed':
-                    ax.set_ylim(0, 1.2e7)
-               
-                plt.savefig(filename+"%s%s.png" % ('Q:PushPop', metric))
-                #plt.show()
-                plt.close()
+            labels = [queues[i] for i in indices]
+            if len(labels) < 5:
+                ncols = len(labels)
+                legend = ax.legend(qbars, labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            else:
+                ncols = int(math.ceil(len(labels)/3.0))
+                legend = ax.legend(qbars, labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            ax.set_xlabel('Initial Size')
+            ax.set_ylabel("Speed" + MEASURES['speed'])
+            ax.set_xticks(np.arange(len(INIT_SIZES)) + (len(labels)/2)*width)
+            ax.set_xticklabels(INIT_SIZES)
+           
+            box = ax.get_position()
+            ax.set_position([box.x0, box.y0, box.width, box.height*.85])
+            ax.set_xlim(-width, x[len(INIT_SIZES)-1]+ width)
+            ax.set_ylim(0, 1.2e7)
+           
+            plt.savefig(filename+"%s.png" % ('Q:PushPop'))
+            #plt.show()
+            plt.close()
 
-    def get_randops_graphs(self, ds, indices, filename, colors, patterns, results, testname, metrics, args=None):    
+            # aborts
+            begin_lines = [
+                '\\begin{tabular}{|c|c|c|}',
+                '\\hline',
+                '\\multirow{2}{*}{Queue} & \\multicolumn{2}{c|}{Initial Size Abort Rate (\%)}\\\\'
+                '\\cline{2-3}'
+                '& \quad 10000 \quad & 100000\\\\',
+            ]
+            end_lines = [
+                '\\hline'
+                '\\end{tabular}',
+            ]
+
+            with open(filename+'pushpop_aborts.tex', 'w') as f:
+                for line in begin_lines:
+                    f.write(line+"\n")
+                f.write('\\hline'+"\n")
+                f.write('\\hline'+"\n")
+                for i in indices:
+                    data = qdata[i]['aborts']
+                    f.write(queues[i] + ' & ' 
+                            + '{0:.3f}'.format(median(data[0])) + ' & ' 
+                            + '{0:.3f}'.format(median(data[1])) + '\\\\\n' 
+                    )
+                for line in end_lines:
+                    f.write(line + '\n')
+
+    def get_randops_graphs(self, ds, indices, filename, colors, patterns, results, testname, args=None):    
         data = defaultdict(dict)
         for size, data_lists in results.items():
             assert(len(ds) == len(data_lists['speed']))
@@ -226,55 +262,86 @@ class Plotter():
                     data[index]['speed'].append(data_lists['speed'][index][nthreads_index])
                     data[index]['aborts'].append(data_lists['aborts'][index][nthreads_index])
 
-            for metric in metrics:
-                fig = plt.figure(figsize=(8,7))
-                ax = fig.add_subplot(111)
-                for index in indices:
-                    datum = data[index]
-                    medians = [median(mets) for mets in datum[metric]]
-                    err_low = [medians[i]-min(mets) for i,mets in enumerate(datum[metric])]
-                    err_high = [max(mets)-medians[i] for i,mets in enumerate(datum[metric])]
+            fig = plt.figure(figsize=(8,7))
+            ax = fig.add_subplot(111)
+            for index in indices:
+                datum = data[index]
+                medians = [median(mets) for mets in datum['speed']]
+                err_low = [medians[i]-min(mets) for i,mets in enumerate(datum['speed'])]
+                err_high = [max(mets)-medians[i] for i,mets in enumerate(datum['speed'])]
 
-                    ax.errorbar(NTHREADS, medians, label=ds[index], color=colors[index], 
-                            linestyle=patterns[index], linewidth=2, yerr=[err_low, err_high])
+                ax.errorbar(NTHREADS, medians, label=ds[index], color=colors[index], 
+                        linestyle=patterns[index], linewidth=2, yerr=[err_low, err_high])
 
-                ax.set_xlabel("Number of Threads")
-                ax.set_ylabel(metric + MEASURES[metric])
+            ax.set_xlabel("Number of Threads")
+            ax.set_ylabel("Speed" + MEASURES['speed'])
 
-                labels = [ds[i] for i in indices]
-                if len(labels) < 5:
-                    ax.set_title("Multi-Threaded Singletons Test %s, Initial Size %s" % (metric, size), y=1.15)
-                    ncols = len(labels)
-                    legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
-                else:
-                    ax.set_title("Multi-Threaded Singletons Test %s, Initial Size %s" % (metric, size), y=1.25)
-                    ncols = int(math.ceil(len(labels)/3.0))
-                    legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            labels = [ds[i] for i in indices]
+            if len(labels) < 5:
+                ax.set_title("Multi-Threaded Singletons Test Performance, Initial Size %s" % (size), y=1.15)
+                ncols = len(labels)
+                legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            else:
+                ax.set_title("Multi-Threaded Singletons Test Performance, Initial Size %s" % (size), y=1.25)
+                ncols = int(math.ceil(len(labels)/3.0))
+                legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
 
-                box = ax.get_position()
-                ax.set_position([box.x0, box.y0, box.width, box.height*.85])
-               
-                if 'map' in filename:
-                    if metric == 'speed':
-                        ax.set_ylim(0, 1.5e8)
-                    else:
-                        ax.set_ylim(0, 0.035)
-                    ax.set_title("Multi-Threaded Singletons Test %s, Max Load %s" % (metric, args), y=1.15)
-                else:
-                    if metric == 'speed':
-                        ax.set_ylim(0, 2e7)
-                    elif metric == 'aborts':
-                        ax.set_ylim(0, 10)
+            box = ax.get_position()
+            ax.set_position([box.x0, box.y0, box.width, box.height*.85])
+           
+            if 'map' in filename:
+                ax.set_ylim(0, 1.5e8)
+                ax.set_title("Multi-Threaded Singletons Test Performance, Max Fullness %s" % (args), y=1.15)
+            else:
+                ax.set_ylim(0, 2e7)
+            ax.set_xlim(0, 21)
 
-                ax.set_xlim(0, 21)
+            if args != None:
+                plt.savefig(filename+"%s%s.png" % (args, testname))
+            else:
+                plt.savefig(filename+"%s%d.png" % (testname, size))
+            #plt.show()
+            plt.close()
 
-                if args != None:
-                    plt.savefig(filename+"%s%s%s.png" % (args, testname, metric))
-                else:
-                    plt.savefig(filename+"%s%d%s.png" % (testname, size, metric))
-                #plt.show()
-                plt.close()
+            # aborts
+            if 'map' not in filename:
+                begin_lines = [
+                    '\\begin{tabular}{|c|c|c|c|c|c|c|}',
+                    '\\hline',
+                    '\\multirow{2}{*}{Queue} & \\multicolumn{6}{c|}{Number of Threads Abort Rate (\%)}\\\\'
+                    '\\cline{2-7}'
+                    '& 2 & 4 & 8 & 12 & 16 & 20\\\\',
+                ]
+                end_lines = [
+                    '\\hline'
+                    '\\end{tabular}',
+                ]
+                myfile = filename+str(size)+'aborts.tex'
+            else:
+                begin_lines = [
+                    '\\begin{tabular}{|c|c|c|c|c|c|c|}',
+                    '\\hline',
+                    '\\multirow{2}{*}{Hashmap} & \\multicolumn{6}{c|}{Number of Threads Abort Rate (\%)}\\\\'
+                    '\\cline{2-7}'
+                    '& 2 & 4 & 8 & 12 & 16 & 20\\\\',
+                ]
+                end_lines = [
+                    '\\hline',
+                    '\\end{tabular}',
+                ]
+                myfile = filename+testname+str(args)+'_aborts.tex'
 
+            with open(myfile, 'w') as f:
+                for line in begin_lines:
+                    f.write(line+"\n")
+                f.write('\\hline'+"\n")
+                f.write('\\hline'+"\n")
+                for i in indices:
+                    datum = data[i]['aborts'][1:]
+                    thread_data = ['{0:.3f}'.format(median(val)) for val in datum]
+                    f.write(ds[i] + ' & ' + ' & '.join(thread_data) + '\\\\\n')
+                for line in end_lines:
+                    f.write(line + '\n')
 
     def concurrent_queues_graphs(self):
         queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "Basket", "Max Performance of other queues","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
@@ -290,7 +357,7 @@ class Plotter():
         queues = ["STO-Queue1", "STO-Queue2", "FCQueueNT", "", "Max Performance of other queues","","","","",""]
         for name in test_names:
             results = self.ctests[name]
-            self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name, QMETRICS)
+            self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name)
 
     def fcqueues_graphs(self):
         queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "NT-FCQueueWrapped", "T-FCQueue", "WT-FCQueue", "WT-Queue"]
@@ -319,10 +386,10 @@ class Plotter():
         test_names = ['Q:RandSingleOps']
         for name in test_names:
             results = self.ttests[name]
-            self.get_randops_graphs(queues, stoindices, filename+"sto", colors, patterns, results, name, QMETRICS)
-            self.get_randops_graphs(queues, ntindices, filename+"nt", colors, patterns, results, name, QMETRICS)
-            self.get_randops_graphs(queues, tindices, filename+"t", colors, patterns, results, name, QMETRICS)
-            self.get_randops_graphs(queues, lpindices, filename+"lp", colors, patterns, results, name, QMETRICS)
+            self.get_randops_graphs(queues, stoindices, filename+"sto", colors, patterns, results, name)
+            self.get_randops_graphs(queues, ntindices, filename+"nt", colors, patterns, results, name)
+            self.get_randops_graphs(queues, tindices, filename+"t", colors, patterns, results, name)
+            self.get_randops_graphs(queues, lpindices, filename+"lp", colors, patterns, results, name)
 
     def hashmaps_graphs(self):
         maps = ["T-Chaining", "T-CuckooIE", "T-CuckooKF", "NT-Cuckoo"]
@@ -335,19 +402,21 @@ class Plotter():
         ]
 
         patterns = ['','//','','']
-        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses)
+        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses_5,5)
+        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses_10,10)
+        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses_15,15)
         
         patterns = ["solid","--","solid","solid"]
         for name in test_names:
-            for load in LOADS:
-                results = self.hmtests[load][name]
-                self.get_randops_graphs(maps, range(len(maps)), filename, colors, patterns, results, name, MAPMETRICS, load)
+            for fullness in fullnesses:
+                results = self.hmtests[fullness][name]
+                self.get_randops_graphs(maps, range(len(maps)), filename, colors, patterns, results, name, fullness)
 
 def main():
     p = Plotter()
-    #p.hashmaps_graphs()
+    p.hashmaps_graphs()
     p.fcqueues_graphs()
-    p.concurrent_queues_graphs()
+    #p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()

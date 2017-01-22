@@ -40,7 +40,7 @@ The queue supports three transactional operations: push, pop, and \texttt{front}
 
 A pop within a transaction first checks if the queue is empty. If the queue is empty, then the thread reads the tailversion to ensure that no other transaction has committed a push before this thread commits. Suppose another thread successfully installs a push before this thread commits. Then this pop should have read that pushed value instead of seeing an empty queue. This forces the thread to abort the transaction. If there have been items added to the \texttt{write\_list} from previous pushes within the transaction, then the pop will “pop” an item off the \texttt{write\_list}, performing an instance of \emph{read-my-writes}. Such a modiicatio is allowable during execution time because the \texttt{write\_list} is thread-local. If the queue is nonempty, then the thread reads the headversion to ensure that no other transaction has committed a pop before this thread commits. The thread then finds the item to pop off the queue by iterating through the queue from the head until it finds an item that has not yet been popped off within this transaction. The thread adds a write to this item so it knows during commit time and during future pops that it intends to pop this item.
 
-The design is summarized in Table \ref{table:sto1}.
+%The design is summarized in Table \ref{table:sto1}.
 
 \subsection{T-Queue2}
 The T-Queue2 is also a circular, fixed-size queue, with operations push, pop, and front. The T-Queue2 algorithm is a hybrid design integrating the T-Queue1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library\cite{tdsl} as described in previous work. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the T-Queue1, and the algorithm is simpler to implement and describe. 
@@ -49,7 +49,7 @@ Pessimistic locking entails locking the queue when any naturally-contentious ope
 
 Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
 
-The design is summarized in Table \ref{table:sto2}
+%The design is summarized in Table \ref{table:sto2}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -118,7 +118,7 @@ If a thread ever sees an empty queue when executing a pop \emph{and} subsequentl
 
 The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending pops. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}.
 
-The algorithm is summarized in Table \ref{table:fcqueue}.
+%The algorithm is summarized in Table \ref{table:fcqueue}.
 
 %\input{tables/sto_queues.tex}
 

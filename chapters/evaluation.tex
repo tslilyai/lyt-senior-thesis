@@ -40,27 +40,7 @@ We refer to the several variants of the flat combining queue that we benchmark a
     \item NT-FCQueueWrapped: the non-transactional flat combining queue that invokes STO \texttt{start\_transaction} and \texttt{commit\_transaction} calls, but does not do any of the transactional bookkeeping necessary to provide transactional guarantees.
 \end{itemize}
 
-
 \subsubsection{T-Queue1 vs. T-Queue2}
-
-\floatstyle{plain} 
-\restylefloat{figure}
-\begin{figure}[ht!]
-\caption{T-Queue1 vs. T-Queue2}
-    \centering
-    \begin{tabular}{|c|c|}
-        \hline&\\
-        Speed (ops/s) & Aborts (\% Transactions)\\
-        \includegraphics[height=2.25in]{fcqueues/stoQ:PushPopspeed.png} &
-        \includegraphics[height=2.25in]{fcqueues/stoQ:PushPopaborts.png}\\
-        \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps10000speed.png} &
-        \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps10000aborts.png}\\
-        \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps100000speed.png} &
-    \includegraphics[height=2.25in]{fcqueues/stoQ:RandSingleOps100000aborts.png}\\
-        \hline
-    \end{tabular}
-\label{fig:stoqueues}
-\end{figure}
 
 The comparative performance of the T-Queue1 and T-Queue2 (Figure~\ref{fig:stoqueues}) measures the effectiveness of a pessimistic approach to the pop operation. We use the better performing queue, the T-Queue2, as the baseline reference in all future benchmarks. This also verifies that a pessimistic approach to contentious operations (such as pop) benefits performance.
 
@@ -69,17 +49,6 @@ The comparative performance of the T-Queue1 and T-Queue2 (Figure~\ref{fig:stoque
 We benchmark a set of the best-performing high-concurrency queue algorithms against the better performing STO queue implementation, the T-Queue2. This helps determine which high-concurrency algorithm would be best suited to integration with STO. We look for both the most scalable and the highest-performing queue.
  
  Our implementation of the flat combining queue modifies the implementation of the flat combining queue from the authors of the flat combining paper\cite{flatcombining}. Our implementation of the other high-concurrency queues are taken from the Concurrent Data Structures (CDS) library implementations online\cite{libcds}. The performance of these implementations on our tests the performance results given in the papers that originally proposed the algorithms.\lyt{CHECK}
-
-\floatstyle{boxed} 
-\restylefloat{figure}
-\begin{figure}[h!]
-\centering
-    \includegraphics[height=3in]{concurrent/Q:PushPopspeed.png}\\
-    \includegraphics[height=3in]{concurrent/Q:RandSingleOps10000speed.png}
-    \includegraphics[height=3in]{concurrent/Q:RandSingleOps100000speed.png}
-\caption{Performance of Various Concurrent Queues}
-\label{fig:concurrent_queues}
-\end{figure}
 
 Out of the concurrent data structures tested, the Moir queue\cite{queue2} consistently performs best on the 2-Thread Push-Pop Test. On the Multi-Thread Singletons Test, the flat combining queue achieves performance over 2.5$\times$ greater than any other concurrent, non-transactional queue as the number of threads increases above 2.
 
@@ -95,48 +64,9 @@ Results are shown in Figure~\ref{fig:ntqueues}.
 
 The STO wrapper calls can lead to a loss of performance ranging from 0\% at twenty threads to 40\% at four threads (comparing against the performance of the vanilla non-transactional flat combining queue). Once contention increases and becomes the bottleneck, the difference in performance becomes negligible. The NT-FCQueueWrapped scales nearly equally as well as the NT-FCQueue, and matches performance at twelve threads when run with a smaller initial queue size. This comparison of the NT-FCQueueWrapped and the NT-FCQueue demonstrates that STO introduces negligible necessary overhead. Even with the wrapper calls, our results indicate it can still be possible to achieve performance up to approximately 1.75$\times$ greater than that of our original T-Queue1 and T-Queue2 as the number of threads increases.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[height=3in]{fcqueues/ntQ:PushPopspeed.png}
-    \\
-    \includegraphics[height=3in]{fcqueues/ntQ:RandSingleOps10000speed.png}
-    \includegraphics[height=3in]{fcqueues/ntQ:RandSingleOps100000speed.png}
-\caption{NT-FCQueueWrapped vs. NT-FCQueue}
-\label{fig:ntqueues}
-\end{figure}
-
 \subsubsection{T-FCQueue Performance}
 We compare the T-FCQueue against the NT-FCQueueWrapped and the T-Queue2 to measure how the flat combining transactional approach described in Section~\ref{fcqueuet} performs.
 Results are shown in Figure~\ref{fig:tfcqueues}.
-
-\floatstyle{plain} 
-\restylefloat{figure}
-\begin{figure}[ht!]
-\caption{T-FCQueue Performance}
-    \centering
-    \begin{tabular}{|c|c|}
-        \hline&\\
-        Speed (ops/s) & Aborts (\% Transactions)\\
-        \includegraphics[height=2.25in]{fcqueues/tQ:PushPopspeed.png} &
-        \includegraphics[height=2.25in]{fcqueues/tQ:PushPopaborts.png}\\
-        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps10000speed.png} &
-        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps10000aborts.png}\\
-        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps100000speed.png} &
-        \includegraphics[height=2.25in]{fcqueues/tQ:RandSingleOps100000aborts.png}\\
-        \hline
-    \end{tabular}
-\label{fig:tfcqueues}
-\end{figure}
-
-\floatstyle{plain} 
-\restylefloat{figure}
-\begin{figure}[ht!]
-\caption{Queue Cache Misses}
-    \centering
-    \includegraphics[height=3in]{fcqueues/cm.png}
-\label{fig:cm_queues}
-\end{figure}
-\lyt{TODO}
 
 In the Push-Pop Test, the T-Queue2 outperforms both flat combining variants, an unsurprising result given our results from the concurrent queues benchmark in Figure~\ref{fig:ntqueues}. We also note that only the T-Queue2 experiences aborts (at approximately 1.2\% abort rates). We hypothesize this is due to a ``no-starvation'' aspect of the flat combining algorithm: the T-Queue2's pop or push operations acquire a global queue lock. This means that the push-only or pop-only thread may continuously succeed in acquiring the lock, leading to a large sequence of pops or pushes. This can lead to the queue reaching an empty state more often, which is the only state that can cause commit-time checks to fail and the transaction to abort. The flat combining algorithm, however, applies the operations of both requesting threads during one combiner pass. Since one thread only pushes and the other only pops, no thread aborts due to seeing a marked pop, and the queue rarely reaches an empty state since both one push and one pop are applied during each pass.
 
