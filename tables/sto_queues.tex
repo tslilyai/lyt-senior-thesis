@@ -1,0 +1,82 @@
+\begin{table}[ht!]
+    \scriptsize
+\centering
+\begin{tabular}{|c|c|c|c|c|l|}
+\hline
+    \multicolumn{2}{|c|}{Operation} & Execution-Time Effects & Read Set & Write Set & \multicolumn{1}{c|}{Commit Protocol} \\ 
+    \hline\hline
+    \multicolumn{2}{|c|}{Push} & none & none & \texttt{write\_list}& 
+        \begin{tabular}[c]{@{}l@{}}- lock tailversion\\ - perform pushes\\ - increment tailversion\\ - unlock tailversion\end{tabular}\\ 
+    \hline
+    \multirow{2}{*}{Pop} & Nonempty & none & headversion & element to be popped & \begin{tabular}[c]{@{}l@{}}- lock headversion\\ - check headversion\\ - perform pops\\ - increment headversion\\ - unlock headversion\end{tabular} \\
+    \cline{2-6} 
+                     & Empty & none & tailversion & none  & 
+                     \begin{tabular}[c]{@{}l@{}}- lock tailversion\\ - check tailversion\\ - unlock tailversion\end{tabular} \\
+\hline
+\end{tabular}
+\caption{The STO1 Queue Algorithm}
+\label{table:sto1}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{table}[ht!]
+    \scriptsize
+\centering
+    \begin{tabular}{|c|c|c|c|c|l|}
+\hline
+    \multicolumn{2}{|c|}{Operation} & Execution-Time Effects & Read Set & Write Set & \multicolumn{1}{c|}{Commit Protocol} \\ 
+    \hline\hline
+    \multicolumn{2}{|c|}{Push} & none & none & \texttt{write\_list}& 
+        \begin{tabular}[c]{@{}l@{}}- lock queueversion,\\ - perform pushes,\\ - increment queueversion\\ - unlock queueversion\end{tabular}\\ 
+    \hline
+    \multirow{2}{*}{Pop} & Nonempty & lock queueversion & none & element to be popped  & \begin{tabular}[c]{@{}l@{}}- perform pops\\ - unlock queueversion\end{tabular} \\
+    \cline{2-6} 
+                     & Empty & lock queueversion & none & none & none\\
+\hline
+\end{tabular}
+    \caption{The STO2 Queue Algorithm (delayed pop execution)}
+\label{table:sto2}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[ht!]
+    \scriptsize
+\centering
+    \begin{tabular}{|c|c|c|c|c|l|}
+\hline
+    \multicolumn{2}{|c|}{Operation} & Execution-Time Effects & Read Set & Write Set & \multicolumn{1}{c|}{Commit Protocol} \\ 
+    \hline\hline
+        \multicolumn{2}{|c|}{Push} & none & none & \texttt{write\_list}& \texttt{<PUSH, write\_list>}\\
+    \hline
+        \multirow{2}{*}{Pop} 
+                     & Nonempty & \texttt{<MARK\_POP, thread\_id>} & none & \texttt{pop\_item} & \texttt{<DEQ, thread\_id>}\\
+    \cline{2-6} 
+                     & Empty & none & none & \texttt{pop\_item} & check \texttt{<EMPTY?, thread\_id>}\\
+\hline
+\end{tabular}
+    \caption{The Transactional Flat Combining Queue Algorithm (delayed pop execution)}
+\label{table:fcqueue}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{table}[ht!]
+    \scriptsize
+\centering
+    \begin{tabular}{|c|c|c|c|c|l|}
+\hline
+    \multicolumn{2}{|c|}{Operation} & Execution-Time Effects & Read Set & Write Set & \multicolumn{1}{c|}{Commit Protocol} \\ 
+    \hline\hline
+    \multicolumn{2}{|c|}{Push} & none & none & \texttt{write\_list}& 
+        \begin{tabular}[c]{@{}l@{}}- lock queueversion,\\ - perform pushes,\\ - increment queueversion\\ - unlock queueversion\end{tabular}\\ 
+    \hline
+    \multirow{2}{*}{Pop} & Nonempty & lock queueversion, perform pop & none & element to be popped  & unlock queueversion \\
+    \cline{2-6} 
+                     & Empty & lock queueversion & none & none & none\\
+\hline
+\end{tabular}
+    \caption{The STO2 Queue Algorithm (undo logging)}
+\label{table:sto2pops}
+\end{table}
+\fi

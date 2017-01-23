@@ -37,7 +37,7 @@ map_cache_misses_5 = {
 }
 map_cache_misses_15 = {
     "T-Chaining":[1,3,3],
-    "T-CuckooIE":[1,5,4],
+    "T-CuckooIE":[1,5,5],
     "T-CuckooKF":[1,2,2],
     "NT-Cuckoo": [.665,1,1],
 }
@@ -148,10 +148,10 @@ class Plotter():
         
         if len(ds) < 5:
             ncols = len(ds)
-            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .0), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
         else:
             ncols = int(math.ceil(len(ds)/3.0))
-        legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+        legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
        
         ax.set_ylabel("Cache Misses (millions)")
         if len(x) > 1:

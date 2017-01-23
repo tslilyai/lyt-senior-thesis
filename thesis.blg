@@ -1,0 +1,56 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: thesis.aux
+The style file: abbrv.bst
+A level-1 auxiliary file: endmatter/colophon.aux
+Database file #1: thesis.bib
+Warning--can't use both author and editor fields in queue4
+Warning--can't use both author and editor fields in queue2
+Warning--can't use both volume and number fields in swisstm
+Warning--can't use both volume and number fields in autolock
+Warning--can't use both author and editor fields in lazyset
+Warning--can't use both volume and number fields in herlihytm
+Warning--can't use both volume and number fields in galois
+Warning--empty institution in queue1
+You've used 40 entries,
+            2118 wiz_defined-function locations,
+            750 strings with 11534 characters,
+and the built_in function-call counts, 17097 in all, are:
+= -- 1781
+> -- 740
+< -- 29
++ -- 294
+- -- 250
+* -- 1173
+:= -- 2618
+add.period$ -- 141
+call.type$ -- 40
+change.case$ -- 243
+chr.to.int$ -- 0
+cite$ -- 48
+duplicate$ -- 703
+empty$ -- 1328
+format.name$ -- 250
+if$ -- 3781
+int.to.chr$ -- 0
+int.to.str$ -- 40
+missing$ -- 41
+newline$ -- 203
+num.names$ -- 80
+pop$ -- 279
+preamble$ -- 1
+purify$ -- 205
+quote$ -- 0
+skip$ -- 543
+stack$ -- 0
+substring$ -- 1136
+swap$ -- 265
+text.length$ -- 29
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 150
+warning$ -- 8
+while$ -- 171
+width$ -- 42
+write$ -- 485
+(There were 8 warnings)

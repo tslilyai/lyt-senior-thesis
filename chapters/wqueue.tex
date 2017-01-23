@@ -35,7 +35,7 @@ The WT-FCQueue uses the flat combining synchornization algorithm. We modify the 
 
 \subsection{Evaluation and Results}
 
-We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section~\ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue (T-FCQueue), the T-Queue2, and the WrappedNT-FCQueue. Results are shown in Figure~\ref{fig:wtqueues} and Figure~\ref{fig:wtqs_pushpop}.
+We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section~\ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue (T-FCQueue), the T-Queue2, and the WrappedNT-FCQueue. Full results are shown in Figure~\ref{fig:wtqs_pushpop} and Figure~\ref{fig:wtqueues}.
 
 While the weakly-transaction, flat combining queue (WT-FCQueue) does not perform as well as its nontransactional counterpart, NT-FCQueue, the performance of the WT-FCQueue exceeds that of the T-Queue1, the T-Queue2, and the T-FCQueue, which all provide full-transactional guarantees. We see gains in performance over the T-Queue2 up to 1.5$\times$ as the number of threads accessing the queue increases to 18; the WT-FCQueue begins to outperform the STO queue as the number of threads increases past 7. The WT-FCQueue outperforms the T-FCQueue starting at 4 threads and achieves performance up to about 3$\times$ by 18 threads.
  

@@ -41,11 +41,11 @@ As with the queue, all hashmaps queues are evaluated on a set of microbenchmarks
 \begin{itemize}
     \item Proportion of Finds/Inserts/Deletes: The ratio of inserts:deletes is kept at 1 to ensure that the hashmap does not always become empty or only grow in size. It is expected that half the inserts will succeed and half the deletes will succeed, since both are drawing key values from the same range. Tests of 5\% inserts, 5\% deletes, and 90\% finds simulate the most likely use cases for hashmaps\cite{hm1}. Tests of equal proportion (33\%) of all operations investigate how the hashmap reacts to an increased rate of inserts and deletes.
     \item Operations per transaction: We choose to run all tests comparing transactional to non-transactional (parallel-only) data structures using single-operation transactions. As discussed in Section~\ref{q_microbenchmarks}, this provides a more fair evaluation of transactional data structures against concurrent ones. In addition, it allows us to minimize the differences between transaction hashmap implementations so we can get a baseline comparison.
-    \item Number of buckets: Both the cuckoo hashmaps and the chaining hashmap statically set the number of buckets in the data structure. The number of items allowed in one bucket of the cuckoo hashmaps is fixed at a particular value, which we will call the \emph{maximum fullness}. 
-        With the Chaining hashmap, the number of items in one bucket can grow arbitrarily large because each bucket represents a linked list of values.
-        The \emph{capacity} (number of buckets $\times$ number of items per bucket) of the two map datatypes differs because the cuckoo hashmaps have a fixed size bucket, and therefore a finite capacity, while the Chaining hashmap 
+    \item Number of buckets: Both the cuckoo hashmaps and the chaining hashmap statically set the number of buckets in the data structure. The number of elements allowed in one bucket of the cuckoo hashmaps is fixed at a particular value, which we will call the \emph{maximum fullness}. 
+        With the Chaining hashmap, the number of elements in one bucket can grow arbitrarily large because each bucket represents a linked list of values.
+        The \emph{capacity} (number of buckets $\times$ number of elements per bucket) of the two map datatypes differs because the cuckoo hashmaps have a fixed size bucket, and therefore a finite capacity, while the Chaining hashmap 
         The number of buckets and the size of each bucket affects the number of cache lines accessed during the test (for example, a larger hashmap may not be expected to fit into the L2 cache, whereas a small hashmap at full capacity will fit entirely in cache). During all tests, the number of keys present in the hashmap is not allowed to outgrow its capacity.
-    \item Fullness: The ratio equivalent to (number of keys : number of buckets). This determines the average number of items to be found per bucket. The tests are implemented such that at steady state, fullness is expected to be 75\% of the maximum fullness of the cuckoo hashmap to avoid an out-of-space exception. This is controlled by picking a maximum key value. The maximum key value of inserted elements is twice the number of elements the hashmap will contain when its size reaches a fixed point.
+    \item Fullness: The ratio equivalent to (number of keys : number of buckets). This determines the average number of elements to be found per bucket. The tests are implemented such that at steady state, fullness is expected to be 75\% of the maximum fullness of the cuckoo hashmap to avoid an out-of-space exception. This is controlled by picking a maximum key value. The maximum key value of inserted elements is twice the number of elements the hashmap will contain when its size reaches a fixed point.
 \end{itemize}
 Note that the initial size of the data structure should not affect performance as the test proceeds for a longer period of time and reaches a steady state. Therefore, we do not include the initial size as a benchmark parameter.
 
@@ -55,10 +55,23 @@ The test is run twice, once with a probability of 33\% insert, 33\% delete, and 
 
 \subsection{Results and Discussion}
 
-We measure all hashmap's performance in terms of operations per second, abort rates, and cache performance (number of cache misses). The full results presented as graphs and tables can be found in Appendix A.
+We measure all hashmap's performance in terms of operations per second, abort rates, and cache performance (number of cache misses). The full results presented as graphs and tables can be found in Appendix~\ref{app:hashmaps}.
+
+\subsubsection{Cache Misses}
+
+The number of cache misses of each datatype is influenced by the number of allocations per data structure and the patterns in which these allocations are accessed. As expected, the non-transactional cuckoo hashmap experiences the least number of cache misses: this is because all other hashmaps' buckets contain a pointer to an allocated element inserted into the map. We expect that the non-allocating, transactional cuckoo hashmap will perform better than either of the allocating types \lyt{TODO?}.
+
+Overall, the CuckooIE hashmap experiences the most cache misses as a result of both the cuckoo hashing algorithm: two buckets and all pointers to elements within the buckets are accessed during a find. As size and fullness increases, the CuckooKF hashmap experiences the least number of cache misses: this is expected, since a find will not need to follow pointers in a CuckooKF hashmap bucket to compare key values, whereas the chaining and CuckooIE hashmaps both require following a pointer to compare element keys.
+
+As expected, the map of size 10K buckets performs best for all algorithms regardless of the maximum fullness allowed: this is because the table and all its elements fit entirely in cache.
+There is no significant difference in the number of cache misses between hashmaps of size 125K and 1M buckets. 
+
+As maximum fullness increases from 5 to 10, all transactional hashmaps experience an increase in the number of cache misses. This is epxpected, since both the chaining and cuckoo hashmaps will iterate on average through more elements per bucket during a find. The chaining and CuckooIE hashmaps experience a greater increase from a maximum fullness of 10 to 15 than does the CuckooKF hashmap.
+
+All figures and data are in Appendix Section~\ref{app:hashmaps_cm}.
 
 \begin{itemize}
-    \item Proportion of Finds/Inserts/Deletes: Increasing the number of finds, as compared to insertions and deletions, increases the performance of all hashmaps. by nearly 100\% in certain cases. This is expected, since a find only performs a read of a bucket and can abort a transaction only if an insertion or deletion of an element in the same bucket simultaneously occurs.
+    \item Proportion of Finds/Inserts/Deletes: Increasing the number of finds, as compared to insertions and deletions, increases the performance of all hashmaps by nearly 100\% in certain cases. This is expected, since a find only performs a read of a bucket and can abort a transaction only if an insertion or deletion of an element in the same bucket simultaneously occurs.
     \item Load: As load increases, the performance of all hashmaps on both the 33\%Find/33\%Insert/33\%Erase test and the 90\%Find/5\%Insert/5\%Erase test decreases for all size hashmaps. Performance drops most during an increase from maximum load 5 to maximum load 10. This is expected since increased load results in increased numbers of cache misses \lyt{numbers?}, a constant multiplier on the time it takes to look up an element in the cuckoo hashmaps, and a greater possibility for longer chains in the chaining hashmap. 
     \item Number of Buckets: Increase in the number of buckets decreases the abort rates, since the probability that two threads will simultaneously attempt to read/modify the same bucket decreases. However, performance is more heavily affected by the number of cache misses, as we see the performance drop as size increases and the number of cache misses also increases. 
 \end{itemize}

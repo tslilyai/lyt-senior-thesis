@@ -1,0 +1,246 @@
+\begin{thebibliography}{10}
+
+\bibitem{queue4}
+Y.~Afek, G.~Korland, and E.~Yanovsky.
+\newblock {\em Quasi-Linearizability: Relaxed Consistency for Improved
+  Concurrency}, pages 395--410.
+\newblock Springer Berlin Heidelberg, Berlin, Heidelberg, 2010.
+
+\bibitem{badrinath}
+B.~R. Badrinath and K.~Ramamritham.
+\newblock Semantics-based concurrency control: Beyond commutativity.
+\newblock {\em ACM Trans. Database Syst.}, 17(1):163--199, Mar. 1992.
+
+\bibitem{predication}
+N.~G. Bronson, J.~Casper, H.~Chafi, and K.~Olukotun.
+\newblock Transactional predication: high-performance concurrent sets and maps
+  for stm.
+\newblock In {\em Proceedings of the 29th ACM SIGACT-SIGOPS symposium on
+  Principles of distributed computing}, pages 6--15. ACM, 2010.
+
+\bibitem{tcc}
+B.~D. Carlstrom, A.~McDonald, M.~Carbin, C.~Kozyrakis, and K.~Olukotun.
+\newblock Transactional collection classes.
+\newblock In {\em Proceedings of the 12th ACM SIGPLAN symposium on Principles
+  and practice of parallel programming}, pages 56--67. ACM, 2007.
+
+\bibitem{cascaval}
+C.~Cascaval, C.~Blundell, M.~Michael, H.~W. Cain, P.~Wu, S.~Chiras, and
+  S.~Chatterjee.
+\newblock Software transactional memory: Why is it only a research toy?
+\newblock {\em Queue}, 6(5):40, 2008.
+
+\bibitem{tl2}
+D.~Dice, O.~Shalev, and N.~Shavit.
+\newblock Transactional locking ii.
+\newblock In {\em International Symposium on Distributed Computing}, pages
+  194--208. Springer, 2006.
+
+\bibitem{queue2}
+S.~Doherty, L.~Groves, V.~Luchangco, and M.~Moir.
+\newblock {\em Formal Verification of a Practical Lock-Free Queue Algorithm},
+  pages 97--114.
+\newblock Springer Berlin Heidelberg, Berlin, Heidelberg, 2004.
+
+\bibitem{swisstm}
+A.~Dragojevi{\'c}, R.~Guerraoui, and M.~Kapalka.
+\newblock Stretching transactional memory.
+\newblock In {\em ACM sigplan notices}, volume~44, pages 155--165. ACM, 2009.
+
+\bibitem{spectm}
+A.~Dragojevi{\'c} and T.~Harris.
+\newblock Stm in the small: trading generality for performance in software
+  transactional memory.
+\newblock In {\em Proceedings of the 7th ACM european conference on Computer
+  Systems}, pages 1--14. ACM, 2012.
+
+\bibitem{elastic}
+P.~Felber, V.~Gramoli, and R.~Guerraoui.
+\newblock Elastic transactions.
+\newblock In {\em Proceedings of the 23rd International Conference on
+  Distributed Computing}, DISC'09, pages 93--107, Berlin, Heidelberg, 2009.
+  Springer-Verlag.
+
+\bibitem{hm3}
+S.~Feldman, P.~LaBorde, and D.~Dechev.
+\newblock Concurrent multi-level arrays: Wait-free extensible hash maps.
+\newblock In {\em 2013 International Conference on Embedded Computer Systems:
+  Architectures, Modeling, and Simulation (SAMOS)}, pages 155--163, July 2013.
+
+\bibitem{cuckoocode}
+M.~Gentili.
+\newblock Dynamically resizable cuckoo hashtable.
+\newblock \url{https://github.com/mgentili/DRECHTs}, 2014.
+
+\bibitem{autolock}
+G.~Golan-Gueta, G.~Ramalingam, M.~Sagiv, and E.~Yahav.
+\newblock Automatic scalable atomicity via semantic locking.
+\newblock In {\em ACM SIGPLAN Notices}, volume~50, pages 31--41. ACM, 2015.
+
+\bibitem{harristm}
+T.~Harris, J.~Larus, and R.~Rajwar.
+\newblock {\em Transactional Memory, 2nd Edition}.
+\newblock Morgan and Claypool Publishers, 2nd edition, 2010.
+
+\bibitem{lazyset}
+A.~Hassan, R.~Palmieri, and B.~Ravindran.
+\newblock {\em On Developing Optimistic Transactional Lazy Set}, pages
+  437--452.
+\newblock Springer International Publishing, Cham, 2014.
+
+\bibitem{optboost}
+A.~Hassan, R.~Palmieri, and B.~Ravindran.
+\newblock Optimistic transactional boosting.
+\newblock {\em SIGPLAN Not.}, 49(8):387--388, Feb. 2014.
+
+\bibitem{flatcombining}
+D.~Hendler, I.~Incze, N.~Shavit, and M.~Tzafrir.
+\newblock Flat combining and the synchronization-parallelism tradeoff.
+\newblock In {\em Proceedings of the Twenty-second Annual ACM Symposium on
+  Parallelism in Algorithms and Architectures}, SPAA '10, pages 355--364, New
+  York, NY, USA, 2010. ACM.
+
+\bibitem{boost}
+M.~Herlihy and E.~Koskinen.
+\newblock Transactional boosting: a methodology for highly-concurrent
+  transactional objects.
+\newblock In {\em Proceedings of the 13th ACM SIGPLAN Symposium on Principles
+  and practice of parallel programming}, pages 207--216. ACM, 2008.
+
+\bibitem{earlyrelease}
+M.~Herlihy, V.~Luchangco, P.~Martin, and M.~Moir.
+\newblock Nonblocking memory management support for dynamic-sized data
+  structures.
+\newblock {\em ACM Transactions on Computer Systems (TOCS)}, 23(2):146--196,
+  2005.
+
+\bibitem{herlihytm}
+M.~Herlihy and J.~E.~B. Moss.
+\newblock {\em Transactional memory: Architectural support for lock-free data
+  structures}, volume~21.
+\newblock ACM, 1993.
+
+\bibitem{linearizability}
+M.~P. Herlihy and J.~M. Wing.
+\newblock Linearizability: A correctness condition for concurrent objects.
+\newblock {\em ACM Transactions on Programming Languages and Systems (TOPLAS)},
+  12(3):463--492, 1990.
+
+\bibitem{sto}
+N.~Herman, J.~P. Inala, Y.~Huang, L.~Tsai, E.~Kohler, B.~Liskov, and L.~Shrira.
+\newblock Type-aware transactions for faster concurrent code.
+\newblock In {\em Proceedings of the Eleventh European Conference on Computer
+  Systems}, EuroSys '16, pages 31:1--31:16, New York, NY, USA, 2016. ACM.
+
+\bibitem{libcds}
+M.~Khizhinsky.
+\newblock A c++ library of concurrent data structures.
+\newblock \url{https://github.com/khizmax/libcds}, 2015.
+
+\bibitem{korth}
+H.~F. Korth.
+\newblock Locking primitives in a database system.
+\newblock {\em J. ACM}, 30(1):55--79, Jan. 1983.
+
+\bibitem{galois}
+M.~Kulkarni, D.~Nguyen, D.~Prountzos, X.~Sui, and K.~Pingali.
+\newblock Exploiting the commutativity lattice.
+\newblock In {\em ACM SIGPLAN Notices}, volume~46, pages 542--555. ACM, 2011.
+
+\bibitem{kung}
+H.~T. Kung and C.~H. Papadimitriou.
+\newblock An optimality theory of concurrency control for databases.
+\newblock In {\em Proceedings of the 1979 ACM SIGMOD International Conference
+  on Management of Data}, SIGMOD '79, pages 116--126, New York, NY, USA, 1979.
+  ACM.
+
+\bibitem{queue3}
+E.~Ladan-mozes and N.~Shavit.
+\newblock An optimistic approach to lock-free fifo queues.
+\newblock In {\em In Proceedings of the 18th International Symposium on
+  Distributed Computing, LNCS 3274}, pages 117--131. Springer, 2004.
+
+\bibitem{hm2}
+M.~M. Michael.
+\newblock High performance dynamic lock-free hash tables and list-based sets.
+\newblock In {\em Proceedings of the Fourteenth Annual ACM Symposium on
+  Parallel Algorithms and Architectures}, SPAA '02, pages 73--82, New York, NY,
+  USA, 2002. ACM.
+
+\bibitem{queue1}
+M.~M. Michael and M.~L. Scott.
+\newblock Simple, fast, and practical non-blocking and blocking concurrent
+  queue algorithms.
+\newblock Technical report, Rochester, NY, USA, 1995.
+
+\bibitem{distributed}
+S.~Mu, Y.~Cui, Y.~Zhang, W.~Lloyd, and J.~Li.
+\newblock Extracting more concurrency from distributed transactions.
+\newblock In {\em Proceedings of the 11th USENIX Conference on Operating
+  Systems Design and Implementation}, OSDI'14, pages 479--494, Berkeley, CA,
+  USA, 2014. USENIX Association.
+
+\bibitem{opennesting}
+Y.~Ni, V.~S. Menon, A.-R. Adl-Tabatabai, A.~L. Hosking, R.~L. Hudson, J.~E.~B.
+  Moss, B.~Saha, and T.~Shpeisman.
+\newblock Open nesting in software transactional memory.
+\newblock In {\em Proceedings of the 12th ACM SIGPLAN symposium on Principles
+  and practice of parallel programming}, pages 68--78. ACM, 2007.
+
+\bibitem{chm}
+R.~Pagh and F.~F. Rodler.
+\newblock Cuckoo hashing.
+\newblock In {\em European Symposium on Algorithms}, pages 121--133. Springer,
+  2001.
+
+\bibitem{schwarz}
+P.~M. Schwarz and A.~Z. Spector.
+\newblock Synchronizing shared abstract types.
+\newblock {\em ACM Trans. Comput. Syst.}, 2(3):223--250, Aug. 1984.
+
+\bibitem{hm1}
+O.~Shalev and N.~Shavit.
+\newblock Split-ordered lists: Lock-free extensible hash tables.
+\newblock {\em J. ACM}, 53(3):379--405, May 2006.
+
+\bibitem{CRDT}
+M.~Shapiro, N.~Pregui\c{c}a, C.~Baquero, and M.~Zawirski.
+\newblock Conflict-free replicated data types.
+\newblock In {\em Proceedings of the 13th International Conference on
+  Stabilization, Safety, and Security of Distributed Systems}, SSS'11, pages
+  386--400, Berlin, Heidelberg, 2011. Springer-Verlag.
+
+\bibitem{tdsl}
+A.~Spiegelman, G.~Golan-Gueta, and I.~Keidar.
+\newblock Transactional data structure libraries.
+\newblock In {\em Proceedings of the 37th ACM SIGPLAN Conference on Programming
+  Language Design and Implementation}, PLDI '16, pages 682--696, New York, NY,
+  USA, 2016. ACM.
+
+\bibitem{queue5}
+P.~Tsigas and Y.~Zhang.
+\newblock A simple, fast and scalable non-blocking concurrent fifo queue for
+  shared memory multiprocessor systems.
+\newblock In {\em Proceedings of the Thirteenth Annual ACM Symposium on
+  Parallel Algorithms and Architectures}, SPAA '01, pages 134--143, New York,
+  NY, USA, 2001. ACM.
+
+\bibitem{weihl}
+W.~E. Weihl.
+\newblock Commutativity-based concurrency control for abstract data types.
+\newblock {\em IEEE Trans. Comput.}, 37(12):1488--1505, Dec. 1988.
+
+\bibitem{htm}
+R.~M. Yoo, C.~J. Hughes, K.~Lai, and R.~Rajwar.
+\newblock Performance evaluation of intel{\textregistered} transactional
+  synchronization extensions for high-performance computing.
+\newblock In {\em 2013 SC-International Conference for High Performance
+  Computing, Networking, Storage and Analysis (SC)}, pages 1--11. IEEE, 2013.
+
+\bibitem{larktm}
+M.~Zhang, J.~Huang, M.~Cao, and M.~D. Bond.
+\newblock Larktm: Efficient, strongly atomic software transactional memory.
+\newblock Technical report, Technical Report OSUCISRC-11/12-TR17, Computer
+  Science \& Engineering, Ohio State University, 2012.
+
+\end{thebibliography}

@@ -1,0 +1,70 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}STM and STO}{1}{section.1.1}
+\contentsline {section}{\numberline {1.2}Motivation}{1}{section.1.2}
+\contentsline {section}{\numberline {1.3}Overview}{2}{section.1.3}
+\contentsline {chapter}{\numberline {2}Background and Related Work}{3}{chapter.2}
+\contentsline {section}{\numberline {2.1}Transactions}{3}{section.2.1}
+\contentsline {section}{\numberline {2.2}Transactional Memory}{4}{section.2.2}
+\contentsline {section}{\numberline {2.3}Abstraction-based STMs}{4}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Commutativity in Transactional Data Structures}{6}{subsection.2.3.1}
+\contentsline {chapter}{\numberline {3}FIFO Queue Algorithms and Analysis}{8}{chapter.3}
+\contentsline {section}{\numberline {3.1}Transactional Queue Specification}{8}{section.3.1}
+\contentsline {section}{\numberline {3.2}Naive Synchronization Queue Algorithms}{9}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}T-Queue1}{9}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}T-Queue2}{10}{subsection.3.2.2}
+\contentsline {section}{\numberline {3.3}Flat Combining Queue Algorithms}{10}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Flat Combining Queue (Non-Transactional)}{10}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Flat Combining Queue (Transactional)}{11}{subsection.3.3.2}
+\contentsline {section}{\numberline {3.4}Evaluation}{12}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Microbenchmarks}{12}{subsection.3.4.1}
+\contentsline {subsubsection}{Parameters}{13}{section*.5}
+\contentsline {subsubsection}{Tests}{13}{section*.6}
+\contentsline {subsection}{\numberline {3.4.2}Results and Discussion}{13}{subsection.3.4.2}
+\contentsline {subsubsection}{T-Queue1 vs. T-Queue2}{14}{section*.7}
+\contentsline {subsubsection}{Concurrent, Non-transactional Queues}{14}{section*.8}
+\contentsline {subsubsection}{NT-FCQueueWrapped Performance}{15}{section*.9}
+\contentsline {subsubsection}{T-FCQueue Performance}{15}{section*.10}
+\contentsline {chapter}{\numberline {4}Commutativity and Weakly Transactional Queues}{17}{chapter.4}
+\contentsline {section}{\numberline {4.1}Terminology}{17}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Histories}{17}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Dependencies}{18}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Results}{18}{subsection.4.1.3}
+\contentsline {section}{\numberline {4.2}Commutativity of Concurrent and Transactional Queues}{19}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Concurrent Non-Transactional Queues}{19}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Transactional Queues}{19}{subsection.4.2.2}
+\contentsline {section}{\numberline {4.3}The Weakly Transactional Queue}{21}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Algorithm}{22}{subsection.4.3.1}
+\contentsline {subsubsection}{WT-Queue}{22}{section*.14}
+\contentsline {subsubsection}{WT-FCQueue}{22}{section*.15}
+\contentsline {subsection}{\numberline {4.3.2}Evaluation and Results}{23}{subsection.4.3.2}
+\contentsline {chapter}{\numberline {5}hashmap Algorithms and Analysis}{24}{chapter.5}
+\contentsline {section}{\numberline {5.1}Algorithms}{24}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}STO chaining hashmap}{24}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Non-Transactional Cuckoo Hashmap}{25}{subsection.5.1.2}
+\contentsline {subsection}{\numberline {5.1.3}Transactional Cuckoo Hashmap}{25}{subsection.5.1.3}
+\contentsline {section}{\numberline {5.2}Evaluation}{26}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Microbenchmarks}{26}{subsection.5.2.1}
+\contentsline {subsubsection}{Parameters}{26}{section*.16}
+\contentsline {subsubsection}{Multi-Thread, Variable-Capacity Singletons Test}{26}{section*.17}
+\contentsline {subsection}{\numberline {5.2.2}Results and Discussion}{27}{subsection.5.2.2}
+\contentsline {subsubsection}{Cache Misses}{27}{section*.18}
+\contentsline {chapter}{\numberline {6}Conclusion and Future Work}{29}{chapter.6}
+\contentsline {section}{\numberline {6.1}Queues}{29}{section.6.1}
+\contentsline {section}{\numberline {6.2}Hashmaps}{29}{section.6.2}
+\contentsline {section}{\numberline {6.3}Future Work}{29}{section.6.3}
+\contentsline {chapter}{References}{32}{chapter*.19}
+\contentsline {chapter}{Appendices}{34}{section*.20}
+\contentsline {chapter}{\numberline {A}Queue Results}{34}{appendix.A}
+\contentsline {section}{\numberline {A.1}Cache Misses}{34}{section.A.1}
+\contentsline {section}{\numberline {A.2}Push-Pop Test Results}{36}{section.A.2}
+\contentsline {section}{\numberline {A.3}Multi-Thread Singletons Test Results}{39}{section.A.3}
+\contentsline {chapter}{\numberline {B}Hashmap Results}{44}{appendix.B}
+\contentsline {section}{\numberline {B.1}Cache Misses}{44}{section.B.1}
+\contentsline {section}{\numberline {B.2}Multi-Thread Singleton Test Results: 33\% Find, 33\% Insert, 33\% Erase}{46}{section.B.2}
+\contentsline {subsection}{\numberline {B.2.1}Maximum Fullness 5}{46}{subsection.B.2.1}
+\contentsline {subsection}{\numberline {B.2.2}Maximum Fullness 10}{49}{subsection.B.2.2}
+\contentsline {subsection}{\numberline {B.2.3}Maximum Fullness 15}{52}{subsection.B.2.3}
+\contentsline {section}{\numberline {B.3}Multi-Thread Singleton Test Results: 90\% Find, 5\% Insert, 5\% Erase}{55}{section.B.3}
+\contentsline {subsection}{\numberline {B.3.1}Maximum Fullness 5}{55}{subsection.B.3.1}
+\contentsline {subsection}{\numberline {B.3.2}Maximum Fullness 10}{58}{subsection.B.3.2}
+\contentsline {subsection}{\numberline {B.3.3}Maximum Fullness 15}{61}{subsection.B.3.3}
