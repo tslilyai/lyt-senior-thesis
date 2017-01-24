@@ -56,7 +56,7 @@ Because pop locks the queue, there are no conflicts at commit time. A thread onl
 \section{Flat Combining Queue Algorithms}
 Given the relatively slow performance of our STO queues, we looked to find a highly-concurrent (non-transactional) queue algorithm that would be promising to integrate with STO's transactional framework. After running several benchmarks (see Figure \ref{fig:concurrent_queues}), we found the most promising to be the Flat-Combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
 
-\subsection{Flat Combining Queue (Non-Transactional)}
+\subsection{Non-Transactional Flat Combining Queue}
 \label{fcqueuent}
 
 
@@ -76,7 +76,7 @@ When a thread T wishes to do an operation O:
 
 In the context of the queue, flat combining proves to be an effective technique to handle the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses ``fat nodes'' (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the T-Queue1 and T-Queue2 suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that flat combining's alternative synchronization paradigm might improve the performance of a transactional queue as much as it does for a concurrent queue.
 
-\subsection{Flat Combining Queue (Transactional)}
+\subsection{Transactional Flat Combining Queue} 
 \label{fcqueuet}
 
 Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there must be a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two pushes push consecutive values at the tail of the queue.
@@ -122,4 +122,4 @@ The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a tran
 
 %\input{tables/sto_queues.tex}
 
-\input{chapters/evaluation}
+\input{chapters/queues/evaluation}

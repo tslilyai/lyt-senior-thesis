@@ -30,32 +30,49 @@ fullnesses = [5, 10, 15]#, 20]
 #fullness of 5
 #put in bar graphs
 map_cache_misses_5 = {
-    "T-Chaining":[1,1,3],
-    "T-CuckooIE":[1,3,3],
-    "T-CuckooKF":[1,2,2],
-    "NT-Cuckoo": [.601,1,1],
-}
-map_cache_misses_15 = {
-    "T-Chaining":[1,3,3],
-    "T-CuckooIE":[1,5,5],
-    "T-CuckooKF":[1,2,2],
-    "NT-Cuckoo": [.665,1,1],
+    "T-Chaining":[205,334,422],
+    "T-CuckooKF":[250,418,495],
+    "T-CuckooIE":[253,645,735],
+    "NT-Cuckoo": [115,200,289],
 }
 map_cache_misses_10 = {
-    "T-Chaining":[1,2,2],
-    "T-CuckooIE":[1,4,4],
-    "T-CuckooKF":[1,2,2],
-    "NT-Cuckoo": [.525,1,1],
+    "T-Chaining":[229,546,660],
+    "T-CuckooKF":[273,464,545],
+    "T-CuckooIE":[294,931,969],
+    "NT-Cuckoo": [107,191,252],
 }
-
+map_cache_misses_15 = {
+    "T-Chaining":[260,711,886],
+    "T-CuckooKF":[298,527,609],
+    "T-CuckooIE":[348,1000,1000],
+    "NT-Cuckoo": [138,225,301],
+}
+map_cache_misses_5_90 = {
+    "T-Chaining":[37,197,300],
+    "T-CuckooKF":[52,284,359],
+    "T-CuckooIE":[53,509,484],
+    "NT-Cuckoo": [28,113,226],
+}
+map_cache_misses_10_90 = {
+    "T-Chaining":[40,433,513],
+    "T-CuckooKF":[60,347,443],
+    "T-CuckooIE":[61,772,761],
+    "NT-Cuckoo": [31,152,246],
+}
+map_cache_misses_15_90 = {
+    "T-Chaining":[48,677,740],
+    "T-CuckooKF":[72,409,537],
+    "T-CuckooIE":[98,1000,1000],
+    "NT-Cuckoo": [34,171,304],
+}
 queue_cache_misses = {
-    "WT-FCQueue" : [1],
-    "T-FCQueue": [3],
-    "NT-FCQueue": [.742],
-    "NT-FCQueueWrapped": [.908],
-    "WT-Queue": [2],
-    "T-Queue1": [1],
-    "T-Queue2": [.945],
+    "WT-FCQueue" : [299],
+    "T-FCQueue": [765],
+    "NT-FCQueue": [157],
+    "NT-FCQueueWrapped": [173],
+    "WT-Queue": [477],
+    "T-Queue1": [232],
+    "T-Queue2": [184],
 }
 
 class Plotter():
@@ -148,12 +165,12 @@ class Plotter():
         
         if len(ds) < 5:
             ncols = len(ds)
-            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., 0.2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
         else:
             ncols = int(math.ceil(len(ds)/3.0))
-        legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+            legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., .3), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
        
-        ax.set_ylabel("Cache Misses (millions)")
+        ax.set_ylabel("Cache Misses (Thousands)")
         if len(x) > 1:
             ax.set_xlabel('Number of Buckets')
             ax.set_xticks(np.arange(3) + (len(ds)/2)*width)
@@ -162,9 +179,9 @@ class Plotter():
             plt.tick_params(axis='x',which='both',bottom='off',top='off',labelbottom='off')
        
         box = ax.get_position()
-        ax.set_position([box.x0, box.y0, box.width, box.height])
+        ax.set_position([box.x0, box.y0, box.width, box.height*0.85])
         ax.set_xlim(-width, x[num_entries-1]+ width)
-        ax.set_ylim(0, 5)
+        ax.set_ylim(0, 1000)
        
         if args:
             plt.savefig(filename+str(args)+"cm.png")
@@ -229,7 +246,7 @@ class Plotter():
                 '\\hline',
                 '\\multirow{2}{*}{Queue} & \\multicolumn{2}{c|}{Initial Size Abort Rate (\%)}\\\\'
                 '\\cline{2-3}'
-                '& \quad 10000 \quad & 100000\\\\',
+                '& \qquad 10000 \qquad\quad & 100000\\\\',
             ]
             end_lines = [
                 '\\hline'
@@ -278,11 +295,11 @@ class Plotter():
 
             labels = [ds[i] for i in indices]
             if len(labels) < 5:
-                ax.set_title("Multi-Threaded Singletons Test Performance, Initial Size %s" % (size), y=1.15)
+                ax.set_title("Initial Size %s" % (size), y=1.15)
                 ncols = len(labels)
                 legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
             else:
-                ax.set_title("Multi-Threaded Singletons Test Performance, Initial Size %s" % (size), y=1.25)
+                ax.set_title("Initial Size %s" % (size), y=1.25)
                 ncols = int(math.ceil(len(labels)/3.0))
                 legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
 
@@ -291,7 +308,7 @@ class Plotter():
            
             if 'map' in filename:
                 ax.set_ylim(0, 1.5e8)
-                ax.set_title("Multi-Threaded Singletons Test Performance, Max Fullness %s" % (args), y=1.15)
+                ax.set_title("Max Fullness %s" % (args), y=1.15)
             else:
                 ax.set_ylim(0, 2e7)
             ax.set_xlim(0, 21)
@@ -306,11 +323,11 @@ class Plotter():
             # aborts
             if 'map' not in filename:
                 begin_lines = [
-                    '\\begin{tabular}{|c|c|c|c|c|c|c|}',
+                    '\\begin{tabular}{|c|c|c|c|}',
                     '\\hline',
-                    '\\multirow{2}{*}{Queue} & \\multicolumn{6}{c|}{Number of Threads Abort Rate (\%)}\\\\'
-                    '\\cline{2-7}'
-                    '& 2 & 4 & 8 & 12 & 16 & 20\\\\',
+                    '\\multirow{2}{*}{Queue} & \\multicolumn{3}{c|}{\#Threads Abort Rate (\%)}\\\\'
+                    '\\cline{2-4}'
+                    '& \quad 4 & 12 & 20\\\\',
                 ]
                 end_lines = [
                     '\\hline'
@@ -319,11 +336,11 @@ class Plotter():
                 myfile = filename+str(size)+'aborts.tex'
             else:
                 begin_lines = [
-                    '\\begin{tabular}{|c|c|c|c|c|c|c|}',
+                    '\\begin{tabular}{|c|c|c|c|}',
                     '\\hline',
-                    '\\multirow{2}{*}{Hashmap} & \\multicolumn{6}{c|}{Number of Threads Abort Rate (\%)}\\\\'
-                    '\\cline{2-7}'
-                    '& 2 & 4 & 8 & 12 & 16 & 20\\\\',
+                    '\\multirow{2}{*}{Hashmap} & \\multicolumn{3}{c|}{\#Threads Abort Rate (\%)}\\\\'
+                    '\\cline{2-4}'
+                    '& 4 & 12 & 20\\\\',
                 ]
                 end_lines = [
                     '\\hline',
@@ -338,7 +355,10 @@ class Plotter():
                 f.write('\\hline'+"\n")
                 for i in indices:
                     datum = data[i]['aborts'][1:]
-                    thread_data = ['{0:.3f}'.format(median(val)) for val in datum]
+                    thread_data = []
+                    for j, val in enumerate(datum):
+                        if j % 2 == 1:
+                            thread_data.append('{0:.3f}'.format(median(val)))
                     f.write(ds[i] + ' & ' + ' & '.join(thread_data) + '\\\\\n')
                 for line in end_lines:
                     f.write(line + '\n')
@@ -402,9 +422,12 @@ class Plotter():
         ]
 
         patterns = ['','//','','']
-        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses_5,5)
-        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses_10,10)
-        self.get_cm_graphs(maps, colors, patterns, filename, map_cache_misses_15,15)
+        self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_5,5)
+        self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_10,10)
+        self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_15,15)
+        self.get_cm_graphs(maps, colors, patterns, filename+'90', map_cache_misses_5_90,5)
+        self.get_cm_graphs(maps, colors, patterns, filename+'90', map_cache_misses_10_90,10)
+        self.get_cm_graphs(maps, colors, patterns, filename+'90', map_cache_misses_15_90,15)
         
         patterns = ["solid","--","solid","solid"]
         for name in test_names:
@@ -414,9 +437,9 @@ class Plotter():
 
 def main():
     p = Plotter()
-    #p.hashmaps_graphs()
-    #p.fcqueues_graphs()
-    p.concurrent_queues_graphs()
+    p.hashmaps_graphs()
+    p.fcqueues_graphs()
+    #p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()

@@ -16,7 +16,7 @@ We first introduce some basic terminology (as defined in \cite{schwarz} and \cit
     // Q.size() == 0 
     (T2, Q.push(a), ())
     (T1, Q.pop(), true)
-    (T2, Q.push(c), ())
+    (T2, Q.push(a), ())
     (T1, Q.pop(), true)
     // Final State: Q.size() == 0 
     \end{lstlisting}
@@ -41,8 +41,8 @@ $H$ is a serializable history given $H'$. $H''$ represents a serial but inconsis
 \begin{lstlisting}
             H                       H'                      H'' 
     (T2, Q.push(a), ())     (T2, Q.push(a), ())     (T1, Q.pop(), false)
-    (T1, Q.pop(), true)     (T2, Q.push(c), ())     (T1, Q.pop(), false)
-    (T2, Q.push(c), ())     (T1, Q.pop(), true)     (T2, Q.push(c), ())
+    (T1, Q.pop(), true)     (T2, Q.push(a), ())     (T1, Q.pop(), false)
+    (T2, Q.push(a), ())     (T1, Q.pop(), true)     (T2, Q.push(a), ())
     (T1, Q.pop(), true)     (T1, Q.pop(), true)     (T2, Q.push(a), ()) 
 \end{lstlisting}
 \end{eg}
@@ -200,4 +200,4 @@ We can also imagine a mix of approaches (1) and (2) where if a transaction $T1$ 
 
 As noted previously, all possible approaches to prevent interleavings 1, 2, and 3 rely on additional flat combining calls and increased complexity of previously existing flat combining calls. In addition, acquisition of a global ``lock'' on the queue for approach (2) prevents the combiner thread from applying \emph{all} of the requests it sees: instead, requests will either return ``abort'' to the calling thread or not be applied, leading to additional time spent spinning or repeating requests. We see through our experiments that these changes to the flat combining algorithm reduce its performance such that it performs worse than a naive synchronization algorithm; furthermore, we claim that these changes to be necessary in order to provide transactional guarantees. The original flat combining algorithm exploits the property that any correct history of operations in data structures supporting only singleton transactions (i.e., a normal non-transactional data structure) is valid. The combiner thread is allowed to immediately apply all thread's operation requests in arbitrary order. However, this property that makes flat combining so performant disappears as soon as the algorithm has to deal with invalid histories. In the next section, we demonstrate how ignoring invalid histories leads to a version of flat combining that can outperform our T-Queue1 and T-Queue2 algorithms.
 
-\input{chapters/wqueue}
+\input{chapters/queues/wqueue}
