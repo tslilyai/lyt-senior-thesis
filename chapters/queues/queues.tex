@@ -1,5 +1,5 @@
 \chapter{FIFO Queue Algorithms and Analysis}
-\label{Queue}
+\label{queue}
 
 This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently unsuited to be converted for use as a fully transactional queue algorithm; the reasoning which allows for the optimizations taken by these algorithms directly conflicts with the reasoning necessary to provide transactional guarantees.
 
@@ -54,7 +54,7 @@ Because pop locks the queue, there are no conflicts at commit time. A thread onl
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Flat Combining Queue Algorithms}
-Given the relatively slow performance of our STO queues, we looked to find a highly-concurrent (non-transactional) queue algorithm that would be promising to integrate with STO's transactional framework. After running several benchmarks (see Figure \ref{fig:concurrent_queues}), we found the most promising to be the Flat-Combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
+Given the relatively slow performance of our STO queues, we looked to find a highly-concurrent (non-transactional) queue algorithm that would be promising to integrate with STO's transactional framework. After running several benchmarks (see Figures~\ref{fig:concurrent_qs} and~\ref{fig:concurrentqs_pushpop}), we found the most promising to be the Flat-Combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
 
 \subsection{Non-Transactional Flat Combining Queue}
 \label{fcqueuent}

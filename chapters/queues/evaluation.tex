@@ -52,7 +52,7 @@ We benchmark a set of the best-performing high-concurrency queue algorithms agai
  
  Our implementation of the flat combining queue modifies the implementation of the flat combining queue from the authors of the flat combining paper\cite{flatcombining}. Our implementation of the other high-concurrency queues are taken from the Concurrent Data Structures (CDS) library implementations online\cite{libcds}. The performance of these implementations on our tests the performance results given in the papers that originally proposed the algorithms.\lyt{CHECK}
 
- Results for the Push-Pop Test can be found in Figure~\ref{fig:concurrentqs_pushpop}, and results for the Multi-Thread Singletons Test can be found in Figure~\ref{fig:concurrentqueues}.
+ Results for the Push-Pop Test can be found in Figure~\ref{fig:concurrentqs_pushpop}, and results for the Multi-Thread Singletons Test can be found in Figure~\ref{fig:concurrent_qs}.
 
 Out of the concurrent data structures tested, the Moir queue\cite{queue2} consistently performs best on the 2-Thread Push-Pop Test. On the Multi-Thread Singletons Test, the flat combining queue achieves performance over 2.5$\times$ greater than any other concurrent, non-transactional queue as the number of threads increases above 2.
 

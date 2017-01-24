@@ -3,7 +3,8 @@
 
 \section{Cache Misses}
 
-The results are collected by evaluating the Multi-Thread Singletons Test with each thread running 10M transactions under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded. In this figure, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
+Cache misses are recorded by evaluating the Multi-Thread Singletons Test with 8 threads, with each thread running 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
+In this figure, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
 
 \begin{figure}[H]
     \centering
