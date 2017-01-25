@@ -1,24 +1,26 @@
 \chapter{FIFO Queue Algorithms and Analysis}
 \label{queue}
 
-This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently unsuited to be converted for use as a fully transactional queue algorithm; the reasoning which allows for the optimizations taken by these algorithms directly conflicts with the reasoning necessary to provide transactional guarantees.
+This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently unsuited to be converted for use as a fully transactional queue algorithm. The optimizations taken by these algorithms rely on data structure state and behavior that must be modified to support transactions. In other words, the high-concurrency queue algorithm's synchronization mechanism is not independent of the mechanisms that STO uses to provide transactional guarantees.
 
 \section[Transactional Queue Specification]{Transactional Queue Specification
 \footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from those used for pop.}}
 
-A concurrent queue must adhere to the following specification, in which all operations can be ordered such that:
+A concurrent queue supporting operations push and pop must adhere to the following specification:
 \begin{itemize}
     \item A value is popped off the queue only once (no duplicate pops).
     \item A value is pushed onto the queue only once (no duplicate pushes).
     \item Values are popped in the order in which they are pushed.
 \end{itemize}
 
+\noindent
 A transactional queue adds the following invariants to the specification. There must be a serial order of all transactions such that, within one transaction:
 \begin{itemize}
-    \item Any two pops pop consecutive values in the queue starting from the head of the queue .
+    \item Any two pops pop consecutive values in the queue starting from the head of the queue.
     \item Any two pushes push consecutive values at the tail of the queue.
 \end{itemize}
 
+\noindent
 To satisfy these invariants, transactional data structures must support \emph{read-my-writes}. This is when a thread sees and modifies or returns the value from a previous operation in the transaction.
 
 
@@ -47,7 +49,7 @@ The T-Queue2 is also a circular, fixed-size queue, with operations push, pop, an
 
 Pessimistic locking entails locking the queue when any naturally-contentious operation (e.g., pop) is invoked. The queue is then only unlocked after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the T-Queue1.
 
-Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queuelock. 
+Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queue lock. 
 
 %The design is summarized in Table \ref{table:sto2}
 
@@ -79,17 +81,17 @@ In the context of the queue, flat combining proves to be an effective technique 
 \subsection{Transactional Flat Combining Queue} 
 \label{fcqueuet}
 
-Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there must be a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two pushes push consecutive values at the tail of the queue.
+Recall that, in addition to the requirements for a correct concurrent queue, a transaction queue must guarantee that there exists a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two pushes push consecutive values at the tail of the queue.
 
-In order to add transactional guarantees to the flat combining queue, the order in which threads' requests are applied to the queue becomes important. For example, let a transaction in thread T1 be \texttt{pop, pop} and a transaction in thread T2 be pop. The combiner thread sees \texttt{T1:pop} and \texttt{T2:pop}, and applies both operations to the queue. T1 second pop request will violate the transactional specification because the two popped values in T1's transaction will not be consecutive. T1 must now abort, which means T2's pop is now invalid: it does not represent a pop at the head of the queue.
+In order to add transactional guarantees to the flat combining queue, we must consider the order in which threads' requests are applied to the queue. For example, let a transaction in thread T1 be \texttt{\{pop, pop\}} and a transaction in thread T2 be \texttt{\{pop\}}. The combiner thread sees \texttt{T1:pop} and \texttt{T2:pop}, and applies both operations to the queue. T1 second pop request will violate the transactional specification because the two popped values in T1's transaction will not be consecutive. T1 must now abort, which means T2's pop is now invalid: it does not represent a pop at the head of the queue.
 
 Addressing the scenario described above requires two important changes to flat combining (we describe the rational for these changes in Chapter~\ref{commutativity}): 
 \begin{enumerate}
-\item pushes cannot be applied to the queue during a transaction's execution, and must instead be performed when a transaction commits
+\item A push cannot be applied to the queue during a transaction's execution, and must instead be performed when a transaction commits.
 \item An uncommitted pop in a thread's transaction must be unobservable by any other thread. This can be implemented in two ways:  
     \begin{enumerate}
-        \item The algorithm can delay a transaction's pops until commit time. This algorithm must track which values in the queue are going to be popped within the transaction. This prevents duplicate pops and detects if the queue will be ``empty'' given how values will be popped.
-        \item The algorithm does not execute flat combining requests from other threads until the transaction has committed or aborted. This can be implemented either through making other threads' transactions abort, or by causing the threads to block or spin.
+        \item The algorithm can delay a transaction's pops until commit time. This then means the algorithm must track which values in the queue are going to be popped within the transaction. This prevents duplicate pops and detects if the queue will be ``empty'' by tracking how many values will be popped off the queue during this transaction. If another thread performs a pop or push during the transaction's lifetime, this can cause the transaction to abort since the ``empty'' status of the queue at commit time may now be inconsistent with what the transaction saw during execution. 
+        \item The algorithm does not execute flat combining requests from other threads until the transaction has committed or aborted. Because only this thread can execute commands, pops can be performed at execution time (and restored to the head of the qeueue if the transaction aborts). This can be implemented either through making other threads' transactions abort, or by causing the other threads to block or spin.
     \end{enumerate}
 \end{enumerate}
 

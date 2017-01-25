@@ -34,7 +34,6 @@
 
 %\titleformat{\section}{\thesection.}
 
-
 % colors
 \RequirePackage{color}
 \definecolor{Crimson}{rgb}{0.6471, 0.1098, 0.1882}
