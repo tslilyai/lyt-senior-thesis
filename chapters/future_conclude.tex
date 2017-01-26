@@ -1,14 +1,17 @@
-\chapter{Conclusion and Future Work}
-
-\section{Queues}
-Our work with the flat combining queues show that 
-
-\section{Hashmaps}
+\chapter{Future Work and Conclusion}
 
 \section{Future Work}
-To further increase performance, we can specialize for singleton transactions...
+One extension that would further increase performance is to specialize our data structures for singleton transactions. As we saw in Chapter~\ref{commutativity}, the commutativity of singleton transaction allows for optimizations that are impossible when a transaction contains more than one operation. However, singleton transactions would need to be carefully handled for the case in which they interleave with multi-operation transactions. 
 
-We can also further test the idea that we can increase the performance of transactional STO data structures by incorporating high-concurrency algorithms only if the data structure experiences little to no reduction of operation commutativity in a transactional setting as compared to a concurrent one.
+We would also like to further test the idea that we can increase the performance of transactional STO data structures by incorporating high-concurrency data structures with STO only if the data structures' algorithms do not need to be heavily modified to support transactions (i.e., the algorithms do not heavily depend on operation commutativity).
 
-\lyt{todo}
-For data structures in which operation commutativity crippled the optimizations in order to provide transactional guarantees (such as the FIFO queue or priority queue), we can explore further different, weaker transactional specifications that may provide some useful guarantees beyond that of a simple concurrent data structure and allow optimizations by concurrency algorithms to increase performance.
+For algorithms in which transactional modifications cripple their optimizations (such as the FIFO queue or priority queue), we can explore further different, weaker transactional specifications that may provide some useful guarantees beyond that of a simple concurrent data structure and allow optimizations by concurrency algorithms to increase performance.
+
+\section{Conclusion}
+This thesis argues that retention of the performance benefits of high-concurrency data structure algorithms within a transactional framework such as STO is contingent upon the amount of independence between the synchronization strategy used by the high-concurrency algorithm and the transactional bookkeeping that must be added to support transactions.
+
+Our work with the flat combining queues demonstrates that, while there is a large performance gap between our naively-concurrent transactional queues and the best-performing non-transactional, concurrent queue (the flat combining queue), the flat combining algorithm loses its performance benefits when moved into STO. We claim that this is because the flat combining technique itself relies on operation commutativity that is disallowed in a transactional framework, and the modifications to flat combining required to support transactions reduce the effectiveness of the flat combining technique. Through exploration of an alternative transactional queue specification that allows greater operation commutativity, we provide evidence that the effectiveness of the flat combining technique is dependent on the number of valid histories---a measure directly affected by the transactional specification.
+
+As an example of the opposite phenomenon, in which the concurrency algorithm retains its performance benefits, we look to the cuckoo hashing algorithms. We demonstrate that certain beneficial properties of cuckoo hashmaps (such as good performance in a small hashmap with several values in each bucket) are present even in a transactional setting, and argue that this is because the cuckoo hashing algorithm can be implemented independently of the transactional bookkeeping to support transactions.
+
+Our results provide a way to determine in advance whether a highly-concurrent but non-transactional data structure can be integrated with STO without losing its performance benefits, and help us better explain why and how different transactional algorithms can often achieve either a surprisingly low or surprisingly high performance.
