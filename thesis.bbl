@@ -77,6 +77,13 @@ G.~Golan-Gueta, G.~Ramalingam, M.~Sagiv, and E.~Yahav.
 \newblock Automatic scalable atomicity via semantic locking.
 \newblock In {\em ACM SIGPLAN Notices}, volume~50, pages 31--41. ACM, 2015.
 
+\bibitem{opacity}
+R.~Guerraoui and M.~Kapalka.
+\newblock On the correctness of transactional memory.
+\newblock In {\em Proceedings of the 13th ACM SIGPLAN Symposium on Principles
+  and Practice of Parallel Programming}, PPoPP '08, pages 175--184, New York,
+  NY, USA, 2008. ACM.
+
 \bibitem{harristm}
 T.~Harris, J.~Larus, and R.~Rajwar.
 \newblock {\em Transactional Memory, 2nd Edition}.

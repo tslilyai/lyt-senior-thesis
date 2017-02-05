@@ -34,6 +34,10 @@
 \newcounter{notecounter}
 \newcommand{\mynote}[1]{\stepcounter{notecounter}\textcolor{red}{\small \bf [\arabic{notecounter}]}\marginpar{\tiny \sf \textcolor{red}{\bf [\arabic{notecounter}]}#1}}
 
+\makeatletter
+     \renewcommand*\l@figure{\@dottedtocline{1}{1em}{3.2em}}
+\makeatother
+
 \newcommand{\lyt}[1]{\mynote{LYT: #1}}
 
 \begin{document}
