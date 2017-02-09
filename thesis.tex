@@ -1,8 +1,11 @@
-\documentclass[10pt, singlespace]{harvard-thesis}
+\documentclass[12pt, doublespace]{harvard-thesis}
 \usepackage{epsfig,amsmath,amsthm,amssymb,multirow,color,xspace,fancyvrb,verbatim,url,listings,verbatim,alltt}
 \usepackage{array, tabularx}
 \usepackage{appendix}
 \captionsetup{width=0.8\textwidth}
+
+\usepackage{enumitem}
+\setlist{nosep}
 
 \usepackage{float}
 
@@ -10,7 +13,6 @@
 \setlength{\pdfpagewidth}{8.5in}
 \setlength{\pdfpageheight}{11in}
 
-\usepackage{enumerate}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 
@@ -54,8 +56,7 @@
 \dedicationpage
 \acknowledgments
 
-%\onehalfspacing
-\singlespacing
+\doublespacing
 
 \input{chapters/introduction}
 

@@ -11,7 +11,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{harvard-thesis}[2012/04/05 v0.4 Harvard University Thesis Class]
-\LoadClass[10pt, oneside, letterpaper]{book}
+\LoadClass[12pt, oneside, a4paper]{book}
 
 % Required packages
 \RequirePackage{graphicx}
@@ -58,7 +58,7 @@
 \nobibliography*        
 
 \RequirePackage{lettrine} % big letter at start of chapter
-\RequirePackage[height=8in, width=7in, letterpaper]{geometry}
+\RequirePackage[height=8.5in, width=6in, letterpaper]{geometry}
 
 \RequirePackage{fancyhdr} 
 \pagestyle{plain} % options: empty , plain , fancy
@@ -68,10 +68,10 @@
 \RequirePackage{setspace} 
 \RequirePackage{booktabs} % for much better looking tables
 \RequirePackage[labelfont={sf,bf,small},textfont={sf,footnotesize},justification=RaggedRight,margin=0pt, figurewithin=section, tablewithin=section]{caption}
-\onehalfspacing
+\doublespacing
 %\raggedright
 
-\parindent 12pt
+\parindent 24pt
 \RequirePackage{mathspec}
 
 % use Arno Pro instead of standard LaTeX fonts
@@ -168,13 +168,14 @@
 	\end{center}
 	\doublespace %Harvard registrar requests that abstract is double spaced
 	\input{frontmatter/abstract}
-	\doublespace %Harvard registrar requests that abstract is double spaced	
+	\singlespace %Harvard registrar requests that abstract is double spaced	
 	\newpage \lhead{} \rhead{}
 	\cfoot{\thepage}
-	\onehalfspacing
+	\doublespacing
 }
 
 \newcommand{\dedicationpage}{
+    \doublespacing
 	\pagestyle{fancy}
 	\newpage \thispagestyle{fancy} \vspace*{\fill}
 	\sc \noindent \input{frontmatter/dedication}
@@ -193,6 +194,7 @@
 
 % the acknowledgments page
 \newcommand{\acknowledgments}{
+    \doublespacing
 	\chapter*{Acknowledgments}
 	\noindent
 	\input{frontmatter/thanks}
