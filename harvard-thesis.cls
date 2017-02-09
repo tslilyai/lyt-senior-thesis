@@ -75,20 +75,20 @@
 \RequirePackage{mathspec}
 
 % use Arno Pro instead of standard LaTeX fonts
-\setmathsfont(Digits,Latin,Greek)[
-Path = fonts/,Extension = .otf,
-UprightFont=ArnoPro-Regular,
-BoldFont=ArnoPro-Bold,
-ItalicFont=ArnoPro-Italic,
-BoldItalicFont=ArnoPro-BoldItalic,
-Numbers={OldStyle,Proportional}]{ArnoPro}
-\setmathrm
-[Path = fonts/,Extension = .otf,
-UprightFont=ArnoPro-Regular,
-BoldFont=ArnoPro-Bold,
-ItalicFont=ArnoPro-Italic,
-BoldItalicFont=ArnoPro-BoldItalic
-]{ArnoPro}
+%\setmathsfont(Digits,Latin,Greek)[
+%Path = fonts/,Extension = .otf,
+%UprightFont=ArnoPro-Regular,
+%BoldFont=ArnoPro-Bold,
+%ItalicFont=ArnoPro-Italic,
+%BoldItalicFont=ArnoPro-BoldItalic,
+%Numbers={OldStyle,Proportional}]{ArnoPro}
+%\setmathrm
+%[Path = fonts/,Extension = .otf,
+%UprightFont=ArnoPro-Regular,
+%BoldFont=ArnoPro-Bold,
+%ItalicFont=ArnoPro-Italic,
+%BoldItalicFont=ArnoPro-BoldItalic
+%]{ArnoPro}
 
 
 %\RequirePackage{xltxtra,xunicode}

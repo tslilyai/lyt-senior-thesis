@@ -21,7 +21,7 @@ Our specification differs from that of Schwarz\cite{schwarz}, however, by preven
 For comparison, we implement two weakly transactional queues. This allows us to determine if changes in performance are due to the changes in the transactional specification, or are instead caused by differences in synchronization algorithms.
 
 \subsubsection{WT-Queue}
-The WT-Queue uses the naive synchronization strategy from the T-Queue1 and T-Queue2. The headversion (for pops) or tailversion (for pushes) is locked prior to actually performing the push or pop at commit time. A call to pop or push at execution time does not require any access to the queue state, but merely returns a LazyPop (pop) or adds an item to the \texttt{write\_list} (push).
+The WT-Queue uses the naive synchronization strategy from the T-Queue1 and T-Queue2. The headversion (for pops) or tailversion (for pushes) is locked prior to actually performing the push or pop at commit time. A call to pop or push at execution time does not require any access to the queue state, but merely returns a LazyPop when pop is called or adds an item to the \texttt{write\_list} when push is called.
 
 \subsubsection{WT-FCQueue}
 The WT-FCQueue uses the flat combining synchornization algorithm. We modify the nontransactional, flat combining technique as follows:
