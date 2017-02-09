@@ -13,8 +13,10 @@ We first introduce some basic terminology (as defined in \cite{schwarz} and \cit
     A \emph{history} is a sequence of \texttt{(transaction, operation, result)} tuples that represent an interleaving of operations of all committed transactions. Knowledge of both the history and initial conditions of a data structure leads to complete knowledge of the (high-level) end state of the structure and operation return values.
 
 \begin{eg}
+    \singlespacing   
+
     \begin{lstlisting}
-   
+
     // Q.size() == 0 
     (T2, Q.push(a), ())
     (T1, Q.pop(), true)
@@ -22,6 +24,7 @@ We first introduce some basic terminology (as defined in \cite{schwarz} and \cit
     (T1, Q.pop(), true)
     // Final State: Q.size() == 0 
     \end{lstlisting}
+    \doublespacing
 \end{eg}
 
 \end{defn}
@@ -44,13 +47,15 @@ We first introduce some basic terminology (as defined in \cite{schwarz} and \cit
 
 \begin{eg}
 $H$ is a serializable history given $H'$. $H''$ represents a serial history but is inconsistent with $H$.
+    \singlespacing   
 \begin{lstlisting}
-            H                       H'                      H'' 
-    (T2, Q.push(a), ())     (T2, Q.push(a), ())     (T1, Q.pop(), false)
-    (T1, Q.pop(), true)     (T2, Q.push(a), ())     (T1, Q.pop(), false)
-    (T2, Q.push(a), ())     (T1, Q.pop(), true)     (T2, Q.push(a), ())
-    (T1, Q.pop(), true)     (T1, Q.pop(), true)     (T2, Q.push(a), ()) 
+        H                       H'                      H'' 
+(T2, Q.push(a), ())     (T2, Q.push(a), ())     (T1, Q.pop(), false)
+(T1, Q.pop(), true)     (T2, Q.push(a), ())     (T1, Q.pop(), false)
+(T2, Q.push(a), ())     (T1, Q.pop(), true)     (T2, Q.push(a), ())
+(T1, Q.pop(), true)     (T1, Q.pop(), true)     (T2, Q.push(a), ()) 
 \end{lstlisting}
+    \doublespacing
 \end{eg}
 
 \begin{defn}
@@ -142,41 +147,42 @@ We start by defining the dependency relations between single operations (Table~\
     \begin{tabular}{|l|l|}
         \hline
 \begin{lstlisting}
-1)  // Q.size() > 1 
-    (T1, Q.pop(), true)  
-    (T2, Q.pop(), true) // W-W
-    (T1, Q.pop(), *)    // W-W
+1) // Q.size() > 1 
+   (T1, Q.pop(), true)  
+   (T2, Q.pop(), true) // W-W
+   (T1, Q.pop(), *)    // W-W
 \end{lstlisting}
         &
 \begin{lstlisting}
-4)  // Q.size() >= 0 
-    (T1, Q.push(a), ()) 
-    (T2, Q.push(a), ()) // W-W
-    (T1, Q.push(a), ()) // W-W
+4) // Q.size() >= 0 
+   (T1, Q.push(a), ()) 
+   (T2, Q.push(a), ()) // W-W
+   (T1, Q.push(a), ()) // W-W
 \end{lstlisting}
 \\
 \hline
 \begin{lstlisting}
-2)  // Q.size() == 1  
-    (T1, Q.pop(), true) // Q empty  
-    (T2, Q.push(a), ()) // R-W
-    (T1, Q.pop(), true) // W-R
+2) // Q.size() == 1  
+   (T1, Q.pop(), true) // Q empty  
+   (T2, Q.push(a), ()) // R-W
+   (T1, Q.pop(), true) // W-R
     \end{lstlisting}
         &
 \begin{lstlisting}
-5)  // Q.size() == 0 
-    (T1, Q.push(a), ())       
-    (T2, Q.pop(), true)  // W-R, Q empty
-    (T1, Q.pop(), false) // W-W
+5) // Q.size() == 0 
+   (T1, Q.push(a), ())       
+   (T2, Q.pop(), true)  // W-R,
+                        // Q empty
+   (T1, Q.pop(), false) // W-W
 \end{lstlisting}
 \\
     \hline
     \begin{lstlisting}
-3)  // Q.size() == 1  
-    (T1, Q.pop(), true)  // Q empty  
-    (T2, Q.pop(), false) // W-W     
-    (T1, Q.push(a), ())  // R-W     
-    \end{lstlisting} &\\
+3) // Q.size() == 1  
+   (T1, Q.pop(), true)  // Q empty  
+   (T2, Q.pop(), false) // W-W     
+   (T1, Q.push(a), ())  // R-W     
+   \end{lstlisting} &\\
         \hline
 \end{tabular}
     \caption*{Interleavings that create no dependencies are left out.}

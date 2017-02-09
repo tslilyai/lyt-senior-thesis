@@ -67,7 +67,7 @@
 \RequirePackage{titling}
 \RequirePackage{setspace} 
 \RequirePackage{booktabs} % for much better looking tables
-\RequirePackage[labelfont={sf,bf,small},textfont={sf,footnotesize},justification=RaggedRight,margin=0pt, figurewithin=section, tablewithin=section]{caption}
+\RequirePackage[labelfont={sf,bf,small},textfont={sf,small},justification=RaggedRight,margin=0pt, figurewithin=section, tablewithin=section]{caption}
 \doublespacing
 %\raggedright
 
