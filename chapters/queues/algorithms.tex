@@ -55,7 +55,7 @@ Because pop locks the queue, there are no conflicts at commit time. A thread onl
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Flat Combining Queue Algorithms}
-\lyt{evaluation?}Given the relatively slow performance of our STO queues, we looked to find a highly-concurrent (non-transactional) queue algorithm that would be promising to integrate with STO's transactional framework. After running several benchmarks (see Figures~\ref{fig:concurrent_qs} and~\ref{fig:concurrentqs_pushpop}), we found the most promising to be the Flat-Combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
+Given the relatively slow performance of our STO queues compared to the best-performing highly-concurrent queue algorithms (which we discuss further in Section~\ref{eval:hypo3}), we looked to find a highly-concurrent (non-transactional) queue algorithm that would be promising to integrate with STO's transactional framework. After running several benchmarks (see Figures~\ref{fig:concurrent_qs} and~\ref{fig:concurrentqs_pushpop}), we found the most promising to be the Flat-Combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
 
 \subsection{Non-Transactional Flat Combining Queue}
 \label{fcqueuent}

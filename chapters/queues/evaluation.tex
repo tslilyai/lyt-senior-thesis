@@ -93,6 +93,7 @@ T-Queue2 outperforms all highly-concurrent, non-transactional queues on the 2-Th
 \end{minipage}}
 
 \subsubsection{Hypothesis 3: The flat combining algorithm is the most promising concurrent queue algorithm to integrate with STO}
+\label{eval:hypo3}
 
 We run the same set of highly-concurrent queues from the previous hypothesis on the Multi-Thread Singletons Test, which provides a more realistic example of high-contention workloads that a queue may experience. We look for the most scalable and performant high-concurrency queue that outperforms the T-Queue2 to integrate with STO. Selected results are shown in Figure~\ref{fig:ntqs}.
 
