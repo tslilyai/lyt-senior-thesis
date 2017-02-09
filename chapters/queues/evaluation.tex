@@ -29,14 +29,6 @@ All queues are evaluated on a set of microbenchmarks to demonstrate their scalab
 We proceed in our discussion by first proposing a hypothesis, which we test using the benchmarks described above, and then discussing the results of our tests and the conclusions that we reach.
 We provide a few figures that highlight our results; full results (including abort rates and cache misses) can be found in Appendix~\ref{app:queue}. 
 
-For ease of reference, we list here the names of queues discussed in this section. Their meaning is explained in context with more detail within the discussion.
-\begin{itemize}
-    \item T-Queue1: the optimistic, transactional, and naively-concurrent queue.
-    \item T-Queue2: the transactional and naively-concurrent queue that performs pessimistic locking upon performing a pop.
-    \item NT-FCQueue: the non-transactional flat combining queue.
-    \item NT-FCQueueWrapped: a version of NT-FCQueue that invokes STO \texttt{start\_transaction} and \texttt{commit\_transaction} calls.
-    \item T-FCQueue: the fully-transactional flat-combining queue.
-\end{itemize}
 
 \subsubsection{Hypothesis 1: Pessimistic execution outperforms optimistic execution on contentious operations}
 \begin{figure}[t]
@@ -171,3 +163,15 @@ Analysis with the \texttt{perf} tool indicates that the majority of the T-FCQueu
 \end{enumerate}
 
 We conclude that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better in a transactional setting than a naive synchronization technique such as that used in the T-Queue1 and T-Queue2. This is because the flat combining algorithm must track the transaction state (e.g., going to perform two pops, one of which observes an empty queue) in order to provide transactional guarantees. This requires modifying the flat combining algorithm itself, reducing the performance benefits from the algorithm's optimizations. In the next chapter, we formalize this argument using a commutativity discussion and claim that the higher quantity of more complex flat combining calls is necessary for flat combining to be used in a transactional setting: the flat combining technique depends on operation commutativity present in only a non-transactional setting to achieve its high performance. 
+
+\iffalse
+For ease of reference, we list here the names of queues discussed in this section. Their meaning is explained in context with more detail within the discussion.
+\begin{itemize}
+    \item T-Queue1: the optimistic, transactional, and naively-concurrent queue.
+    \item T-Queue2: the transactional and naively-concurrent queue that performs pessimistic locking upon performing a pop.
+    \item NT-FCQueue: the non-transactional flat combining queue.
+    \item NT-FCQueueWrapped: a version of NT-FCQueue that invokes STO \texttt{start\_transaction} and \texttt{commit\_transaction} calls.
+    \item T-FCQueue: the fully-transactional flat-combining queue.
+\end{itemize}
+
+\fi
