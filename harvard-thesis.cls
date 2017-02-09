@@ -58,7 +58,7 @@
 \nobibliography*        
 
 \RequirePackage{lettrine} % big letter at start of chapter
-\RequirePackage[height=9in, width=6in, letterpaper]{geometry}
+\RequirePackage[height=8.5in, width=6in, letterpaper]{geometry}
 
 \RequirePackage{fancyhdr} 
 \pagestyle{plain} % options: empty , plain , fancy
@@ -195,6 +195,7 @@
 % the acknowledgments page
 \newcommand{\acknowledgments}{
 	\chapter*{Acknowledgments}
+    \vspace*{-30pt}
 	\noindent
     \doublespacing
 	\input{frontmatter/thanks}

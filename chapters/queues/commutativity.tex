@@ -105,7 +105,8 @@ These results are well-known in the literature about transactional data structur
 \section{Commutativity of Concurrent and Transactional Queues}
 
 For generality, we reduce each queue operation to a read or write of a particular semantic object: the head, the tail, or the empty? predicate of the queue. This allows for our reasoning to be applied to operations that differ from our current specification of pop or push. For example, we can imagine an alternative pop operation that returns \texttt{void} regardless of whether the queue was empty, which would perform no visible reads. We summarize what reads and writes our specifications for pop and push perform in Table \ref{table:qrw}.
-\begin{table}[h!]
+
+\begin{table}[t]
 \centering
 \begin{tabular}{c||c|c}
     Operation & Read & Write\\
@@ -126,7 +127,7 @@ The flat combining technique provides serializable, atomic, \emph{and} lineariza
 
 We start by defining the dependency relations between single operations (Table~\ref{table:queuesimpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, synchronization is only necessary to ensure correctness when two threads attempt to write (W-W) or simultaneously write/read (W-R or R-W) the same object: the performance bottleneck is only caused by concurrent access synchronization. As we have shown, the flat combining approach works particularly well in a highly-concurrent setting to minimize the overhead of this synchronization cost.
 
-\begin{table}[h!]
+\begin{table}[t]
     \centering
 \begin{tabular}{c||c|c|c|c}
     Object & Pop-Pop & Pop-Push & Push-Pop & Push-Push\\
