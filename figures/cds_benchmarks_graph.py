@@ -364,20 +364,23 @@ class Plotter():
                     f.write(line + '\n')
 
     def concurrent_queues_graphs(self):
-        queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "Basket", "Max Performance of other queues","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
-        filename='concurrent/'
+        queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "Basket", "Moir","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
+        #queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "Basket", "Max Performance of other queues","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
+        filename='concurrent/all'
         colors = ["red", "red","green"] + [(0.15*i,0.15*i, 0.15*i) for i in range(7)]
         results = self.ctests['Q:PushPop']
 
         patterns = ['//','','//','', '', '', '', '', '', '']
-        self.get_pushpop_graphs(queues, [1,2,4], filename, colors, patterns, results)
+        #self.get_pushpop_graphs(queues, [1,2,4], filename, colors, patterns, results)
+        self.get_pushpop_graphs(queues, range(len(queues)), filename, colors, patterns, results)
 
         patterns = ['--','solid','--','solid', 'solid', 'solid', 'solid', 'solid', 'solid', 'solid']
         test_names = ['Q:RandSingleOps']
-        queues = ["STO-Queue1", "STO-Queue2", "FCQueueNT", "", "Max Performance of other queues","","","","",""]
+        #queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "", "Max Performance of other queues","","","","",""]
         for name in test_names:
             results = self.ctests[name]
-            self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name)
+            #self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name)
+            self.get_randops_graphs(queues, range(len(queues)), filename, colors, patterns, results, name)
 
     def fcqueues_graphs(self):
         queues = ["T-Queue1", "T-Queue2", "NT-FCQueue", "NT-FCQueueWrapped", "T-FCQueue", "WT-FCQueue", "WT-Queue"]
@@ -385,6 +388,7 @@ class Plotter():
         ntindices = [2,3]
         tindices = [1,3,4]
         lpindices = [1,6,3,4,5]
+        allindices = [0,1,6,3,4,5]
 
         filename='fcqueues/'
         colors = ["red","red","green","green","purple","purple","red"]
@@ -396,20 +400,22 @@ class Plotter():
 
         # PUSH POP TEST: SPEED 
         patterns = ['//','','//','', '', '..',".."]
-        self.get_pushpop_graphs(queues, stoindices, filename+"sto", colors, patterns, results)
-        self.get_pushpop_graphs(queues, ntindices, filename+"nt", colors, patterns, results)
-        self.get_pushpop_graphs(queues, tindices, filename+"t", colors, patterns, results)
-        self.get_pushpop_graphs(queues, lpindices, filename+"lp", colors, patterns, results)
+        #self.get_pushpop_graphs(queues, stoindices, filename+"sto", colors, patterns, results)
+        #self.get_pushpop_graphs(queues, ntindices, filename+"nt", colors, patterns, results)
+        #self.get_pushpop_graphs(queues, tindices, filename+"t", colors, patterns, results)
+        #self.get_pushpop_graphs(queues, lpindices, filename+"lp", colors, patterns, results)
+        self.get_pushpop_graphs(queues, allindices, filename+"all", colors, patterns, results)
 
         # RAND OPS TEST
         patterns = ['--','solid','--','solid', 'solid', ':', ':']
         test_names = ['Q:RandSingleOps']
         for name in test_names:
             results = self.ttests[name]
-            self.get_randops_graphs(queues, stoindices, filename+"sto", colors, patterns, results, name)
-            self.get_randops_graphs(queues, ntindices, filename+"nt", colors, patterns, results, name)
-            self.get_randops_graphs(queues, tindices, filename+"t", colors, patterns, results, name)
-            self.get_randops_graphs(queues, lpindices, filename+"lp", colors, patterns, results, name)
+            #self.get_randops_graphs(queues, stoindices, filename+"sto", colors, patterns, results, name)
+            #self.get_randops_graphs(queues, ntindices, filename+"nt", colors, patterns, results, name)
+            #self.get_randops_graphs(queues, tindices, filename+"t", colors, patterns, results, name)
+            #self.get_randops_graphs(queues, lpindices, filename+"lp", colors, patterns, results, name)
+            self.get_randops_graphs(queues, allindices, filename+"all", colors, patterns, results, name)
 
     def hashmaps_graphs(self):
         maps = ["T-Chaining", "T-CuckooIE", "T-CuckooKF", "NT-Cuckoo"]
@@ -437,7 +443,7 @@ class Plotter():
 
 def main():
     p = Plotter()
-    p.hashmaps_graphs()
+    #p.hashmaps_graphs()
     p.fcqueues_graphs()
     #p.concurrent_queues_graphs()
 

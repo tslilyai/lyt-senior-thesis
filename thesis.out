@@ -21,12 +21,12 @@
 \BOOKMARK [0][-]{chapter.6}{Future\040Work\040and\040Conclusion}{}% 21
 \BOOKMARK [1][-]{section.6.1}{Future\040Work}{chapter.6}% 22
 \BOOKMARK [1][-]{section.6.2}{Conclusion}{chapter.6}% 23
-\BOOKMARK [0][-]{chapter*.22}{References}{}% 24
-\BOOKMARK [0][-]{section*.23}{Appendices}{}% 25
+\BOOKMARK [0][-]{chapter*.26}{References}{}% 24
+\BOOKMARK [0][-]{section*.27}{Appendices}{}% 25
 \BOOKMARK [0][-]{appendix.A}{Queue\040Results}{}% 26
 \BOOKMARK [1][-]{section.A.1}{Cache\040Misses}{appendix.A}% 27
-\BOOKMARK [1][-]{section.A.2}{Push-Pop\040Test\040Results}{appendix.A}% 28
-\BOOKMARK [1][-]{section.A.3}{Multi-Thread\040Singletons\040Test\040Results}{appendix.A}% 29
+\BOOKMARK [1][-]{section.A.2}{Performance\040Results}{appendix.A}% 28
+\BOOKMARK [1][-]{section.A.3}{Abort\040Rate\040Results}{appendix.A}% 29
 \BOOKMARK [0][-]{appendix.B}{Hashmap\040Results}{}% 30
 \BOOKMARK [1][-]{section.B.1}{Multi-Thread\040Singleton\040Test\040Results:\04033\045\040Find,\04033\045\040Insert,\04033\045\040Erase}{appendix.B}% 31
 \BOOKMARK [1][-]{section.B.2}{Multi-Thread\040Singleton\040Test\040Results:\04090\045\040Find,\0405\045\040Insert,\0405\045\040Erase}{appendix.B}% 32
