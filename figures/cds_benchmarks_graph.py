@@ -244,7 +244,7 @@ class Plotter():
             begin_lines = [
                 '\\begin{tabular}{|c|c|c|}',
                 '\\hline',
-                '\\multirow{2}{*}{Queue} & \\multicolumn{2}{c|}{Initial Size Abort Rate (\%)}\\\\'
+                '\\multirow{2}{*}{Queue} & \\multicolumn{2}{c|}{Initial Size}\\\\'
                 '\\cline{2-3}'
                 '& \qquad 10000 \qquad\quad & 100000\\\\',
             ]
@@ -325,7 +325,7 @@ class Plotter():
                 begin_lines = [
                     '\\begin{tabular}{|c|c|c|c|}',
                     '\\hline',
-                    '\\multirow{2}{*}{Queue} & \\multicolumn{3}{c|}{\#Threads Abort Rate (\%)}\\\\'
+                    '\\multirow{2}{*}{Queue} & \\multicolumn{3}{c|}{\#Threads}\\\\'
                     '\\cline{2-4}'
                     '& \quad 4 & 12 & 20\\\\',
                 ]
@@ -338,7 +338,7 @@ class Plotter():
                 begin_lines = [
                     '\\begin{tabular}{|c|c|c|c|}',
                     '\\hline',
-                    '\\multirow{2}{*}{Hashmap} & \\multicolumn{3}{c|}{\#Threads Abort Rate (\%)}\\\\'
+                    '\\multirow{2}{*}{Hashmap} & \\multicolumn{3}{c|}{\#Threads}\\\\'
                     '\\cline{2-4}'
                     '& 4 & 12 & 20\\\\',
                 ]
@@ -443,9 +443,9 @@ class Plotter():
 
 def main():
     p = Plotter()
-    #p.hashmaps_graphs()
+    p.hashmaps_graphs()
     p.fcqueues_graphs()
-    #p.concurrent_queues_graphs()
+    p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()

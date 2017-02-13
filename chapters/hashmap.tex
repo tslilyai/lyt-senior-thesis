@@ -59,16 +59,54 @@ The full results can be found in Appendix~\ref{app:hashmaps}.
 
 \subsubsection{Hypothesis 1: The transactional cuckoo hashmaps will experience a greater number of cache misses}
 
+    \begin{figure}[t]
+    \centering
+        \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{maps/3310cm.png}
+        \caption*{33\%Find, 33\%Insert, 33\% Delete}
+        \end{minipage}
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{maps/9010cm.png}
+            \caption*{90\%Find, 5\%Insert, 5\% Delete}
+        \end{minipage}
+        \caption{Hashmap Cache Misses (Max Fullness 10)}
+    \end{figure}
+
+
 The number of cache misses of each datatype is influenced by the number of allocations per data structure and the patterns in which these allocations are accessed. As expected, the non-transactional cuckoo hashmap experiences the least number of cache misses: this is because all other hashmaps' buckets contain a pointer to an allocated element inserted into the map. We expect that the non-allocating, transactional cuckoo hashmap will perform better than either of the allocating types \lyt{TODO?}.
 
 Overall, the CuckooIE hashmap experiences the most cache misses as a result of both the cuckoo hashing algorithm: two buckets and all pointers to elements within the buckets are accessed during a find. As size and fullness increases, the CuckooKF hashmap experiences the least number of cache misses: this likely occurs because a find will not need to follow pointers in a CuckooKF hashmap bucket to compare key values, whereas comparing key values in the chaining and CuckooIE hashmaps both require following pointers.
 
 \subsubsection{Hypothesis 2: Increases in the number of buckets and maximum fullness of the hahmap increases the number of cache misses by about the same amount in all hashmaps}
+
 As expected, maps of size 10K buckets experience the fewest cache misses regardless of the maximum fullness allowed: this is because the table and all its elements fit entirely in cache. There is no significant difference in the number of cache misses between hashmaps of size 125K and 1M buckets for either the 33\% Finds/Inserts/Erases  or 90\% Finds, 5\% Inserts/Erases Test. This may be attributed to the greater probability of short chains / empty buckets during the time before the hashmap reaches a fixed point in the number of keys the map contains: since the number of threads running the tests is fixed at 8 threads, the number of keys in the map reaches this fixed point more slowly with 1M buckets than with 125K buckets.
 
 As maximum fullness increases from 5 to 10, all transactional hashmaps experience an increase in the number of cache misses. Both the chaining and cuckoo hashmaps will iterate on average through more elements per bucket during a find, therefore increasing the number of cache misses. The chaining and CuckooIE hashmaps experience a greater increase from a maximum fullness of 10 to 15 than does the CuckooKF hashmap; this is likely due to the optimizations taken for key comparison in the CuckooKF hashmap.
 
 \subsubsection{Hypothesis 3: The abort rate decreases as the number of buckets increases, but performance is not heavily affected by abort rate}
+
+    \begin{table}[t]
+    \centering
+        \begin{minipage}{0.45\textwidth}
+        \centering
+        \input{figures/maps/HM10K:F34,I33,E3310_aborts.tex}
+        \caption*{10K Buckets}
+        \end{minipage}
+        \begin{minipage}{0.45\textwidth}
+        \centering
+        \input{figures/maps/HM125K:F34,I33,E3310_aborts.tex}
+        \caption*{125K Buckets}
+        \end{minipage}
+        \begin{minipage}{0.45\textwidth}
+        \centering
+        \input{figures/maps/HM1M:F34,I33,E3310_aborts.tex}
+        \caption*{1 Million Buckets}
+        \end{minipage}
+        \caption{Hashmap Abort Rate (Max Fullness 10, 33\%F/33\%I/33\%E)}
+    \end{table}
+
 Overall, the abort rate remains relatively constant regardless of the fullness of the hashmap, but decreases as the number of buckets in the map increases. A greater number of buckets decreases the abort rates, since the probability that two threads will simultaneously attempt to read/modify the same bucket decreases. Abort rate is negligible in nearly all tests, with the chaining hashmap experiencing the highest abort rates (the median of 5 trials never exceeding 0.006\%)
 
 We see that cache performance affects overall performance more than the abort rate: as the number of buckets and thus the number of cache misses increases, the performance decreases even though abort rate also decreases.

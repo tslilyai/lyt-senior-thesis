@@ -5,252 +5,252 @@ All results presented are the median of 5 trials. If there is an error bar, the 
 Cache misses are recorded by evaluating the Multi-Thread Singletons Test with 8 threads, with each thread running 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
 In the figures below, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
 
-\section{Multi-Thread Singleton Test Results: 33\% Find, 33\% Insert, 33\% Erase}
-
-\subsection{Cache Misses}
-\label{app:hm_cm_33}
-    \begin{figure}[H]
-    \centering
-        {\includegraphics[width=0.45\textwidth]{maps/335cm.png}}
-        \caption{Hashmap Cache Misses: Maximum Fullness 5}
-    \end{figure}
-
-    \begin{figure}[H]
-    \centering
-        {\includegraphics[width=0.45\textwidth]{maps/3310cm.png}}
-        \caption{Hashmap Cache Misses: Maximum Fullness 10}
-    \end{figure}
-
-    \begin{figure}[H]
-    \centering
-        {\includegraphics[width=0.45\textwidth]{maps/3315cm.png}}
-        \caption{Hashmap Cache Misses: Maximum Fullness 15}
-    \end{figure}
-
-\subsection{Maximum Fullness 5}
+\section{Cache Misses}
 
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/5HM10K:F34,I33,E33.png} 
+    \begin{minipage}{.5\textwidth}
+    \centering
+        \includegraphics[width=\linewidth]{maps/335cm.png}
+        \caption*{Maximum Fullness 5}
     \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM10K:F34,I33,E335_aborts.tex}
+    \begin{minipage}{.5\textwidth}
+    \centering
+        \includegraphics[width=\linewidth]{maps/3310cm.png}
+        \caption*{Maximum Fullness 10}
     \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 10K Buckets, Maximum Fullness 5}
+    \begin{minipage}{.5\textwidth}
+    \centering
+        \includegraphics[width=\linewidth]{maps/3315cm.png}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{33F/33I/33E Cache Misses}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F34,I33,E33.png} 
+    \begin{minipage}{.5\textwidth}
+    \centering
+        \includegraphics[width=\linewidth]{maps/905cm.png}
+        \caption*{Maximum Fullness 5}
     \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM125K:F34,I33,E335_aborts.tex}
+    \begin{minipage}{.5\textwidth}
+    \centering
+        \includegraphics[width=\linewidth]{maps/9010cm.png}
+        \caption*{Maximum Fullness 10}
     \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 125K Buckets, Maximum Fullness 5}
+    \begin{minipage}{.5\textwidth}
+    \centering
+        \includegraphics[width=\linewidth]{maps/9015cm.png}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{90F/5I/5E Cache Misses}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/5HM1M:F34,I33,E33.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM1M:F34,I33,E335_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 1M Buckets, Maximum Fullness 5}
-\end{figure}
+\section{Abort Rate Results}
 
-\subsection{Maximum Fullness 10}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/10HM10K:F34,I33,E33.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM10K:F34,I33,E3310_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 10K Buckets, Maximum Fullness 10}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F34,I33,E33.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM125K:F34,I33,E3310_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 125K Buckets, Maximum Fullness 10}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/10HM1M:F34,I33,E33.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM1M:F34,I33,E3310_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 1M Buckets, Maximum Fullness 10}
-\end{figure}
-
-\subsection{Maximum Fullness 15}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/15HM10K:F34,I33,E33.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM10K:F34,I33,E3315_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 10K Buckets, Maximum Fullness 15}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/15HM125K:F34,I33,E33.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM125K:F34,I33,E3315_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 125K Buckets, Maximum Fullness 15}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F34,I33,E33.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM1M:F34,I33,E3315_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (33F/33I/33E): 1M Buckets, Maximum Fullness 15}
-\end{figure}
-
-\section{Multi-Thread Singleton Test Results: 90\% Find, 5\% Insert, 5\% Erase}
-
-\subsection{Cache Misses}
-\label{app:hm_cm_90}
-    \begin{figure}[H]
-    \centering
-        {\includegraphics[width=0.45\textwidth]{maps/905cm.png}}
-        \caption{Hashmap Cache Misses: Maximum Fullness 5}
-    \end{figure}
-
-    \begin{figure}[H]
-    \centering
-        {\includegraphics[width=0.45\textwidth]{maps/9010cm.png}}
-        \caption{Hashmap Cache Misses: Maximum Fullness 10}
-    \end{figure}
-
-    \begin{figure}[H]
-    \centering
-        {\includegraphics[width=0.45\textwidth]{maps/905cm.png}}
-        \caption{Hashmap Cache Misses: Maximum Fullness 15}
-    \end{figure}
-
-\subsection{Maximum Fullness 5}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/5HM10K:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM10K:F90,I5,E55_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (34F/5I/5E): 10K Buckets, Maximum Fullness 5}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM125K:F90,I5,E55_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (34F/5I/5E): 125K Buckets, Maximum Fullness 5}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/5HM1M:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM1M:F90,I5,E55_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (34F/5I/5E): 1M Buckets, Maximum Fullness 5}
-\end{figure}
-
-\subsection{Maximum Fullness 10}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/10HM10K:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM10K:F90,I5,E510_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (90F/5I/5E): 10K Buckets, Maximum Fullness 10}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM125K:F90,I5,E510_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (90F/5I/5E): 125K Buckets, Maximum Fullness 10}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/10HM1M:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM1M:F90,I5,E510_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (90F/5I/5E): 1M Buckets, Maximum Fullness 10}
-\end{figure}
-
-\subsection{Maximum Fullness 15}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/15HM10K:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM10K:F90,I5,E515_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (90F/5I/5E): 10K Buckets, Maximum Fullness 15}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/15HM125K:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM125K:F90,I5,E515_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (90F/5I/5E): 125K Buckets, Maximum Fullness 15}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-	\begin{minipage}{0.5\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F90,I5,E5.png} 
-    \end{minipage}
-	\begin{minipage}{0.4\textwidth}
-    \input{figures/maps/HM1M:F90,I5,E515_aborts.tex}
-    \end{minipage}
-    \caption{Hashmap Performance (90F/5I/5E): 1M Buckets, Maximum Fullness 15}
-\end{figure}
-
-\iffalse
 \begin{table}[H]
     \centering
-\begin{tabular}{|c|c|c|c|c|c|}
-    find(x)-find(x) & insert(x)-insert(x) & erase(x)-erase(x) & find(x)-insert(x) & find(x)-erase(x) & insert(x)-erase(x)\\
-    \hline
-    & W-W, W-R & W-W, W-R & R-W & R-W & W-W, W-R
-\end{tabular}
-    \caption*{R-R relations are not shown.}
-    \caption{Dependencies of pairs of hashmap operations}
-    \label{table:hashmapsimpledeps}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM10K:F34,I33,E335_aborts.tex}
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM10K:F34,I33,E3310_aborts.tex}
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM10K:F34,I33,E3315_aborts.tex}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{33F/33I/33E, 10K Buckets Abort Rate Results}
 \end{table}
-\fi
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM10K:F90,I5,E55_aborts.tex}
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM10K:F90,I5,E510_aborts.tex}
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM10K:F90,I5,E515_aborts.tex}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{90F/5I/5E, 10K Buckets Abort Rate Results}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM125K:F34,I33,E335_aborts.tex}
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM125K:F34,I33,E3310_aborts.tex}
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM125K:F34,I33,E3315_aborts.tex}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{33F/33I/33E, 125K Buckets Abort Rate Results}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM125K:F90,I5,E55_aborts.tex}
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM125K:F90,I5,E510_aborts.tex}
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM125K:F90,I5,E515_aborts.tex}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{90F/5I/5E, 125K Buckets Abort Rate Results}
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM1M:F34,I33,E335_aborts.tex}
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM1M:F34,I33,E3310_aborts.tex}
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM1M:F34,I33,E3315_aborts.tex}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{33F/33I/33E, 1M Buckets Abort Rate Results}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM1M:F90,I5,E55_aborts.tex}
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM1M:F90,I5,E510_aborts.tex}
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+    \begin{minipage}{.45\textwidth}
+    \centering
+        \input{figures/maps/HM1M:F90,I5,E515_aborts.tex}
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+    \caption{90F/5I/5E, 1M Buckets Abort Rate Results}
+\end{table}
+
+\section{Performance Results}
+\subsection{10K Buckets}
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM10K:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM10K:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM10K:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+	\caption{Hashmap Performance, 10K Buckets (33F/33I/33E)}
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM10K:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM10K:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+	\caption{Hashmap Performance, 10K Buckets (90F/5I/5E)}
+\end{figure}
+
+\subsection{125K Buckets}
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM125K:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+	\caption{Hashmap Performance, 125K Buckets (33F/33I/33E)}
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+	\caption{Hashmap Performance, 125K Buckets (90F/5I/5E)}
+\end{figure}
+
+\subsection{1M Buckets}
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM1M:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM1M:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+	\caption{Hashmap Performance, 1M Buckets (33F/33I/33E)}
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 5}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 10}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 15}
+    \end{minipage}
+	\caption{Hashmap Performance, 1M Buckets (90F/5I/5E)}
+\end{figure}
