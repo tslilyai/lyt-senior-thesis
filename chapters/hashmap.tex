@@ -99,11 +99,6 @@ As maximum fullness increases from 5 to 10, all transactional hashmaps experienc
         \input{figures/maps/HM125K:F34,I33,E3310_aborts.tex}
         \caption*{125K Buckets}
         \end{minipage}
-        \begin{minipage}{0.45\textwidth}
-        \centering
-        \input{figures/maps/HM1M:F34,I33,E3310_aborts.tex}
-        \caption*{1 Million Buckets}
-        \end{minipage}
         \caption{Hashmap Abort Rate (Max Fullness 10, 33\%F/33\%I/33\%E)}
     \end{table}
 
@@ -111,7 +106,18 @@ Overall, the abort rate remains relatively constant regardless of the fullness o
 
 We see that cache performance affects overall performance more than the abort rate: as the number of buckets and thus the number of cache misses increases, the performance decreases even though abort rate also decreases.
 
-\subsubsection{Hypothesis 4: The behaviors of the transactional cuckoo hashmap and the transactional chaining hashmap do not differ the behaviors of their nontransactional counterparts. }
+\subsubsection{Hypothesis 4: The behaviors of the transactional cuckoo hashmap and the transactional chaining hashmap do not differ the behaviors of their nontransactional counterparts}
+
+\begin{figure}[t]
+    \centering
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F34,I33,E33.png} 
+        \caption*{10K Buckets, Maximum Fullness 10}
+    \end{minipage}
+	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F34,I33,E33.png} 
+        \caption*{1M Buckets, Maximum Fullness 10}
+    \end{minipage}
+	\caption{Hashmap Performance, 33F/33I/33E}
+\end{figure}
 
 In the 90\% Finds, 5\% Inserts/Erases Test, the performance of the cuckoo hashmaps decreases by approximately 33\% as hashmap size increases from 10K to 1M buckets. However, the chaining hashmap experiences nearly no decrease in performance, or at times, an increase in performance to nearly 150\% its original performance. The CuckooKF hashmap at 10K buckets achieves performance $2\times$ that of the chaining hashmap. Performance is approximately equivalent for all transactional hashmaps at 125K buckets, and at 1M buckets the chaining hashmap achieves performance up to $1.5\times$ that of the cuckoo hashmaps. These performance differences are exacerbated as the fullness of the maps grows. This is expected since increased fullness results in a more significant increase in the numbers of cache misses in the cuckoo hashmaps.
  Performance on this test is nearly $1.5\times$ that of the 33\% Finds/Inserts/Erases Test. This is expected, since a find is both faster to perform than an insert or delete, and a find requires only reading a bucketversion for all transactional hashmaps.
