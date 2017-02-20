@@ -52,7 +52,6 @@ spell:
 clean:
 	-rm -rf latex.out
 	-rm -f *.aux *.dvi *.log *.blg *.bbl *.bak *.lof *.lot *.toc *.brf *.out *.fls *.fdb* *.ps *.bcf
-	-rm -f $(EVERYTHING)
 
 always:
 	@:
