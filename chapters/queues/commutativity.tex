@@ -1,7 +1,7 @@
 \chapter{Commutativity and Weakly Transactional Queues}
 \label{commutativity}
 
-In this chapter, we first describe the commutativity of queue operations in high-concurrent, non-transactional settings and compare it to the commutativity of queue operations in a fully-transactional setting. We then argue that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better for performance than a naive synchronization technique in a transactional data structure: this is because the flat combining algorithm's high performance comes from exploiting the greater operation commutativity present in a non-transactional setting. Thus, to support transactions, the flat combining algorithm's optimizations must be heavily modified. 
+We first describe the commutativity of queue operations in high-concurrent, non-transactional settings and compare it to the commutativity of queue operations in a fully-transactional setting. We then argue that the flat combining technique, while perhaps near-optimal for a highly-concurrent data structure, is no better for performance than a naive synchronization technique in a transactional data structure. This is because the flat combining algorithm's high performance comes from exploiting the greater operation commutativity present in a non-transactional setting. Thus, to support transactions, the flat combining algorithm's optimizations must be heavily modified. 
 
 To demonstrate this point, we propose a transactional specification that allows greater operation commutativity with the expectation that the flat combining technique can achieve better performance under this specification. Our experimental results illustrate that the commutativity of operations in this new setting is essential for the effectiveness of the flat combining technique.
 
@@ -46,7 +46,7 @@ We first introduce some basic terminology (as defined by Schwarz~\cite{schwarz} 
 \end{defn}
 
 \begin{eg}
-$H$ is a serializable history given $H'$. $H''$ represents a serial history but is inconsistent with $H$.
+$H$ is a serializable history whose corresponding serial execution is $H'$. $H''$ represents a serial history but is inconsistent with $H$.
     \singlespacing   
 \begin{lstlisting}
         H                       H'                      H'' 
@@ -59,7 +59,7 @@ $H$ is a serializable history given $H'$. $H''$ represents a serial history but 
 \end{eg}
 
 \begin{defn}
-    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all operations are linearizable. Informally, this means that the serial order of transactions corresponds to the real time at which the transactions commit.
+    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all operations are linearizable. Informally, \emph{linearizability} means that the serial order of transactions corresponds to the real time at which the transactions commit.
 \end{defn}
 \lyt{examples?}
 
@@ -68,24 +68,26 @@ $H$ is a serializable history given $H'$. $H''$ represents a serial history but 
 Note that all operations can be classified as sets of reads and/or writes (as we do in Table~\ref{table:qrw}). We therefore define dependencies abstractly as reads and writes of particular objects in our definitions.
 
 \begin{defn}
-    Transaction $T2$ is \emph{dependent} on transaction $T1$ if one of the following relations holds:
+    A \emph{dependency} between transaction $T2$ and transaction $T1$ can be defined as one of the following relations:
     \begin{itemize}
-        \item R-R: $T1$ reads an object later read by $T2$
-        \item R-W: $T1$ reads an object later written by $T2$
-        \item W-R: $T1$ writes an object later read by $T2$
-        \item W-W: $T1$ writes an object later written by $T2$
+        \item R-R: $T2$ reads an object previously read by $T1$
+        \item R-W: $T2$ writes an object previously read by $T1$
+        \item W-R: $T2$ reads an object previously written by $T1$
+        \item W-W: $T2$ writes an object previously written by $T1$
     \end{itemize}
+    Dependencies between two transactions form a dependency graph, where transactions are the vertices and labeled edges indicate different types of dependencies between them.
 \end{defn}
 
 \begin{defn}
-    An operation $P$ of transaction $T1$ is \emph{commutative} with operation $Q$ of transaction $T2$ when ordering $P$ before $Q$ results in a \emph{R-R} dependency or no dependency at all (definition taken from Weihl~\cite{weihl}).
+    Operation $p$ performed by $T1$ \emph{commutes} with operation $q$ of $T2$ when the operations form a \emph{R-R} dependency or no dependency at all.
+(definition taken from Weihl~\cite{weihl}).
 \end{defn}
 
 \subsection{Results}
 
 These results are well-known in the literature about transactional data structure scalability: we repeat them here for reference.
 \begin{theorem}
-    A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions (see ~\cite{schwarz} for proof).
+    A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions in the dependency graph (see ~\cite{schwarz} for proof).
 \end{theorem}
 
 \begin{theorem}
@@ -191,7 +193,8 @@ We start by defining the dependency relations between single operations (Table~\
     \label{tab:interleavings}
 \end{table}
 
-With a fully-transactional queue, cyclical dependencies can occur, thus reducing the number of valid histories. The possible interleavings that generate cyclical dependencies are shown in Table~\ref{tab:interleavings}. Note that most of the interleavings that result in cyclical dependencies, and therefore invalid histories, occur only when the queue becomes empty; only when two transactions both perform pushes or both perform pops do we see cyclical dependencies in a nonempty queue. 
+With a fully-transactional queue, cyclical dependencies can occur, thus reducing the number of valid histories. The possible interleavings that generate cyclical dependencies are shown in Table~\ref{tab:interleavings}. Note that most of the interleavings that result in cyclical dependencies, and therefore invalid histories, occur when the queue becomes empty. 
+We only see cyclical dependencies in a nonempty queue if both transactions push or pop (a $W-W$ dependency).
 
 A transactional queue prevents these interleavings from occurring through delaying push operation execution and using a pessimistic or optimistic approach upon encountering an empty queue.
 
@@ -205,7 +208,7 @@ Because pop operations immediately return values that depend on the state of the
 
 The T-Queue1 implements the optimistic method: checks of the \texttt{tailversion} and \texttt{headversion} determine at commit time whether the empty status of the queue has been modified by another, already committed transaction. The T-Queue2 implements the pessimistic approach, which locks the queue after a pop is performed and only releases the lock if the transaction commits or aborts, therefore preventing any other transaction from committing any operation after the pop.
 
-In order to support transactions, the flat combining approach must do either approach (1) or (2). Here we argue that the flat combining approach cannot do either without introducing overhead that reduces its performance to below that of the T-Queue1 or T-Queue2.
+To support transactions, the flat combining approach must do either approach (1) or (2). Here we argue that the flat combining approach cannot do either without introducing overhead that reduces its performance to below that of the T-Queue1 or T-Queue2.
 
 If we take approach (1), a pop cannot be performed at execution time because no locks on the queue are acquired: other transactions may commit pops of an invalid head if this transaction later aborts. Thus, in order to determine if a pop should return true or if it should return false, a transactional pop flat combining request requires much more complexity than a nontransaction one: the thread must determine how many elements the queue holds, how many elements the current transaction is intending to pop, and if any other thread intends to pop (in which case the transaction aborts). The transactional push flat combining request is also significantly more complex, as it requires installing all the pushes of the transaction. Additional flat combining calls are necessary to allow a thread to perform checks of the queue's empty status (the \texttt{<EMPTY?>} flat combining call) to determine whether the transaction can commit or must abort, and to actually execute the pops at commit time. Thus, approach (1) requires adding both more flat combining calls and more complexity to the existing flat combining calls.
 
