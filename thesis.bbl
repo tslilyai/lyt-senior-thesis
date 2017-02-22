@@ -139,6 +139,11 @@ N.~Herman, J.~P. Inala, Y.~Huang, L.~Tsai, E.~Kohler, B.~Liskov, and L.~Shrira.
 \newblock In {\em Proceedings of the Eleventh European Conference on Computer
   Systems}, EuroSys '16, pages 31:1--31:16, New York, NY, USA, 2016. ACM.
 
+\bibitem{intel_htm}
+R.~D. (Intel).
+\newblock Web resources about intel® transactional synchronization extensions,
+  Jan 2017.
+
 \bibitem{libcds}
 M.~Khizhinsky.
 \newblock A c++ library of concurrent data structures.

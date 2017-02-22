@@ -6,7 +6,7 @@ In this chapter, we first describe the commutativity of queue operations in high
 To demonstrate this point, we propose a transactional specification that allows greater operation commutativity with the expectation that the flat combining technique can achieve better performance under this specification. Our experimental results illustrate that the commutativity of operations in this new setting is essential for the effectiveness of the flat combining technique.
 
 \section{Terminology}
-We first introduce some basic terminology (as defined in \cite{schwarz} and \cite{weihl}) that will occur in our discussion.
+We first introduce some basic terminology (as defined by Schwarz~\cite{schwarz} and Weihl~\cite{weihl}) that will occur in our discussion.
 
 \subsection{Histories}
 \begin{defn}
@@ -78,14 +78,14 @@ Note that all operations can be classified as sets of reads and/or writes (as we
 \end{defn}
 
 \begin{defn}
-    An operation $P$ of transaction $T1$ is \emph{commutative} with operation $Q$ of transaction $T2$ when ordering $P$ before $Q$ results in a \emph{R-R} dependency or no dependency at all (definition taken from \cite{weihl}).
+    An operation $P$ of transaction $T1$ is \emph{commutative} with operation $Q$ of transaction $T2$ when ordering $P$ before $Q$ results in a \emph{R-R} dependency or no dependency at all (definition taken from Weihl~\cite{weihl}).
 \end{defn}
 
 \subsection{Results}
 
 These results are well-known in the literature about transactional data structure scalability: we repeat them here for reference.
 \begin{theorem}
-    A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions (see \cite{schwarz} for proof).
+    A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions (see ~\cite{schwarz} for proof).
 \end{theorem}
 
 \begin{theorem}
@@ -123,7 +123,7 @@ For generality, we reduce each queue operation to a read or write of a particula
 
 The guarantees of concurrent, non-transactional queues are \emph{nearly} equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable, since the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned), may not be visible to an operation that is performed after $P$ returns.
 
-The flat combining technique provides serializable, atomic, \emph{and} linearizable singleton transactions\cite{flatcombining}. Therefore, we can reason about the commutativity and therefore scalability of a concurrent, non-transactional flat combining queue using notions of transactional dependencies.
+The flat combining technique provides serializable, atomic, \emph{and} linearizable singleton transactions~\cite{flatcombining}. Therefore, we can reason about the commutativity and therefore scalability of a concurrent, non-transactional flat combining queue using notions of transactional dependencies.
 
 We start by defining the dependency relations between single operations (Table~\ref{table:queuesimpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, synchronization is only necessary to ensure correctness when two threads attempt to write (W-W) or simultaneously write/read (W-R or R-W) the same object: the performance bottleneck is only caused by concurrent access synchronization. As we have shown, the flat combining approach works particularly well in a highly-concurrent setting to minimize the overhead of this synchronization cost.
 
