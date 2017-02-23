@@ -31,14 +31,15 @@ We provide a few figures that highlight our results; full results (including abo
 
 
 \subsubsection{Hypothesis 1: Pessimistic execution outperforms optimistic execution on contentious operations}
-\begin{figure}[t]
+\begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{fcqueues/stoQ:PushPop.png}
+	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{fcqueues/stoQ:PushPop.png}}
         \caption*{Push-Pop Test}
+        \vspace{12pt}
 	\end{minipage}
-	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{fcqueues/stoQ:RandSingleOps10000.png}
+	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{fcqueues/stoQ:RandSingleOps10000.png}}
         \caption*{Multi-Thread Singletons Test}
 	\end{minipage}
     \caption{T-QueueO vs. T-QueueP Performance}
@@ -55,14 +56,15 @@ The comparative performance of the T-QueueO and T-QueueP (Figure~\ref{fig:stoqs}
    T-QueueP outperforms T-QueueO, indicating that a pessimistic approach is more appropriate for contentious operations.
 \end{minipage}}
 
-\begin{figure}[t]
+\begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{concurrent/Q:PushPop.png}
+	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{concurrent/Q:PushPop.png}}
         \caption*{Push-Pop Test}
+        \vspace{12pt}
 	\end{minipage}
-   	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps10000.png}
+   	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{concurrent/Q:RandSingleOps10000.png}}
         \caption*{Multi-Thread Singletons Test}
 	\end{minipage}
         \caption{Non-transactional Concurrent Queues Performance}
@@ -101,14 +103,15 @@ Given these results, as well as the algorithmic benefits of the flat combining t
 
 \subsubsection{Hypothesis 4: Overhead from general STO bookkeeping does not cripple performance of a highly-concurrent queue algorithm}
 
-\begin{figure}[t]
+\begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{fcqueues/ntQ:PushPop.png}
+	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{fcqueues/ntQ:PushPop.png}}
         \caption*{Push-Pop Test}
+        \vspace{12pt}
 	\end{minipage}
-   	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{fcqueues/ntQ:RandSingleOps10000.png}
+   	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{fcqueues/ntQ:RandSingleOps10000.png}}
         \caption*{Multi-Thread Singletons Test}
 	\end{minipage}
         \caption{NT-FCQueue vs. NT-FCQueueWrapped Performance}
@@ -130,15 +133,16 @@ Adding the calls to the general STO wrapper functions that are necessary for any
 
 \subsubsection{Hypothesis 5: A transactional flat combining queue outperforms and scales better than a transactional queue with a naive concurrent algorithm}
 
-\begin{figure}[t]
+\begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{fcqueues/tQ:PushPop.png}
+	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{fcqueues/tQ:PushPop.png}}
         \caption*{Push-Pop Test}
+        \vspace{12pt}
 	\end{minipage}
-   	\begin{minipage}{0.45\textwidth}
-	    \includegraphics[width=\textwidth]{fcqueues/tQ:RandSingleOps10000.png}
-        \caption{Multi-Thread Singletons Test}
+   	\begin{minipage}{0.75\textwidth}
+        \boxed{\includegraphics[width=\textwidth]{fcqueues/tQ:RandSingleOps10000.png}}
+        \caption*{Multi-Thread Singletons Test}
 	\end{minipage}
         \caption{T-FCQueue Performance}
     \label{fig:tqs}

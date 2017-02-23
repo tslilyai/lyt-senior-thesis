@@ -194,6 +194,8 @@ class Plotter():
     def get_pushpop_graphs(self, queues, indices, filename, colors, patterns, results):
         width = 0.5/len(indices)
         qdata = defaultdict(dict)
+        labels = [queues[i] for i in indices]
+
         for size, data_lists in results.items():
             if len(data_lists['speed'][0]) == 0:
                 continue
@@ -206,7 +208,10 @@ class Plotter():
                     qdata[q_index]['aborts'].append(data_lists['aborts'][q_index][0])
        
             x = range(len(INIT_SIZES)) 
-            fig = plt.figure(figsize=(8,7))
+            if len(labels) < 5:
+                fig = plt.figure(figsize=(8,5))
+            else:
+                fig = plt.figure(figsize=(9,6))
             ax = fig.add_subplot(111)
             qbars = []
             for index in indices:
@@ -219,12 +224,11 @@ class Plotter():
                     yerr=[err_low, err_high], ecolor='black'))
                 x = [v+width for v in x]
 
-            labels = [queues[i] for i in indices]
             if len(labels) < 5:
                 ncols = len(labels)
                 legend = ax.legend(qbars, labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
             else:
-                ncols = int(math.ceil(len(labels)/3.0))
+                ncols = int(math.ceil(len(labels)/2.0))
                 legend = ax.legend(qbars, labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
             ax.set_xlabel('Initial Size')
             ax.set_ylabel("Speed" + MEASURES['speed'])
@@ -232,7 +236,10 @@ class Plotter():
             ax.set_xticklabels(INIT_SIZES)
            
             box = ax.get_position()
-            ax.set_position([box.x0, box.y0, box.width, box.height*.85])
+            if len(labels) < 5:
+                ax.set_position([box.x0, box.y0, box.width, box.height*.95])
+            else:
+                ax.set_position([box.x0, box.y0, box.width, box.height*.9])
             ax.set_xlim(-width, x[len(INIT_SIZES)-1]+ width)
             ax.set_ylim(0, 1.2e7)
            
@@ -269,6 +276,7 @@ class Plotter():
 
     def get_randops_graphs(self, ds, indices, filename, colors, patterns, results, testname, args=None):    
         data = defaultdict(dict)
+        labels = [ds[i] for i in indices]
         for size, data_lists in results.items():
             assert(len(ds) == len(data_lists['speed']))
 
@@ -279,7 +287,10 @@ class Plotter():
                     data[index]['speed'].append(data_lists['speed'][index][nthreads_index])
                     data[index]['aborts'].append(data_lists['aborts'][index][nthreads_index])
 
-            fig = plt.figure(figsize=(8,7))
+            if len(labels) < 5:
+                fig = plt.figure(figsize=(8,5))
+            else:
+                fig = plt.figure(figsize=(9,6))
             ax = fig.add_subplot(111)
             for index in indices:
                 datum = data[index]
@@ -292,19 +303,19 @@ class Plotter():
 
             ax.set_xlabel("Number of Threads")
             ax.set_ylabel("Speed" + MEASURES['speed'])
+            box = ax.get_position()
 
-            labels = [ds[i] for i in indices]
             if len(labels) < 5:
+                ax.set_position([box.x0, box.y0, box.width, box.height*.9])
                 ax.set_title("Initial Size %s" % (size), y=1.15)
                 ncols = len(labels)
                 legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
             else:
+                ax.set_position([box.x0, box.y0, box.width, box.height*.85])
                 ax.set_title("Initial Size %s" % (size), y=1.25)
-                ncols = int(math.ceil(len(labels)/3.0))
+                ncols = int(math.ceil(len(labels)/2.0))
                 legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
 
-            box = ax.get_position()
-            ax.set_position([box.x0, box.y0, box.width, box.height*.85])
            
             if 'map' in filename:
                 ax.set_ylim(0, 1.2e8)
@@ -365,7 +376,7 @@ class Plotter():
 
     def concurrent_queues_graphs(self):
         queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "Basket", "Moir","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
-        queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "Basket", "Max Performance of other queues","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
+        #queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "Basket", "Max Performance of other queues","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
         filename='concurrent/'
         #filename='concurrent/all'
         colors = ["red", "red","green"] + [(0.15*i,0.15*i, 0.15*i) for i in range(7)]
@@ -377,11 +388,11 @@ class Plotter():
 
         patterns = ['--','solid','--','solid', 'solid', 'solid', 'solid', 'solid', 'solid', 'solid']
         test_names = ['Q:RandSingleOps']
-        queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "", "Max Performance of other queues","","","","",""]
+        #queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "", "Max Performance of other queues","","","","",""]
         for name in test_names:
             results = self.ctests[name]
-            self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name)
-            #self.get_randops_graphs(queues, range(len(queues)), filename, colors, patterns, results, name)
+            #self.get_randops_graphs(queues, [1,2,4], filename, colors, patterns, results, name)
+            self.get_randops_graphs(queues, range(len(queues)), filename, colors, patterns, results, name)
 
     def fcqueues_graphs(self):
         queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "NT-FCQueueWrapped", "T-FCQueue", "WT-FCQueue", "WT-Queue"]
@@ -445,7 +456,7 @@ class Plotter():
 def main():
     p = Plotter()
     #p.hashmaps_graphs()
-    #p.fcqueues_graphs()
+    p.fcqueues_graphs()
     p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
