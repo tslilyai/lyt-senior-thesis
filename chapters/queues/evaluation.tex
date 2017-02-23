@@ -26,7 +26,7 @@ We evaluate all the queue implementations on a set of microbenchmarks to determi
 
 \subsection{Results and Discussion}
 
-We proceed in our discussion by first proposing a hypothesis, which we test using the benchmarks described above, and then discussing the results of our tests and the conclusions that we reach.
+We proceed in our discussion by proposing a sequence of hypotheses, which we test using the benchmarks described above. For each hypothesis, we use our benchmark results to formulate a conclusion that either refutes or supports the hypothesis.
 We provide a few figures that highlight our results; full results (including abort rates and cache misses) can be found in Appendix~\ref{app:queue}. 
 
 
@@ -47,7 +47,7 @@ We provide a few figures that highlight our results; full results (including abo
 \end{figure}
 
 
-We test this hypothesis by comparing the performance of the T-QueueO and T-QueueP queue, which differ only in that the a thread running on the T-QueueP queue locks the queue immediately when it performs a transactional pop, therefore pessimistically assuming that any other thread accessing the queue will cause a conflict with its pop operation.
+We test this hypothesis by comparing the performance of the T-QueueO and T-QueueP queue, which differ only in that a thread running on the T-QueueP queue locks the queue immediately when it performs a transactional pop, therefore pessimistically assuming that any other thread accessing the queue will cause a conflict with its pop operation.
 
 The comparative performance of the T-QueueO and T-QueueP (Figure~\ref{fig:stoqs}) demonstrate the effectiveness of a pessimistic approach to the pop operation. T-QueueP's performance is double that of T-QueueO's performance on the Push-Pop Test even with triple the abort rate---this is likely because the abort rate is still relatively low (at 1.5\%). T-QueueP performs slightly better on the Multi-Thread Singletons Test, likely because of its significantly lower abort rate (1/3 that of the T-QueueO): this result supports that a pessimistic approach to contentious operations (such as pop) benefits performance. Because of its higher performance, we use T-QueueP as a baseline reference in all future tests.
 
