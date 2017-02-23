@@ -59,16 +59,17 @@ The full results can be found in Appendix~\ref{app:hashmaps}.
 
 \subsubsection{Hypothesis 1: The transactional cuckoo hashmaps will experience a greater number of cache misses}
 
-    \begin{figure}[t]
+    \begin{figure}[H]
     \centering
-        \begin{minipage}{0.45\textwidth}
+        \begin{minipage}{0.75\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{maps/3310cm.png}
-        \caption*{33\%Find, 33\%Insert, 33\% Delete}
+            \boxed{\includegraphics[width=\textwidth]{maps/3310cm.png}}
+            \caption*{33\%Find, 33\%Insert, 33\% Delete}
+            \vspace{12pt}
         \end{minipage}
-        \begin{minipage}{0.45\textwidth}
+        \begin{minipage}{0.75\textwidth}
             \centering
-            \includegraphics[width=\textwidth]{maps/9010cm.png}
+            \boxed{\includegraphics[width=\textwidth]{maps/9010cm.png}}
             \caption*{90\%Find, 5\%Insert, 5\% Delete}
         \end{minipage}
         \caption{Hashmap Cache Misses (Max Fullness 10)}
@@ -87,14 +88,15 @@ As maximum fullness increases from 5 to 10, all transactional hashmaps experienc
 
 \subsubsection{Hypothesis 3: The abort rate decreases as the number of buckets increases, but performance is not heavily affected by abort rate}
 
-    \begin{table}[t]
+    \begin{table}[H]
     \centering
-        \begin{minipage}{0.45\textwidth}
+        \begin{minipage}{0.75\textwidth}
         \centering
         \input{figures/maps/HM10K:F34,I33,E3310_aborts.tex}
         \caption*{10K Buckets}
+            \vspace{12pt}
         \end{minipage}
-        \begin{minipage}{0.45\textwidth}
+        \begin{minipage}{0.75\textwidth}
         \centering
         \input{figures/maps/HM125K:F34,I33,E3310_aborts.tex}
         \caption*{125K Buckets}
@@ -108,12 +110,13 @@ We see that cache performance affects overall performance more than the abort ra
 
 \subsubsection{Hypothesis 4: The behaviors of the transactional cuckoo hashmap and the transactional chaining hashmap do not differ the behaviors of their nontransactional counterparts}
 
-\begin{figure}[t]
+\begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F34,I33,E33.png} 
+    \begin{minipage}{0.75\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/10HM125K:F34,I33,E33.png}}
         \caption*{10K Buckets, Maximum Fullness 10}
+        \vspace{12pt}
     \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F34,I33,E33.png} 
+    \begin{minipage}{0.75\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/10HM125K:F34,I33,E33.png}}
         \caption*{1M Buckets, Maximum Fullness 10}
     \end{minipage}
 	\caption{Hashmap Performance, 33F/33I/33E}

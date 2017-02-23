@@ -306,10 +306,10 @@ class Plotter():
             box = ax.get_position()
 
             if len(labels) < 5:
-                ax.set_position([box.x0, box.y0, box.width, box.height*.9])
+                ax.set_position([box.x0, box.y0, box.width, box.height*.85])
                 ax.set_title("Initial Size %s" % (size), y=1.15)
                 ncols = len(labels)
-                legend = ax.legend(labels, bbox_to_anchor=(0., 1.02, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+                legend = ax.legend(labels, bbox_to_anchor=(0., 1.05, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
             else:
                 ax.set_position([box.x0, box.y0, box.width, box.height*.85])
                 ax.set_title("Initial Size %s" % (size), y=1.25)
@@ -319,7 +319,7 @@ class Plotter():
            
             if 'map' in filename:
                 ax.set_ylim(0, 1.2e8)
-                ax.set_title("Max Fullness %s" % (args), y=1.15)
+                ax.set_title("Max Fullness %s" % (args), y=1.2)
             else:
                 ax.set_ylim(0, 2e7)
             ax.set_xlim(0, 21)
@@ -455,9 +455,9 @@ class Plotter():
 
 def main():
     p = Plotter()
-    #p.hashmaps_graphs()
-    p.fcqueues_graphs()
-    p.concurrent_queues_graphs()
+    p.hashmaps_graphs()
+    #p.fcqueues_graphs()
+    #p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()
