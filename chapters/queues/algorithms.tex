@@ -31,10 +31,10 @@ STO provides two transactional FIFO queues that adhere to the interface exposed 
 These two algorithms enforce transactional correctness using \emph{versions}. A version can act as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure by monotonically increasing whenever a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. When a transactional operation performs a read of some data structure state, it adds a read of the corresponding version value. This read is checked when the transaction commits to ensure that the observed data structure state is still valid.
 Note that we need to validate the version's value from the \emph{first} time we perform a read of the version during the transaction; this ensures that every observed state since the start of the transaction is still valid.
 
-\subsection{T-Queue1}
-The T-Queue1 is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size, transactional queue.
+\subsection{T-QueueO}
+The T-QueueO is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size, transactional queue.
 
-The queue supports transactional operations push and pop and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue during their transaction's executions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. The T-Queue1 allows checks on the queues to be done via two versions. Headversion, which tracks the location of the head, is used to check if another thread has popped from the queue; tailversion, which tracks the location of the tail, is used to check if another thread has pushed onto the queue.
+The queue supports transactional operations push and pop and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue during their transaction's executions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. The T-QueueO allows checks on the queues to be done via two versions. Headversion, which tracks the location of the head, is used to check if another thread has popped from the queue; tailversion, which tracks the location of the tail, is used to check if another thread has pushed onto the queue.
 
 A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tailversion acts as a lock to prevent any other thread from pushing onto the queue. After locking tailversion, the thread pushes all elements on the \texttt{write\_list} onto the queue, and increments the tailversion.
 If a transaction performs only pushes, then the transaction will always commit: a push does not observe any property of the queue, such as the value at the head of the queue or the emptiness of the queue. 
@@ -45,10 +45,10 @@ When a transaction that performed pops commits, it locks the headversion (ensuri
 
 %The design is summarized in Table \ref{table:sto1}.
 
-\subsection{T-Queue2}
-The T-Queue2 is also a circular, fixed-size queue, with operations push and pop. The T-Queue2 algorithm is a hybrid design integrating the T-Queue1 algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library~\cite{tdsl}. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the T-Queue1, and the algorithm is simpler to implement and describe. 
+\subsection{T-QueueP}
+The T-QueueP is also a circular, fixed-size queue, with operations push and pop. The T-QueueP algorithm is a hybrid design integrating the T-QueueO algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library~\cite{tdsl}. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the T-QueueO, and the algorithm is simpler to implement and describe. 
 
-Adding pessimistic locking is done by locking the queue when any pop (a naturally contentious operation) is invoked. The queue is then unlocked only after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the T-Queue1.
+Adding pessimistic locking is done by locking the queue when any pop (a naturally contentious operation) is invoked. The queue is then unlocked only after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the T-QueueO.
 
 Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queue lock. 
 
@@ -74,7 +74,7 @@ When a thread T wishes to perform an operation O:
     \end{enumerate}
 \end{enumerate}
 
-In the context of the queue, flat combining proves to be an effective technique for handling the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses ``fat nodes'' (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the T-Queue1 and T-Queue2 suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that flat combining's alternative synchronization paradigm might improve the performance of a transactional queue as much as it does for a concurrent queue.
+In the context of the queue, flat combining proves to be an effective technique for handling the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses ``fat nodes'' (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the T-QueueO and T-QueueP suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that flat combining's alternative synchronization paradigm might improve the performance of a transactional queue as much as it does for a concurrent queue.
 
 \subsection{Transactional Flat Combining Queue} 
 \label{fcqueuet}
@@ -102,7 +102,7 @@ We now describe the new algorithms for push and pop.  We change the types of req
     \item \texttt{<CLEANUP, thread\_id>} : unmark all values that are marked with this \texttt{thread\_id}
 \end{itemize}
 
-As with the T-Queue1, a push within a transaction adds to an internal \texttt{write\_list\_item}. At commit time, the thread will invoke the \texttt{<PUSH, list>}, with the \texttt{write\_list} passed as the argument.
+As with the T-QueueO, a push within a transaction adds to an internal \texttt{write\_list\_item}. At commit time, the thread will invoke the \texttt{<PUSH, list>}, with the \texttt{write\_list} passed as the argument.
 
 A pop is implemented with a pessimistic approach. Performing a pop within a transaction invokes the \texttt{<MARK\_POP, thread\_id>} command. The combiner thread, upon seeing a MARK\_POP command, looks at the first value at the head of the queue. If this value is marked with another thread's \texttt{thread\_id}, the combiner thread returns \texttt{<ABORT>} to the calling thread.
 
