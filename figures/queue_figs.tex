@@ -1,6 +1,7 @@
 \chapter{Queue Results}
 \label{app:queue}
 
+\vspace{-12pt}
 \section{Cache Misses}
 
 Cache misses are recorded by evaluating the Multi-Thread Singletons Test with 8 threads, with each thread running 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
@@ -8,42 +9,36 @@ In this figure, we report the number of cache misses reported by perf (approxima
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{fcqueues/cm.png}
+    \includegraphics[width=0.66\textwidth]{fcqueues/cm.png}
     \caption{Queue Cache Misses}
 \label{fig:cm_queues}
 \end{figure}
 
-\section{Performance Results}
+\section{Performance of Non-transactional Concurrent Queues}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.5\textwidth}
+    \includegraphics[width=0.65\textwidth]{concurrent/allQ:RandSingleOps10000.png}
+    \includegraphics[width=0.65\textwidth]{concurrent/allQ:RandSingleOps100000.png}
+    \caption{Non-transactional Queues: Multi-Thread Singletons Test}
+\end{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{concurrent/allQ:PushPop.png}
-    \caption*{Push-Pop Test}
-	\end{minipage}\\
-    \begin{minipage}{\textwidth}
-    \centering
-    \includegraphics[width=0.48\textwidth]{concurrent/allQ:RandSingleOps10000.png}
-    \includegraphics[width=0.48\textwidth]{concurrent/allQ:RandSingleOps100000.png}
-    \caption*{Multi-Thread Singletons Test}
-	\end{minipage}
-    \caption{Non-transactional Concurrent Queues Performance (Full Results)}
+    \caption{Non-transactional Queues: Push-Pop Test}
 \end{figure}
 
+\section{Performance of Various Transactional Queues}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.5\textwidth}
+    \includegraphics[width=0.75\textwidth]{fcqueues/allQ:RandSingleOps10000.png}
+    \vspace{12pt}
+    \includegraphics[width=0.75\textwidth]{fcqueues/allQ:RandSingleOps100000.png}
+    \caption{Various Transactional Queues: Multi-Thread Singletons Test}
+\end{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fcqueues/allQ:PushPop.png}
-    \caption*{Push-Pop Test}
-	\end{minipage}\\
-    \begin{minipage}{\textwidth}
-    \centering
-    \includegraphics[width=0.48\textwidth]{fcqueues/allQ:RandSingleOps10000.png}
-    \includegraphics[width=0.48\textwidth]{fcqueues/allQ:RandSingleOps100000.png}
-    \caption*{Multi-Thread Singletons Test}
-	\end{minipage}
-    \caption{Various Transactional Queues Performance (Full Results)}
+    \caption{Various Transactional Queues: Push-Pop Test}
 \end{figure}
 
 \section{Abort Rate Results}

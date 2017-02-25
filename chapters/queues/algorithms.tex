@@ -66,7 +66,7 @@ The data structure design includes a sequential implementation of the data struc
 
 When a thread T wishes to perform an operation O:
 \begin{enumerate}
-    \item T writes the opcode and parameters for O to its local record. Specifically for the queue, the thread writes \texttt{<PUSH, value>} or \texttt{<POP, ()>} to its local record.
+    \item T writes the opcode and parameters for O to its local record. Specifically for the queue, the thread writes \texttt{<PUSH, value>} or \texttt{<POP,()>} to its local record.
    \item T tries to acquire the global lock. Depending on the result:
    \begin{enumerate}
         \item T acquires the lock and is now the “combiner” thread. T applies all thread requests in the publication list to the data structure in sequence, and writes both the result and an \texttt{<OK>} response to each requesting thread's local record.
@@ -81,7 +81,14 @@ In the context of the queue, flat combining proves to be an effective technique 
 
 Recall that, in addition to the requirements for a correct concurrent queue, a transactional queue must guarantee that there exists a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two pushes push consecutive values at the tail of the queue.
 
-We must consider the order in which threads' requests are applied to the queue to be able to create a transactionally correct flat combining queue. For example, let a transaction in thread T1 be \texttt{\{pop, pop\}} and a transaction in thread T2 be \texttt{\{pop\}}. The combiner thread sees that T1 has published \texttt{<POP, ()>} and T2 has published \texttt{<POP, ()>} to the publication list. The combiner thread then applies \texttt{T1:Pop} (popping the head of the queue) and \texttt{T2:Pop} (popping the second item on the queue). When the next combining pass executes, the combiner thread will see that T1 has published \texttt{<POP, ()>} again to the queue. However, performing T1's second pop violates the queue's transactional specification: the two popped values in T1's transaction will not be consecutive. T1 must now abort, which means that T2's pop of the second-frontmost value in the queue is now invalid: it did not pop at the head of the queue.
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.45\textwidth]{fcqueue_publist}
+\caption{Invalid order of pop application in the flat combining queue.}
+\label{fig:fcqueue_publist}
+\end{figure}
+
+We must consider the order in which threads' requests are applied to the queue to be able to create a transactionally correct flat combining queue. For example, let a transaction in thread T1 be \texttt{\{pop, pop\}} and a transaction in thread T2 be \texttt{\{pop\}}. The combiner thread sees that T1 has published \texttt{<POP,()>} and T2 has published \texttt{<POP,()>} to the publication list. The combiner thread then applies \texttt{T1:Pop} (popping the head of the queue) and \texttt{T2:Pop} (popping the second item on the queue). When the next combining pass executes, the combiner thread will see that T1 has published \texttt{<POP,()>} again to the queue. However, performing T1's second pop violates the queue's transactional specification: the two popped values in T1's transaction will not be consecutive. This sequence is shown in Figure~\ref{fig:fcqueue_publist}. T1 must now abort, which means that T2's pop becomes invalid: it popped the second-frontmost value of the queue, rather than the head of the queue.
 
 Addressing the scenario described above requires two important changes to flat combining (we describe the rationale for these changes in Chapter~\ref{commutativity}): 
 \begin{enumerate}

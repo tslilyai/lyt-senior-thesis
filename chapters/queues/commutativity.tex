@@ -47,21 +47,48 @@ We first introduce some basic terminology (as defined by Schwarz~\cite{schwarz} 
 
 \begin{eg}
 $H$ is a serializable history whose corresponding serial execution is $H'$. $H''$ represents a serial history but is inconsistent with $H$.
-    \singlespacing   
+    
+\begin{figure}[H]
+\singlespacing   
 \begin{lstlisting}
-        H                       H'                      H'' 
-(T2, Q.push(a), ())     (T2, Q.push(a), ())     (T1, Q.pop(), false)
-(T1, Q.pop(), true)     (T2, Q.push(a), ())     (T1, Q.pop(), false)
-(T2, Q.push(a), ())     (T1, Q.pop(), true)     (T2, Q.push(a), ())
-(T1, Q.pop(), true)     (T1, Q.pop(), true)     (T2, Q.push(a), ()) 
+        H                     H'                     H'' 
+(T2, Q.push(a), ())   (T2, Q.push(a), ())   (T1, Q.pop(), false)
+(T1, Q.pop(), true)   (T2, Q.push(a), ())   (T1, Q.pop(), false)
+(T2, Q.push(a), ())   (T1, Q.pop(), true)   (T2, Q.push(a), ())
+(T1, Q.pop(), true)   (T1, Q.pop(), true)   (T2, Q.push(a), ()) 
 \end{lstlisting}
-    \doublespacing
+\end{figure}
 \end{eg}
 
 \begin{defn}
-    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all operations are linearizable. Informally, \emph{linearizability} means that the serial order of transactions corresponds to the real time at which the transactions commit.
+    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all operations are linearizable. Informally, \emph{linearizability} means that a transaction appears to occur instantaneously between the time of its start and the time of its commit.
 \end{defn}
-\lyt{examples?}
+
+\begin{eg}
+$H$ is a serializable but not linearizable history. $H'$ is a valid serial ordering, but violates the rule that the serial order of transactions corresponds to the real time at which the transactions committed.
+    
+\begin{figure}[H]
+\singlespacing   
+    \begin{tabular}{ll}
+\begin{lstlisting}
+        H                            
+// Q empty                          
+(T1, Q.push(a), ())                
+(T1, Q.push(a), ())               
+(T1, Q.pop(), true)  // T1 commits
+(T2, Q.pop(), false) // T2 commits
+\end{lstlisting} & 
+\begin{lstlisting}
+             H'        
+    // Q empty
+    (T2, Q.pop(), false) // T2 commits
+    (T1, Q.push(a), ())                       
+    (T1, Q.push(a), ())
+    (T1, Q.pop(), false)// T1 commits
+\end{lstlisting}
+    \end{tabular}
+\end{figure}
+\end{eg}
 
 \subsection{Dependencies}
 
@@ -102,22 +129,22 @@ These results are well-known in the literature about transactional data structur
     Commutativity of data structure operations determines scalability: the greater number of valid histories, the lower the contention between transactions, and the greater the scalability of the transactional data structure. 
 \end{corollary}
 
-\lyt{examples?}
-
 \section{Commutativity of Concurrent and Transactional Queues}
 
-For generality, we reduce each queue operation to a read or write of a particular semantic object: the head, the tail, or the empty? predicate of the queue. This allows for our reasoning to be applied to operations that differ from our current specification of pop or push. For example, we can imagine an alternative pop operation that returns \texttt{void} regardless of whether the queue was empty, which would perform no visible reads. We summarize what reads and writes our specifications for pop and push perform in Table \ref{table:qrw}.
+For generality, we reduce each queue operation to a read or write of a particular semantic object: the \texttt{head}, the \texttt{tail}, or the \texttt{empty?} predicate of the queue. This allows for our reasoning to be applied to operations that differ from our current specification of pop or push. For example, we can imagine an alternative pop operation that returns \texttt{void} regardless of whether the queue was empty, which would perform no visible reads. We summarize the reads and writes of our pop and push specifications in Table \ref{table:qrw}.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
-\begin{tabular}{c||c|c}
+\begin{tabular}{|c||c|c|}
+    \hline
     Operation & Read & Write\\
     \hline
     \hline
-    pop & empty? & head, empty?\\
-    push & & tail, empty?\\
+    pop & \texttt{empty?} & \texttt{head}, \texttt{empty?}\\
+    push & & \texttt{tail}, \texttt{empty?}\\
+    \hline
 \end{tabular}
-    \caption{Read and writes of queue operations}
+    \caption{Objects read or written by queue operations}
     \label{table:qrw}
 \end{table}
 
@@ -190,7 +217,7 @@ We start by defining the dependency relations between single operations (Table~\
 \\
     \hline
 \end{tabular}
-    \caption*{Interleavings that create no dependencies are left out.}
+    \caption*{Interleavings that create R-R dependencies or no dependencies are omitted.}
     \caption{Operation interleavings generating dependency cycles.}
     \label{tab:interleavings}
 \end{table}

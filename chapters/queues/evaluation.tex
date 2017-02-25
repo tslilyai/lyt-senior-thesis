@@ -7,22 +7,17 @@ We evaluate all the queue implementations on a set of microbenchmarks to determi
 
 \subsubsection{Parameters}
 
-\begin{itemize}
-\item Value Types: Each queue benchmark uses randomly chosen integers because the benchmarks do not manipulate the values they push/pop and the queue algorithms are agnostic to the actual values being placed in the queue.
+\emph{Value Types}. Each queue benchmark uses randomly chosen integers because the benchmarks do not manipulate the values they push/pop and the queue algorithms are agnostic to the actual values being placed in the queue.
 
-\item Initial Queue Size: We run several tests with different initial number of entries in the queue. This affects how often the structure becomes empty, which can cause aborts and additional overhead (as described in the algorithms above). It also affects the number of cache lines accessed: a near-empty queue will never require iterating over values contained in more than one cache line.
+\emph{Initial Queue Size}. We run several tests with different initial number of entries in the queue. This affects how often the structure becomes empty, which can cause aborts and additional overhead (as described in the algorithms above). It also affects the number of cache lines accessed: a near-empty queue will never require iterating over values contained in more than one cache line.
 
-\item Operations per transaction: We modify the number of operations per transaction in different benchmarks. For some benchmarks, the number of operations in a transaction is set to 1 (i.e., the transactions are singleton transactions). This provides a more fair evaluation of transactional data structures against concurrent data structures: by keeping a transaction as short as possible, we minimize the performance hit from transactional overhead. Supporting multiple-operation transactions requires support for multiple items in read/write sets, read-my-writes, and an increased number of aborts and retries, all of which incurs additional overhead. With single operation transactions, we observe an upper bound on the best performance our data structures can achieve.
-
-\end{itemize}
+\emph{Operations per transaction}. We modify the number of operations per transaction in different benchmarks. For some benchmarks, the number of operations in a transaction is set to 1 (i.e., the transactions are singleton transactions). This provides a more fair evaluation of transactional data structures against concurrent data structures: by keeping a transaction as short as possible, we minimize the performance hit from transactional overhead. Supporting multiple-operation transactions requires support for multiple items in read/write sets, read-my-writes, and an increased number of aborts and retries, all of which incurs additional overhead. With single operation transactions, we observe an upper bound on the best performance our data structures can achieve.
 
 \subsubsection{Tests}
-\begin{enumerate}
-    \item 2-Thread Push-Pop Test: This test has one thread that performs only pushes and another thread that performs only pops (a traditional ``producer-consumer'' model). Unless the queue is empty, the two threads should never be modifying the same part of the data structure and will never conflict, leading to an abort rate that should be near 0. We use this test to measure the speed of push/pops on the queue under low or no contention. We expect that our transactional queues should perform as well, if not better, than most of the highly-concurrent queues: while their algorithms are optimized for multi-threaded access, our simpler implementation should be just as fast with low contention and low abort rates.
+    \emph{2-Thread Push-Pop Test}. This test has one thread that performs only pushes and another thread that performs only pops (a traditional ``producer-consumer'' model). Unless the queue is empty, the two threads should never be modifying the same part of the data structure and will never conflict, leading to an abort rate that should be near 0. We use this test to measure the speed of push/pops on the queue under low or no contention. We expect that our transactional queues should perform as well, if not better, than most of the highly-concurrent queues: while their algorithms are optimized for multi-threaded access, our simpler implementation should be just as fast with low contention and low abort rates.
 
-\item Multi-Thread Singletons Test: 
+\emph{Multi-Thread Singletons Test}.
     In this test, a thread randomly selects an operation (push or pop) to perform within each transaction. This keeps the queue at approximately the same size as its initial size during the test. This test is run with different initial queue sizes and different numbers of threads, which each thread performing singleton transactions. This test allows us to benchmark performance under variable amounts of contention (by increasing the number of threads) and increased abort rates. We expect that our T-QueueO/T-QueueP transactional queues will perform significantly worse once the number of threads is increased and our naive concurrent algorithms underperform concurrent algorithms optimized for contentious situations.
-\end{enumerate}
 
 \subsection{Results and Discussion}
 
@@ -119,10 +114,33 @@ Given these results, as well as the algorithmic benefits of the flat combining t
 \end{figure}
 
 We create a version of the NT-FCQueue that invokes general STO bookkeeping calls called NT-FCQueueWrapped. Thus, the relative performance of the NT-FCQueueWrapped to the NT-FCQueue indicates how much of the overhead added by the STO system is unavoidable (without modifying STO itself). 
-Selected tesults are shown in Figure~\ref{fig:wrappedqs}.
+Selected results are shown in Figure~\ref{fig:wrappedqs}.
 
 The STO wrapper functions called by NT-FCQueueWrapped must be called by any user of the data structure in order for the data structure to support transactions.
-These two calls are \texttt{start\_transaction} and \texttt{commit\_transaction}, and allow a user to mark which operations should occur together in the same transaction. After invoking the \texttt{start\_transaction} call, the thread is able to collect items in its read- and write-sets; when \texttt{commit\_transaction} is invoked, the commit protocol is invoked. The NT-FCQueueWrapped adds no items to the read- and write-sets after invoking \texttt{start\_transaction} and does nothing in its commit protocol. This means that the NT-FCQueueWrapped incurs the minimum amount of overhead necessary to use STO and therefore represents the upper bound on the performance we can expect from a fully transactional flat combining queue, the T-FCQueue. 
+These two calls are \texttt{start\_transaction} and \texttt{try\_commit}, and allow a user to mark which operations should occur together in the same transaction. An example of how these calls are used are in Figure~\ref{fig:wrappers}. After invoking the \texttt{start\_transaction} call, the thread is able to collect items in its read- and write-sets; when \texttt{try\_commit} is invoked, the commit protocol is invoked. The NT-FCQueueWrapped adds no items to the read- and write-sets after invoking \texttt{start\_transaction} and does nothing in its commit protocol. This means that the NT-FCQueueWrapped incurs the minimum amount of overhead necessary to use STO and therefore represents the upper bound on the performance we can expect from a fully transactional flat combining queue, the T-FCQueue. 
+
+\begin{figure}[H]
+\centering
+\singlespace
+\begin{tabular}{|c|}
+\hline
+\begin{lstlisting}
+	Sto::start_transaction();
+	try {
+		do_queue_op(push, 1);
+		do_queue_op(pop, 0);
+		if (Sto::try_commit()) {
+			printf("Transaction committed");
+		}
+	} catch (Transaction::Abort e) {
+		printf("Transaction aborted");
+	}
+\end{lstlisting}\\
+\hline
+\end{tabular}
+\caption{Example usage of STO wrapper calls}
+\label{fig:wrappers}
+\end{figure}
 
 The STO wrapper calls can lead to a loss of performance ranging from 0\% at twenty threads to 40\% at four threads compared to the performance of the vanilla non-transactional flat combining queue. Once contention increases and becomes the bottleneck, the difference in performance becomes negligible. The NT-FCQueueWrapped scales nearly equally as well as the NT-FCQueue. The performance of the two queues becomes equivalent at 12 threads when run with 10000 values initially in the queue, and at 20 threads when run with 100000 values initially in the queue. This comparison of the NT-FCQueueWrapped and the NT-FCQueue demonstrates that STO introduces negligible necessary overhead. Even with the wrapper calls, our results indicate it can still be possible to achieve performance up to nearly 2$\times$ greater at 20 threads than that of the T-QueueP.
 

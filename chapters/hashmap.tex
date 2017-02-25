@@ -38,15 +38,17 @@ As with the queue, all hashmaps queues are evaluated on a set of microbenchmarks
 
 \subsubsection{Parameters}
 
-\begin{itemize}
-    \item Proportion of Finds/Inserts/Deletes: The ratio of inserts:deletes is kept at 1 to ensure that the hashmap does not always become empty or only grow in size. It is expected that half the inserts will succeed and half the deletes will succeed, since both are drawing key values from the same range. Tests of 5\% inserts, 5\% deletes, and 90\% finds simulate the most likely use cases for hashmaps~\cite{hm1}. Tests of equal proportion (33\%) of all operations investigate how the hashmap reacts to an increased rate of inserts and deletes.
-    \item Operations per transaction: We choose to run all tests comparing transactional to non-transactional (parallel-only) data structures using single-operation transactions. As discussed in Section~\ref{q_microbenchmarks}, this provides a more fair evaluation of transactional data structures against concurrent ones. In addition, it allows us to minimize the differences between transaction hashmap implementations so we can get a baseline comparison.
-    \item Number of buckets: Both the cuckoo hashmaps and the chaining hashmap statically set the number of buckets in the data structure. The number of elements allowed in one bucket of the cuckoo hashmaps is fixed at a particular value, which we will call the \emph{maximum fullness}. 
+    \emph{Proportion of Finds/Inserts/Deletes}. The ratio of inserts:deletes is kept at 1 to ensure that the hashmap does not always become empty or only grow in size. It is expected that half the inserts will succeed and half the deletes will succeed, since both are drawing key values from the same range. Tests of 5\% inserts, 5\% deletes, and 90\% finds simulate the most likely use cases for hashmaps~\cite{hm1}. Tests of equal proportion (33\%) of all operations investigate how the hashmap reacts to an increased rate of inserts and deletes.
+
+\emph{Operations per transaction}. We choose to run all tests comparing transactional to non-transactional (parallel-only) data structures using single-operation transactions. As discussed in Section~\ref{q_microbenchmarks}, this provides a more fair evaluation of transactional data structures against concurrent ones. In addition, it allows us to minimize the differences between transaction hashmap implementations so we can get a baseline comparison.
+
+\emph{Number of buckets}. Both the cuckoo hashmaps and the chaining hashmap statically set the number of buckets in the data structure. The number of elements allowed in one bucket of the cuckoo hashmaps is fixed at a particular value, which we will call the \emph{maximum fullness}. 
         The \emph{capacity} (number of buckets $\times$ number of elements per bucket) of the cuckoo hashmap is fixed at some finite value because the cuckoo hashmap has a fixed size bucket; the chaining hashmap has no fixed capacity because a bucket's chain can grow arbitrarily long.
         The number of buckets and the size of each bucket affects the number of cache lines accessed during the test (for example, a larger hashmap may not be expected to fit into the L2 cache, whereas a small hashmap at full capacity will fit entirely in cache). During all tests, the number of keys present in the hashmap is not allowed to outgrow its capacity.
-    \item Fullness: The ratio equivalent to (number of keys : number of buckets). This determines the average number of elements to be found per bucket. The tests are implemented such that at steady state, fullness is expected to be 75\% of the maximum fullness of the cuckoo hashmap to avoid an out-of-space exception. This is controlled by picking a maximum key value. The maximum key value of inserted elements is twice the number of elements the hashmap will contain when its size reaches a fixed point.
-\end{itemize}
-Note that the initial size of the data structure should not affect performance as the test proceeds for a longer period of time and reaches a steady state. Therefore, we do not include the initial size as a benchmark parameter.
+    
+    \emph{Fullness}. The ratio equivalent to (number of keys : number of buckets). This determines the average number of elements to be found per bucket. The tests are implemented such that at steady state, fullness is expected to be 75\% of the maximum fullness of the cuckoo hashmap to avoid an out-of-space exception. This is controlled by picking a maximum key value. The maximum key value of inserted elements is twice the number of elements the hashmap will contain when its size reaches a fixed point.
+
+        Note that the initial size of the data structure should not affect performance as the test proceeds for a longer period of time and reaches a steady state. Therefore, we do not include the initial size as a benchmark parameter.
 
 \subsubsection{Multi-Thread, Variable-Capacity Singletons Test} 
 This test is run with different numbers of threads and with different proportions of finds/inserts/deletes. Each thread runs 5 million singleton transactions.
@@ -76,7 +78,7 @@ The full results can be found in Appendix~\ref{app:hashmaps}.
     \end{figure}
 
 
-The number of cache misses of each datatype is influenced by the number of allocations per data structure and the patterns in which these allocations are accessed. As expected, the non-transactional cuckoo hashmap experiences the least number of cache misses: this is because all other hashmaps' buckets contain a pointer to an allocated element inserted into the map. We expect that the non-allocating, transactional cuckoo hashmap will perform better than either of the allocating types \lyt{TODO?}.
+The number of cache misses of each datatype is influenced by the number of allocations per data structure and the patterns in which these allocations are accessed. As expected, the non-transactional cuckoo hashmap experiences the least number of cache misses: this is because all other hashmaps' buckets contain a pointer to an allocated element inserted into the map. We expect that the non-allocating, transactional cuckoo hashmap will perform better than either of the allocating types.
 
 Overall, the CuckooIE hashmap experiences the most cache misses as a result of both the cuckoo hashing algorithm: two buckets and all pointers to elements within the buckets are accessed during a find. As size and fullness increases, the CuckooKF hashmap experiences the least number of cache misses: this likely occurs because a find will not need to follow pointers in a CuckooKF hashmap bucket to compare key values, whereas comparing key values in the chaining and CuckooIE hashmaps both require following pointers.
 
