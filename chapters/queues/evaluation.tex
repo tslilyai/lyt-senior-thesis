@@ -122,18 +122,26 @@ These two calls are \texttt{start\_transaction} and \texttt{try\_commit}, and al
 \begin{figure}[t]
 \centering
 \singlespace
-\begin{lstlisting}
-	Sto::start_transaction();
-	try {
-		do_queue_op(push, 1);
-		do_queue_op(pop, 0);
-		if (Sto::try_commit()) {
-			printf("Transaction committed");
+\lstset{
+	language=C++,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{green}\ttfamily,
+	morekeywords={true, false},
+}
+	\begin{lstlisting}
+		Sto::start_transaction();
+		try {
+			do_queue_op(push, 1);
+			do_queue_op(pop, 0);
+			if (Sto::try_commit()) {
+				printf("committed");
+			}
+		} catch (Transaction::Abort e) {
+			printf("aborted");
 		}
-	} catch (Transaction::Abort e) {
-		printf("Transaction aborted");
-	}
-\end{lstlisting}
+	\end{lstlisting}
 \caption{Example usage of STO wrapper calls}
 \label{fig:wrappers}
 \end{figure}

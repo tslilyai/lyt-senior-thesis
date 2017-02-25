@@ -1,11 +1,11 @@
 \chapter{Queue Results}
 \label{app:queues}
 
-\vspace{-12pt}
+\vspace{-20pt}
 \section{Cache Misses}
 
-Cache misses are recorded by evaluating the Multi-Thread Singletons Test with 8 threads, with each thread running 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
-In this figure, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
+Cache misses are recorded by running the Multi-Thread Singletons Test benchmark with 8 threads, with each thread performing 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
+In the cache miss results presented, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
 
 \begin{figure}[H]
     \centering
@@ -30,9 +30,9 @@ In this figure, we report the number of cache misses reported by perf (approxima
 \section{Performance of Various Transactional Queues}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{fcqueues/allQ:RandSingleOps10000.png}
-    \vspace{12pt}
-    \includegraphics[width=0.75\textwidth]{fcqueues/allQ:RandSingleOps100000.png}
+    \includegraphics[width=0.85\textwidth]{fcqueues/allQ:RandSingleOps10000.png}
+    \vspace{20pt}
+    \includegraphics[width=0.85\textwidth]{fcqueues/allQ:RandSingleOps100000.png}
     \caption{Various Transactional Queues: Multi-Thread Singletons Test}
 \end{figure}
 \begin{figure}[H]

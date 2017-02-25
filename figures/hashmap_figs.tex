@@ -2,12 +2,11 @@
 \label{app:hashmaps}
 
 All results presented are the median of 5 trials. If there is an error bar, the bar represents the maximum and minimum value of the 5 trials.
-Cache misses are recorded by evaluating the Multi-Thread Singletons Test with 8 threads, with each thread running 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
-In the figures below, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
 
+\iffalse
 \section{Cache Misses}
 
-\subsection{33\%Find, 33\% Insert, 33\% Erase Test}
+\subsection{33\%Find, 33\% Insert, 33\% Erase}
 
 \begin{figure}[H]
     \centering
@@ -25,7 +24,7 @@ In the figures below, we report the number of cache misses reported by perf (app
         \caption*{Maximum Fullness 15}
 \end{figure}
 
-\subsection{90\%Find, 5\% Insert, 5\% Erase Test}
+\subsection{90\%Find, 5\% Insert, 5\% Erase}
 
 \begin{figure}[H]
     \centering
@@ -42,12 +41,12 @@ In the figures below, we report the number of cache misses reported by perf (app
         \includegraphics[width=0.75\linewidth]{maps/9015cm.png}
         \caption*{Maximum Fullness 15}
 \end{figure}
+\fi
 
 
+%\section{Performance Results}
 
-\section{Performance Results}
-
-\subsection{10K Buckets, 33\%Find, 33\% Insert, 33\% Erase Test}
+\section{10K Buckets, 33\%Find, 33\% Insert, 33\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM10K:F34,I33,E33.png} 
@@ -64,7 +63,7 @@ In the figures below, we report the number of cache misses reported by perf (app
         \caption*{Maximum Fullness 15}
     \end{figure}
 
-\subsection{10K Buckets, 90\%Find, 5\% Insert, 5\% Erase Test}
+\section{10K Buckets, 90\%Find, 5\% Insert, 5\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM10K:F90,I5,E5.png} 
@@ -81,7 +80,7 @@ In the figures below, we report the number of cache misses reported by perf (app
         \caption*{Maximum Fullness 15}
     \end{figure}
 
-\subsection{125K Buckets, 33\%Find, 33\% Insert, 33\% Erase Test}
+\section{125K Buckets, 33\%Find, 33\% Insert, 33\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM125K:F34,I33,E33.png} 
@@ -99,7 +98,7 @@ In the figures below, we report the number of cache misses reported by perf (app
 \end{figure}
 
 
-\subsection{125K Buckets, 90\%Find, 5\% Insert, 5\% Erase Test}
+\section{125K Buckets, 90\%Find, 5\% Insert, 5\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM125K:F90,I5,E5.png} 
@@ -117,7 +116,7 @@ In the figures below, we report the number of cache misses reported by perf (app
 \end{figure}
 
 
-\subsection{1MK Buckets, 33\%Find, 33\% Insert, 33\% Erase Test}
+\section{1MK Buckets, 33\%Find, 33\% Insert, 33\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM1M:F34,I33,E33.png} 
@@ -135,7 +134,7 @@ In the figures below, we report the number of cache misses reported by perf (app
 \end{figure}
 
 
-\subsection{1M Buckets, 90\%Find, 5\% Insert, 5\% Erase Test}
+\section{1M Buckets, 90\%Find, 5\% Insert, 5\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM1M:F90,I5,E5.png} 
@@ -154,6 +153,7 @@ In the figures below, we report the number of cache misses reported by perf (app
 
 
 \section{Abort Rate Results}
+\label{app:hm_aborts}
 
 \begin{table}[H]
     \centering
