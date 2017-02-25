@@ -47,16 +47,30 @@ We first introduce some basic terminology (as defined by Schwarz~\cite{schwarz} 
 
 \begin{eg}
 $H$ is a serializable history whose corresponding serial execution is $H'$. $H''$ represents a serial history but is inconsistent with $H$.
-    
 \begin{figure}[H]
 \singlespacing   
+   \begin{tabular}{c|c|c}
+H & H' & H''\\
+\hline
 \begin{lstlisting}
-        H                     H'                     H'' 
-(T2, Q.push(a), ())   (T2, Q.push(a), ())   (T1, Q.pop(), false)
-(T1, Q.pop(), true)   (T2, Q.push(a), ())   (T1, Q.pop(), false)
-(T2, Q.push(a), ())   (T1, Q.pop(), true)   (T2, Q.push(a), ())
-(T1, Q.pop(), true)   (T1, Q.pop(), true)   (T2, Q.push(a), ()) 
+(T2, Q.push(a), ())
+(T1, Q.pop(), true)
+(T2, Q.push(a), ())
+(T1, Q.pop(), true)
+\end{lstlisting} & 
+\begin{lstlisting}
+(T2, Q.push(a), ())
+(T2, Q.push(a), ())
+(T1, Q.pop(), true)
+(T1, Q.pop(), true)
+\end{lstlisting} &
+\begin{lstlisting}
+(T1, Q.pop(), false)
+(T1, Q.pop(), false)
+(T2, Q.push(a), ())
+(T2, Q.push(a), ()) 
 \end{lstlisting}
+\end{tabular}
 \end{figure}
 \end{eg}
 
@@ -65,13 +79,14 @@ $H$ is a serializable history whose corresponding serial execution is $H'$. $H''
 \end{defn}
 
 \begin{eg}
-$H$ is a serializable but not linearizable history. $H'$ is a valid serial ordering, but violates the rule that the serial order of transactions corresponds to the real time at which the transactions committed.
+$H$ is a serializable but not linearizable history. $H'$ is a valid serial ordering of $H$, but violates the rule that the serial order of transactions corresponds to the real time at which the transactions committed.
     
 \begin{figure}[H]
 \singlespacing   
-    \begin{tabular}{ll}
+    \begin{tabular}{c|c}
+H & H'\\
+\hline
 \begin{lstlisting}
-        H                            
 // Q empty                          
 (T1, Q.push(a), ())                
 (T1, Q.push(a), ())               
@@ -79,12 +94,11 @@ $H$ is a serializable but not linearizable history. $H'$ is a valid serial order
 (T2, Q.pop(), false) // T2 commits
 \end{lstlisting} & 
 \begin{lstlisting}
-             H'        
-    // Q empty
-    (T2, Q.pop(), false) // T2 commits
-    (T1, Q.push(a), ())                       
-    (T1, Q.push(a), ())
-    (T1, Q.pop(), false)// T1 commits
+// Q empty
+(T2, Q.pop(), false) // T2 commits
+(T1, Q.push(a), ())                       
+(T1, Q.push(a), ())
+(T1, Q.pop(), false)// T1 commits
 \end{lstlisting}
     \end{tabular}
 \end{figure}
@@ -133,16 +147,13 @@ These results are well-known in the literature about transactional data structur
 
 For generality, we reduce each queue operation to a read or write of a particular semantic object: the \texttt{head}, the \texttt{tail}, or the \texttt{empty?} predicate of the queue. This allows for our reasoning to be applied to operations that differ from our current specification of pop or push. For example, we can imagine an alternative pop operation that returns \texttt{void} regardless of whether the queue was empty, which would perform no visible reads. We summarize the reads and writes of our pop and push specifications in Table \ref{table:qrw}.
 
-\begin{table}[H]
+\begin{table}[t]
 \centering
-\begin{tabular}{|c||c|c|}
-    \hline
+\begin{tabular}{c||c|c}
     Operation & Read & Write\\
-    \hline
     \hline
     pop & \texttt{empty?} & \texttt{head}, \texttt{empty?}\\
     push & & \texttt{tail}, \texttt{empty?}\\
-    \hline
 \end{tabular}
     \caption{Objects read or written by queue operations}
     \label{table:qrw}

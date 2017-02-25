@@ -119,11 +119,9 @@ Selected results are shown in Figure~\ref{fig:wrappedqs}.
 The STO wrapper functions called by NT-FCQueueWrapped must be called by any user of the data structure in order for the data structure to support transactions.
 These two calls are \texttt{start\_transaction} and \texttt{try\_commit}, and allow a user to mark which operations should occur together in the same transaction. An example of how these calls are used are in Figure~\ref{fig:wrappers}. After invoking the \texttt{start\_transaction} call, the thread is able to collect items in its read- and write-sets; when \texttt{try\_commit} is invoked, the commit protocol is invoked. The NT-FCQueueWrapped adds no items to the read- and write-sets after invoking \texttt{start\_transaction} and does nothing in its commit protocol. This means that the NT-FCQueueWrapped incurs the minimum amount of overhead necessary to use STO and therefore represents the upper bound on the performance we can expect from a fully transactional flat combining queue, the T-FCQueue. 
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \singlespace
-\begin{tabular}{|c|}
-\hline
 \begin{lstlisting}
 	Sto::start_transaction();
 	try {
@@ -135,9 +133,7 @@ These two calls are \texttt{start\_transaction} and \texttt{try\_commit}, and al
 	} catch (Transaction::Abort e) {
 		printf("Transaction aborted");
 	}
-\end{lstlisting}\\
-\hline
-\end{tabular}
+\end{lstlisting}
 \caption{Example usage of STO wrapper calls}
 \label{fig:wrappers}
 \end{figure}
