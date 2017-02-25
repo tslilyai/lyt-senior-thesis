@@ -7,150 +7,169 @@ In the figures below, we report the number of cache misses reported by perf (app
 
 \section{Cache Misses}
 
-\begin{figure}[H]
-    \centering
-    \begin{minipage}{.5\textwidth}
-    \centering
-        \includegraphics[width=\linewidth]{maps/335cm.png}
-        \caption*{Maximum Fullness 5}
-    \end{minipage}
-    \begin{minipage}{.5\textwidth}
-    \centering
-        \includegraphics[width=\linewidth]{maps/3310cm.png}
-        \caption*{Maximum Fullness 10}
-    \end{minipage}
-    \begin{minipage}{.5\textwidth}
-    \centering
-        \includegraphics[width=\linewidth]{maps/3315cm.png}
-        \caption*{Maximum Fullness 15}
-    \end{minipage}
-    \caption{33F/33I/33E Cache Misses}
-\end{figure}
+\subsection{33\%Find, 33\% Insert, 33\% Erase Test}
 
 \begin{figure}[H]
     \centering
-    \begin{minipage}{.5\textwidth}
-    \centering
-        \includegraphics[width=\linewidth]{maps/905cm.png}
+        \includegraphics[width=0.75\linewidth]{maps/335cm.png}
         \caption*{Maximum Fullness 5}
-    \end{minipage}
-    \begin{minipage}{.5\textwidth}
+\end{figure}
+\begin{figure}[H]
     \centering
-        \includegraphics[width=\linewidth]{maps/9010cm.png}
+        \includegraphics[width=0.75\linewidth]{maps/3310cm.png}
         \caption*{Maximum Fullness 10}
-    \end{minipage}
-    \begin{minipage}{.5\textwidth}
+\end{figure}
+\begin{figure}[H]
     \centering
-        \includegraphics[width=\linewidth]{maps/9015cm.png}
+        \includegraphics[width=0.75\linewidth]{maps/3315cm.png}
         \caption*{Maximum Fullness 15}
-    \end{minipage}
-    \caption{90F/5I/5E Cache Misses}
+\end{figure}
+
+\subsection{90\%Find, 5\% Insert, 5\% Erase Test}
+
+\begin{figure}[H]
+    \centering
+        \includegraphics[width=0.75\linewidth]{maps/905cm.png}
+        \caption*{Maximum Fullness 5}
+\end{figure}
+\begin{figure}[H]
+    \centering
+        \includegraphics[width=0.75\linewidth]{maps/9010cm.png}
+        \caption*{Maximum Fullness 10}
+\end{figure}
+\begin{figure}[H]
+    \centering
+        \includegraphics[width=0.75\linewidth]{maps/9015cm.png}
+        \caption*{Maximum Fullness 15}
 \end{figure}
 
 
 
 \section{Performance Results}
-\subsection{10K Buckets}
+
+\subsection{10K Buckets, 33\%Find, 33\% Insert, 33\% Erase Test}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM10K:F34,I33,E33.png} 
+	\includegraphics[width=0.85\textwidth]{maps/5HM10K:F34,I33,E33.png} 
         \caption*{Maximum Fullness 5}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM10K:F34,I33,E33.png} 
+    \end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/10HM10K:F34,I33,E33.png} 
         \caption*{Maximum Fullness 10}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM10K:F34,I33,E33.png} 
+    \end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/15HM10K:F34,I33,E33.png} 
         \caption*{Maximum Fullness 15}
-    \end{minipage}
-	\caption{Hashmap Performance, 10K Buckets (33F/33I/33E)}
+    \end{figure}
+
+\subsection{10K Buckets, 90\%Find, 5\% Insert, 5\% Erase Test}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/5HM10K:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 5}
+    \end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/10HM10K:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 10}
+    \end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 15}
+    \end{figure}
+
+\subsection{125K Buckets, 33\%Find, 33\% Insert, 33\% Erase Test}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/5HM125K:F34,I33,E33.png} 
+        \caption*{Maximum Fullness 5}
 \end{figure}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM10K:F90,I5,E5.png} 
-        \caption*{Maximum Fullness 5}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM10K:F90,I5,E5.png} 
+	\includegraphics[width=0.85\textwidth]{maps/10HM125K:F34,I33,E33.png} 
         \caption*{Maximum Fullness 10}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/15HM125K:F34,I33,E33.png} 
         \caption*{Maximum Fullness 15}
-    \end{minipage}
-	\caption{Hashmap Performance, 10K Buckets (90F/5I/5E)}
 \end{figure}
 
-\subsection{125K Buckets}
+
+\subsection{125K Buckets, 90\%Find, 5\% Insert, 5\% Erase Test}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F34,I33,E33.png} 
+	\includegraphics[width=0.85\textwidth]{maps/5HM125K:F90,I5,E5.png} 
         \caption*{Maximum Fullness 5}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F34,I33,E33.png} 
-        \caption*{Maximum Fullness 10}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM125K:F34,I33,E33.png} 
-        \caption*{Maximum Fullness 15}
-    \end{minipage}
-	\caption{Hashmap Performance, 125K Buckets (33F/33I/33E)}
 \end{figure}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM125K:F90,I5,E5.png} 
-        \caption*{Maximum Fullness 5}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM125K:F90,I5,E5.png} 
+	\includegraphics[width=0.85\textwidth]{maps/10HM125K:F90,I5,E5.png} 
         \caption*{Maximum Fullness 10}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/15HM1M:F90,I5,E5.png} 
         \caption*{Maximum Fullness 15}
-    \end{minipage}
-	\caption{Hashmap Performance, 125K Buckets (90F/5I/5E)}
 \end{figure}
 
-\subsection{1M Buckets}
+
+\subsection{1MK Buckets, 33\%Find, 33\% Insert, 33\% Erase Test}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM1M:F34,I33,E33.png} 
+	\includegraphics[width=0.85\textwidth]{maps/5HM1M:F34,I33,E33.png} 
         \caption*{Maximum Fullness 5}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM1M:F34,I33,E33.png} 
-        \caption*{Maximum Fullness 10}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F34,I33,E33.png} 
-        \caption*{Maximum Fullness 15}
-    \end{minipage}
-	\caption{Hashmap Performance, 1M Buckets (33F/33I/33E)}
 \end{figure}
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/5HM1M:F90,I5,E5.png} 
-        \caption*{Maximum Fullness 5}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/10HM1M:F90,I5,E5.png} 
+	\includegraphics[width=0.85\textwidth]{maps/10HM1M:F34,I33,E33.png} 
         \caption*{Maximum Fullness 10}
-    \end{minipage}
-	\begin{minipage}{0.45\textwidth}\includegraphics[width=\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/15HM1M:F34,I33,E33.png} 
         \caption*{Maximum Fullness 15}
-    \end{minipage}
-	\caption{Hashmap Performance, 1M Buckets (90F/5I/5E)}
 \end{figure}
 
+
+\subsection{1M Buckets, 90\%Find, 5\% Insert, 5\% Erase Test}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/5HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 5}
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/10HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 10}
+\end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=0.85\textwidth]{maps/15HM1M:F90,I5,E5.png} 
+        \caption*{Maximum Fullness 15}
+\end{figure}
 
 
 \section{Abort Rate Results}
 
 \begin{table}[H]
     \centering
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM10K:F34,I33,E335_aborts.tex}
         \caption*{Maximum Fullness 5}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM10K:F34,I33,E3310_aborts.tex}
         \caption*{Maximum Fullness 10}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM10K:F34,I33,E3315_aborts.tex}
         \caption*{Maximum Fullness 15}
@@ -160,17 +179,19 @@ In the figures below, we report the number of cache misses reported by perf (app
 
 \begin{table}[H]
     \centering
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM10K:F90,I5,E55_aborts.tex}
         \caption*{Maximum Fullness 5}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM10K:F90,I5,E510_aborts.tex}
         \caption*{Maximum Fullness 10}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM10K:F90,I5,E515_aborts.tex}
         \caption*{Maximum Fullness 15}
@@ -180,17 +201,19 @@ In the figures below, we report the number of cache misses reported by perf (app
 
 \begin{table}[H]
     \centering
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM125K:F34,I33,E335_aborts.tex}
         \caption*{Maximum Fullness 5}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM125K:F34,I33,E3310_aborts.tex}
         \caption*{Maximum Fullness 10}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM125K:F34,I33,E3315_aborts.tex}
         \caption*{Maximum Fullness 15}
@@ -200,17 +223,19 @@ In the figures below, we report the number of cache misses reported by perf (app
 
 \begin{table}[H]
     \centering
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM125K:F90,I5,E55_aborts.tex}
         \caption*{Maximum Fullness 5}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM125K:F90,I5,E510_aborts.tex}
         \caption*{Maximum Fullness 10}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM125K:F90,I5,E515_aborts.tex}
         \caption*{Maximum Fullness 15}
@@ -221,17 +246,19 @@ In the figures below, we report the number of cache misses reported by perf (app
 
 \begin{table}[H]
     \centering
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM1M:F34,I33,E335_aborts.tex}
         \caption*{Maximum Fullness 5}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM1M:F34,I33,E3310_aborts.tex}
         \caption*{Maximum Fullness 10}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM1M:F34,I33,E3315_aborts.tex}
         \caption*{Maximum Fullness 15}
@@ -241,17 +268,19 @@ In the figures below, we report the number of cache misses reported by perf (app
 
 \begin{table}[H]
     \centering
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM1M:F90,I5,E55_aborts.tex}
         \caption*{Maximum Fullness 5}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM1M:F90,I5,E510_aborts.tex}
         \caption*{Maximum Fullness 10}
+        \vspace{20pt}
     \end{minipage}
-    \begin{minipage}{.45\textwidth}
+    \begin{minipage}{.85\textwidth}
     \centering
         \input{figures/maps/HM1M:F90,I5,E515_aborts.tex}
         \caption*{Maximum Fullness 15}

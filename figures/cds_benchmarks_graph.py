@@ -319,7 +319,8 @@ class Plotter():
            
             if 'map' in filename:
                 ax.set_ylim(0, 1.2e8)
-                ax.set_title("Max Fullness %s" % (args), y=1.2)
+                ax.set_position([box.x0, box.y0, box.width, box.height*.92])
+                #ax.set_title("Max Fullness %s" % (args), y=1.2)
             else:
                 ax.set_ylim(0, 2e7)
             ax.set_xlim(0, 21)
