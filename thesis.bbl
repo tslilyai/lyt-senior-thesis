@@ -1,11 +1,5 @@
 \begin{thebibliography}{10}
 
-\bibitem{queue4}
-Y.~Afek, G.~Korland, and E.~Yanovsky.
-\newblock {\em Quasi-Linearizability: Relaxed Consistency for Improved
-  Concurrency}, pages 395--410.
-\newblock Springer Berlin Heidelberg, Berlin, Heidelberg, 2010.
-
 \bibitem{badrinath}
 B.~R. Badrinath and K.~Ramamritham.
 \newblock Semantics-based concurrency control: Beyond commutativity.
@@ -60,12 +54,6 @@ P.~Felber, V.~Gramoli, and R.~Guerraoui.
 \newblock In {\em Proceedings of the 23rd International Conference on
   Distributed Computing}, DISC'09, pages 93--107, Berlin, Heidelberg, 2009.
   Springer-Verlag.
-
-\bibitem{hm3}
-S.~Feldman, P.~LaBorde, and D.~Dechev.
-\newblock Concurrent multi-level arrays: Wait-free extensible hash maps.
-\newblock In {\em 2013 International Conference on Embedded Computer Systems:
-  Architectures, Modeling, and Simulation (SAMOS)}, pages 155--163, July 2013.
 
 \bibitem{cuckoocode}
 M.~Gentili.
@@ -166,19 +154,6 @@ H.~T. Kung and C.~H. Papadimitriou.
   on Management of Data}, SIGMOD '79, pages 116--126, New York, NY, USA, 1979.
   ACM.
 
-\bibitem{queue3}
-E.~Ladan-mozes and N.~Shavit.
-\newblock An optimistic approach to lock-free fifo queues.
-\newblock In {\em In Proceedings of the 18th International Symposium on
-  Distributed Computing, LNCS 3274}, pages 117--131. Springer, 2004.
-
-\bibitem{hm2}
-M.~M. Michael.
-\newblock High performance dynamic lock-free hash tables and list-based sets.
-\newblock In {\em Proceedings of the Fourteenth Annual ACM Symposium on
-  Parallel Algorithms and Architectures}, SPAA '02, pages 73--82, New York, NY,
-  USA, 2002. ACM.
-
 \bibitem{queue1}
 M.~M. Michael and M.~L. Scott.
 \newblock Simple, fast, and practical non-blocking and blocking concurrent
@@ -198,12 +173,6 @@ Y.~Ni, V.~S. Menon, A.-R. Adl-Tabatabai, A.~L. Hosking, R.~L. Hudson, J.~E.~B.
 \newblock Open nesting in software transactional memory.
 \newblock In {\em Proceedings of the 12th ACM SIGPLAN symposium on Principles
   and practice of parallel programming}, pages 68--78. ACM, 2007.
-
-\bibitem{chm}
-R.~Pagh and F.~F. Rodler.
-\newblock Cuckoo hashing.
-\newblock In {\em European Symposium on Algorithms}, pages 121--133. Springer,
-  2001.
 
 \bibitem{schwarz}
 P.~M. Schwarz and A.~Z. Spector.
@@ -228,14 +197,6 @@ A.~Spiegelman, G.~Golan-Gueta, and I.~Keidar.
 \newblock In {\em Proceedings of the 37th ACM SIGPLAN Conference on Programming
   Language Design and Implementation}, PLDI '16, pages 682--696, New York, NY,
   USA, 2016. ACM.
-
-\bibitem{queue5}
-P.~Tsigas and Y.~Zhang.
-\newblock A simple, fast and scalable non-blocking concurrent fifo queue for
-  shared memory multiprocessor systems.
-\newblock In {\em Proceedings of the Thirteenth Annual ACM Symposium on
-  Parallel Algorithms and Architectures}, SPAA '01, pages 134--143, New York,
-  NY, USA, 2001. ACM.
 
 \bibitem{weihl}
 W.~E. Weihl.

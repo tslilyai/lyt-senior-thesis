@@ -3,7 +3,6 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: thesis.aux
 The style file: abbrv.bst
 Database file #1: thesis.bib
-Warning--can't use both author and editor fields in queue4
 Warning--can't use both author and editor fields in queue2
 Warning--can't use both volume and number fields in swisstm
 Warning--can't use both volume and number fields in autolock
@@ -11,45 +10,45 @@ Warning--can't use both author and editor fields in lazyset
 Warning--can't use both volume and number fields in herlihytm
 Warning--can't use both volume and number fields in galois
 Warning--empty institution in queue1
-You've used 42 entries,
+You've used 36 entries,
             2118 wiz_defined-function locations,
-            762 strings with 11840 characters,
-and the built_in function-call counts, 17764 in all, are:
-= -- 1852
-> -- 760
-< -- 30
-+ -- 302
-- -- 256
-* -- 1208
-:= -- 2716
-add.period$ -- 147
-call.type$ -- 42
-change.case$ -- 252
+            727 strings with 10586 characters,
+and the built_in function-call counts, 15015 in all, are:
+= -- 1553
+> -- 678
+< -- 24
++ -- 268
+- -- 230
+* -- 1048
+:= -- 2331
+add.period$ -- 125
+call.type$ -- 36
+change.case$ -- 222
 chr.to.int$ -- 0
-cite$ -- 50
-duplicate$ -- 733
-empty$ -- 1389
-format.name$ -- 256
-if$ -- 3935
+cite$ -- 43
+duplicate$ -- 598
+empty$ -- 1153
+format.name$ -- 230
+if$ -- 3288
 int.to.chr$ -- 0
-int.to.str$ -- 42
-missing$ -- 42
-newline$ -- 212
-num.names$ -- 84
-pop$ -- 293
+int.to.str$ -- 36
+missing$ -- 35
+newline$ -- 182
+num.names$ -- 72
+pop$ -- 251
 preamble$ -- 1
-purify$ -- 212
+purify$ -- 187
 quote$ -- 0
-skip$ -- 571
+skip$ -- 458
 stack$ -- 0
-substring$ -- 1178
-swap$ -- 276
-text.length$ -- 30
+substring$ -- 966
+swap$ -- 214
+text.length$ -- 24
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 158
-warning$ -- 8
-while$ -- 178
-width$ -- 44
-write$ -- 507
-(There were 8 warnings)
+type$ -- 136
+warning$ -- 7
+while$ -- 149
+width$ -- 38
+write$ -- 432
+(There were 7 warnings)
