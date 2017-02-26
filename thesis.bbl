@@ -109,6 +109,13 @@ M.~Herlihy, V.~Luchangco, P.~Martin, and M.~Moir.
 \newblock {\em ACM Transactions on Computer Systems (TOCS)}, 23(2):146--196,
   2005.
 
+\bibitem{stm_objects}
+M.~Herlihy, V.~Luchangco, M.~Moir, and W.~N. Scherer, III.
+\newblock Software transactional memory for dynamic-sized data structures.
+\newblock In {\em Proceedings of the Twenty-second Annual Symposium on
+  Principles of Distributed Computing}, PODC '03, pages 92--101, New York, NY,
+  USA, 2003. ACM.
+
 \bibitem{herlihytm}
 M.~Herlihy and J.~E.~B. Moss.
 \newblock {\em Transactional memory: Architectural support for lock-free data
