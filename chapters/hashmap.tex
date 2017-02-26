@@ -10,7 +10,7 @@ We present the concurrent and transactional algorithms we analyzed, created, and
 \subsection{Transactional Chaining Hashmap}
 The STO chaining hashmap (ChainingHashmap) is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list. Thus, the worst case lookup/delete is $O(n)$. Inserts are always constant time and require allocating an element. Each bucket is associated with a \emph{bucketversion} that increments upon any committed addition or removal from the bucket. The bucketversion is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{elementversion} that tracks if the value to the element has been modified or if the element has been removed.
 
-Elements are inserted at execution time but marked as \emph{phantom}, allowing another transaction that sees ones of these uninstalled elements to realize it is viewing an inconsistent state of the map and therefore abort. If a transaction containing insertions aborts, these phantom elements are removed from the map. ELse thephantom mark is erased during commit. An alternative approach would be to insert all elements at commit time.However, this requires either relying on the bucketversion to determine if another transaction has inserted the same element (which would result in false aborts since the bucketversion increments for \emph{any} inserted value) or redoing the search for the element to see if the insertion can still occur. Thus, we insert at execution time to allow for more fine-grained validation checks at commit time and to reduce redundant computations. Deletions are delayed until commit time (an optimistic approach). This requires careful handling of cases of \emph{read\_my\_writes}, such as deleting an element inserted in the same transaction, 
+Elements are inserted at execution time but marked as \emph{phantom}, allowing another transaction that sees ones of these uninstalled elements to realize it is viewing an inconsistent state of the map and therefore abort. If a transaction containing insertions aborts, these phantom elements are removed from the map. Otherwise, the phantom mark is erased during commit. An alternative approach would be to insert all elements at commit time.However, this requires either relying on the bucketversion to determine if another transaction has inserted the same element (which would result in false aborts since the bucketversion increments for \emph{any} inserted value) or redoing the search for the element to see if the insertion can still occur. Thus, we insert at execution time to allow for more fine-grained validation checks at commit time and to reduce redundant computations. Deletions are delayed until commit time (an optimistic approach). This requires careful handling of cases of \emph{read\_my\_writes}, such as deleting an element inserted in the same transaction, 
 
 \subsection{Non-Transactional Cuckoo Hashmap}
 The Non-Transactional Cuckoo Hashmap (CuckooNT) implements a concurrent, non-transactional cuckoo hashing algorithm (modifying an implementation of a dynamically-resizing, concurrent cuckoo hashmap~\cite{cuckoocode}).
@@ -59,14 +59,14 @@ The test is run twice, once with a probability of 33\% insert, 33\% delete, and 
 
 \subsection{Results and Discussion}
 
-We measure all hashmap's performance in terms of operations per second, abort rates, and cache performance (number of cache misses). 
+We measure all the performance of all hashmaps in terms of operations per second, abort rates, and cache performance (number of cache misses). 
 The full results can be found in Appendix~\ref{app:hashmaps}.
 
 \subsubsection{Hypothesis 1: The transactional cuckoo hashmaps will experience a greater number of cache misses}
 
 The number of cache misses of each datatype is influenced by the number of allocations per data structure and the patterns in which these allocations are accessed. As expected, the non-transactional cuckoo hashmap experiences the least number of cache misses: this is because all other hashmaps' buckets contain a pointer to an allocated element inserted into the map. We expect that the non-allocating, transactional cuckoo hashmap will perform better than either of the allocating types tested in our benchmarks.
 
-As we see in Figures~\ref{fig:hm_cm5},~\ref{fig:hm_cm10}, and~\ref{fig:hm_cm15}, our hypothesis is validated: the CuckooIE hashmap experiences the most cache misses regardless of the number of buckets in the map, the fullness of the map, or the proportion of find operations in the benchmark. This result is unsurprising: the hashmap's buckets containing pointers to allocated map elements, and the cuckoo hashing algorithm follows pointers in at least two complete buckets on an absent find. As size and fullness increases, the CuckooKF hashmap experiences the least number of cache misses; this occurs because a find will not need to follow pointers in a CuckooKF hashmap bucket to compare key values, whereas comparing key values in the chaining and CuckooIE hashmaps both require following pointers.
+As we see in Figures~\ref{fig:hm_cm5},~\ref{fig:hm_cm10}, and~\ref{fig:hm_cm15}, our hypothesis is validated: the CuckooIE hashmap experiences the most cache misses regardless of the number of buckets in the map, the fullness of the map, or the proportion of find operations in the benchmark. This result is unsurprising: the hashmap's buckets contain pointers to allocated map elements, and the cuckoo hashing algorithm follows pointers in at least two complete buckets on an absent find. As size and fullness increases, the CuckooKF hashmap experiences the least number of cache misses; this occurs because a find will not need to follow pointers in a CuckooKF hashmap bucket to compare key values, whereas comparing key values in the chaining and CuckooIE hashmaps both require following pointers.
 
     \begin{figure}[H]
     \centering
@@ -149,7 +149,7 @@ Our results in Table~\ref{tab:hm_aborts} and in Appendix~\ref{app:hm_aborts} ind
 
 We see that cache performance affects overall performance more than the abort rate: as the number of buckets and thus the number of cache misses increases, the performance decreases even though abort rate also decreases.
 
-\subsubsection{Hypothesis 4: Adding transactional guarantees to the cuckoo hashmap and the chaining hashmap does not change the relative performance of their nontransactional counterparts}
+\subsubsection{Hypothesis 4: Adding transactional guarantees to the cuckoo hashmap and the chaining hashmap does not change the relative performance of their non-transactional counterparts}
 
 \begin{figure}[H]
     \centering
@@ -182,7 +182,7 @@ In the 90\% Finds, 5\% Inserts/Erases Test, the performance of the cuckoo hashma
 
 In the 33\% Finds/Inserts/Erases Test, the performance of the cuckoo hashmaps decreases only slightly (less than 20\%) as hashmap size increases from 10K to 1M buckets (Figure~\ref{fig:hm_33}). However, the chaining hashmap experiences nearly no decrease in performance. For all fullness settings, the cuckoo hashmaps achieve performance approximately $1.5-2\times$ that of the chaining hashmap for when the size is set to 10K or 125K buckets. Performance is approximately equivalent when the size is set to 1M buckets. We make these observations from the full set of results in Appendix~\ref{app:hashmaps}.
 
-We note that the behavior of the transactional cuckoo hashmap mirrors that of the nontransactional cuckoo hashmap, although the performance of the transactional version is consistently about half that of the nontransactional. Our expectations for how the cuckoo hashing algorithm performs compared to a chaining algorithm are consistent to the results we see when we compare the transactional cuckoo hashmap to the transactional chaining hashmap.
+We note that the behavior of the transactional cuckoo hashmap mirrors that of the non-transactional cuckoo hashmap, although the performance of the transactional version is consistently about half that of the non-transactional. Our expectations for how the cuckoo hashing algorithm performs compared to a chaining algorithm are consistent to the results we see when we compare the transactional cuckoo hashmap to the transactional chaining hashmap.
 More specifically, the transactional cuckoo hashmap outperforms the chaining hashmap when run on a large maximum fullness with a small number of buckets. 
 
 \subsubsection{Conclusion}

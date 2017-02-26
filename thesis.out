@@ -11,7 +11,7 @@
 \BOOKMARK [1][-]{section.3.2}{Naive\040Synchronization\040Queue\040Algorithms}{chapter.3}% 11
 \BOOKMARK [1][-]{section.3.3}{Flat\040Combining\040Queue\040Algorithms}{chapter.3}% 12
 \BOOKMARK [1][-]{section.3.4}{Evaluation}{chapter.3}% 13
-\BOOKMARK [0][-]{chapter.4}{Commutativity\040and\040Weakly\040Transactional\040Queues}{}% 14
+\BOOKMARK [0][-]{chapter.4}{Commutativity\040in\040Transactional\040and\040Weakly\040Transactional\040Queue\040Specifications}{}% 14
 \BOOKMARK [1][-]{section.4.1}{Terminology}{chapter.4}% 15
 \BOOKMARK [1][-]{section.4.2}{Commutativity\040of\040Concurrent\040and\040Transactional\040Queues}{chapter.4}% 16
 \BOOKMARK [1][-]{section.4.3}{The\040Weakly\040Transactional\040Queue}{chapter.4}% 17

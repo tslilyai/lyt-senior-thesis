@@ -24,7 +24,7 @@ For comparison, we implement two weakly transactional queues. This allows us to 
 The WT-Queue uses the naive synchronization strategy from the T-QueueO and T-QueueP. The headversion (for pops) or tailversion (for pushes) is locked prior to actually performing the push or pop at commit time. A call to pop or push at execution time does not require any access to the queue state, but merely returns a LazyPop when pop is called or adds an item to the \texttt{write\_list} when push is called.
 
 \subsubsection{WT-FCQueue}
-The WT-FCQueue uses the flat combining algorithm. We modify the nontransactional, flat combining technique as follows:
+The WT-FCQueue uses the flat combining algorithm. We modify the non-transactional, flat combining technique as follows:
 \begin{itemize}
     \item \emph{Pops}: 
     Executing a pop returns a LazyPop value. It does not generate a flat combining request or access the queue itself. At commit time, all LazyPops are instantiated with values: for each LazyPop, the thread makes a \texttt{<POP>} flat combining request. This request is completed using the vanilla, concurrent \texttt{<POP>} flat combining implementation, which simply pops an item off the queue.
@@ -51,9 +51,9 @@ The WT-FCQueue uses the flat combining algorithm. We modify the nontransactional
 \end{figure}
 
 
-We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section~\ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue (T-FCQueue), the T-QueueP, and the WrappedNT-FCQueue. Selected results are shown in Figure~\ref{fig:wtqs}; full results are in Appendix~\ref{app:queues}. 
+We evaluate the weakly transactional flat-combining queue on the same benchmarks described in Section~\ref{q_microbenchmarks} to compare against the fully transactional flat-combining queue (T-FCQueue), the T-QueueP, and the NT-FCQueueWrapped. Selected results are shown in Figure~\ref{fig:wtqs}; full results are in Appendix~\ref{app:queues}. 
 
-While the weakly-transaction, flat combining queue (WT-FCQueue) does not perform as well as its nontransactional counterpart, NT-FCQueue, the performance of the WT-FCQueue exceeds that of the T-QueueO, the T-QueueP, and the T-FCQueue, which all provide full-transactional guarantees. We see gains in performance over the T-QueueP up to 1.5$\times$ as the number of threads accessing the queue increases to 20; the WT-FCQueue begins to outperform the STO queue as the number of threads increases past 7. The WT-FCQueue outperforms the T-FCQueue starting at 4 threads and achieves performance up to about 5$\times$ by 20 threads.
+While the weakly-transaction, flat combining queue (WT-FCQueue) does not perform as well as its non-transactional counterpart, NT-FCQueue, the performance of the WT-FCQueue exceeds that of the T-QueueO, the T-QueueP, and the T-FCQueue, which all provide full-transactional guarantees. We see gains in performance over the T-QueueP up to 1.5$\times$ as the number of threads accessing the queue increases to 20; the WT-FCQueue begins to outperform the STO queue as the number of threads increases past 7. The WT-FCQueue outperforms the T-FCQueue starting at 4 threads and achieves performance up to about 5$\times$ by 20 threads.
  
 The WT-FCQueue does not experience any aborts. This is due to the flat combining algorithm, which does not require that any locks be held in the weakly transactional setting in order to ensure correctness. A transaction can abort only if the result of a pop is accessed during the transaction's execution.
 Because of the lack of aborts, the WT-FCQueue outperforms the T-FCQueue; this demonstrates the effectiveness of the flat combining technique in the weakly transactional setting. 

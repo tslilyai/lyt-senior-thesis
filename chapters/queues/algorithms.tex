@@ -1,7 +1,7 @@
 \chapter{FIFO Queue Algorithms and Analysis}
 \label{queue}
 
-This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently nontransactional: the optimizations taken by these algorithms rely on data structure state and behaviors that must be modified to support transactions. In other words, the highly-concurrent queue algorithm's synchronization mechanism interferes with the mechanisms that STO uses to provide transactional guarantees.
+This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently non-transactional: the optimizations taken by these algorithms rely on data structure state and behaviors that must be modified to support transactions. In other words, the highly-concurrent queue algorithm's synchronization mechanism interferes with the mechanisms that STO uses to provide transactional guarantees.
 
 \section[Transactional Queue Specification]{Transactional Queue Specification
 \footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from those used for pop.}}
@@ -50,7 +50,7 @@ The T-QueueP is also a circular, fixed-size queue, with operations push and pop.
 
 Adding pessimistic locking is done by locking the queue when any pop (a naturally contentious operation) is invoked. The queue is then unlocked only after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the T-QueueO.
 
-Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, “queueversion,” acts as the global queue lock. 
+Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, ``queueversion,'' acts as the global queue lock. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -74,7 +74,7 @@ When a thread T wishes to perform an operation O:
     \end{enumerate}
 \end{enumerate}
 
-In the context of the queue, flat combining proves to be an effective technique for handling the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses ``fat nodes'' (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the T-QueueO and T-QueueP suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that flat combining's alternative synchronization paradigm might improve the performance of a transactional queue as much as it does for a concurrent queue.
+In the context of the queue, flat combining proves to be an effective technique for handling the contention caused by parallel access on the head and tail of the queue. In addition, their choice of queue implementation uses ``fat nodes'' (arrays of values, with new nodes allocated when the array fills up), which both improves cache performance and allows the queue to be dynamically sized. Both the T-QueueO and T-QueueP suffer from the contention and cache performance issues pointed out in the flat combining paper, leading us to believe that the alternative synchronization paradigm offered by flat combining may improve the performance of a transactional queue just as it does for a concurrent queue.
 
 \subsection{Transactional Flat Combining Queue} 
 \label{fcqueuet}
@@ -96,7 +96,7 @@ Addressing the scenario described above requires two important changes to flat c
 \item An uncommitted pop in a thread's transaction must be unobservable by any other thread. This can be implemented in two ways:  
     \begin{enumerate}
         \item The algorithm can delay a transaction's pops until commit time. This then means the algorithm must track which values in the queue are going to be popped within the transaction. This prevents duplicate pops and detects if the queue will be ``empty'' by tracking how many values will be popped off the queue during this transaction. If another thread performs a pop or push during the transaction's lifetime, this can cause the transaction to abort since the ``empty'' status of the queue at commit time may now be inconsistent with what the transaction saw during execution. 
-        \item The algorithm does not execute flat combining requests from other threads until the transaction has committed or aborted. Because only this thread can execute commands, pops can be performed at execution time (and restored to the head of the qeueue if the transaction aborts). This can be implemented either through making other threads' transactions abort, or by causing the other threads to block or spin.
+        \item The algorithm does not execute flat combining requests from other threads until the transaction has committed or aborted. Because only this thread can execute commands, pops can be performed at execution time (and restored to the head of the queue if the transaction aborts). This can be implemented either through making other threads' transactions abort, or by causing the other threads to block or spin.
     \end{enumerate}
 \end{enumerate}
 
@@ -133,7 +133,7 @@ The thread therefore knows that no other thread has pushed onto the queue since 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_abort2}
-    \caption{Abort when checking\texttt{<EMPTY?>} in the transactional flat combining queue.}
+    \caption{Abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue.}
 \label{fig:fcqueue_abort2}
 \end{figure}
 
