@@ -1,23 +1,23 @@
 \chapter{FIFO Queue Algorithms and Analysis}
 \label{queue}
 
-This chapter investigates different concurrent and transactional algorithms for queues to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently non-transactional: the optimizations taken by these algorithms rely on data structure state and behaviors that must be modified to support transactions. In other words, the highly-concurrent queue algorithm's synchronization mechanism interferes with the mechanisms that STO uses to provide transactional guarantees.
+This chapter investigates different concurrent and transactional algorithms for queues in order to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently non-transactional: the optimizations taken by these algorithms rely on data structure state and behaviors that must be modified to support transactions. In other words, the synchronization mechanism of the highly-concurrent queue algorithm interferes with the mechanisms that STO uses to provide transactional guarantees.
 
-\section[Transactional Queue Specification]{Transactional Queue Specification
-\footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from those used for pop.}}
+\section{Transactional Queue Specification}
 
-A concurrent queue supporting operations push and pop must adhere to the following specification:
+A concurrent queue supporting operations push and pop must adhere to the following specification%
+\footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from that used for pop.}:
 \begin{itemize}
-    \item A value is popped off the queue only once (no duplicate pops).
-    \item A value is pushed onto the queue only once (no duplicate pushes).
-    \item Values are popped in the order in which they are pushed.
+    \item No duplicate pops: a value is popped off the queue only once
+    \item No duplicate pushes: a value is pushed onto the queue only once
+    \item Correct ordering: values are popped in the order in which they are pushed
 \end{itemize}
 
 \noindent
 A transactional queue adds the following invariants to the specification. There must be a serial order of all transactions such that, within one transaction:
 \begin{itemize}
-    \item Any two pops pop consecutive values in the queue starting from the head of the queue.
-    \item Any two pushes push consecutive values at the tail of the queue.
+    \item Any two pop operations pop consecutive values in the queue starting from the head of the queue
+    \item Any two push operations push consecutive values at the tail of the queue
 \end{itemize}
 
 \noindent
@@ -26,31 +26,31 @@ To satisfy these invariants, transactional data structures must support \emph{re
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Naive Synchronization Queue Algorithms}
 
-STO provides two transactional FIFO queues that adhere to the interface exposed by the \texttt{C++} standard library queue. These transactional queue algorithms are designed with transactional correctness in mind, and concurrency as a secondary concern. 
+STO provides two transactional FIFO queues that adhere to the interface exposed by the queue in the \texttt{C++} standard library. These transactional queue algorithms are designed with transactional correctness primarily in mind and concurrency as a secondary concern. 
 
-These two algorithms enforce transactional correctness using \emph{versions}. A version can act as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure by monotonically increasing whenever a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. When a transactional operation performs a read of some data structure state, it adds a read of the corresponding version value. This read is checked when the transaction commits to ensure that the observed data structure state is still valid.
+These two queue algorithms enforce transactional correctness using \emph{versions}. A version acts as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure by monotonically increasing whenever a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. When a transactional operation performs a read of some data structure state, it adds a read of the corresponding version value. This read version value is checked when the transaction commits to ensure that the observed data structure state is still valid: if the version value has changed, then the data structure state has changed as well.
 Note that we need to validate the version's value from the \emph{first} time we perform a read of the version during the transaction; this ensures that every observed state since the start of the transaction is still valid.
 
 \subsection{T-QueueO}
 The T-QueueO is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size, transactional queue.
 
-The queue supports transactional operations push and pop and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue during their transaction's executions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. The T-QueueO allows checks on the queues to be done via two versions. Headversion, which tracks the location of the head, is used to check if another thread has popped from the queue; tailversion, which tracks the location of the tail, is used to check if another thread has pushed onto the queue.
+The queue supports transactional operations push and pop and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue while executing their transactions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. The T-QueueO allows checks on the queues to be done via two versions. Headversion, which tracks the location of the head, is used to check if another thread has popped from the queue; tailversion, which tracks the location of the tail, is used to check if another thread has pushed onto the queue.
 
-A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tailversion acts as a lock to prevent any other thread from pushing onto the queue. After locking tailversion, the thread pushes all elements on the \texttt{write\_list} onto the queue, and increments the tailversion.
+A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tailversion acts as a lock to prevent any other thread from pushing onto the queue. After locking tailversion, the thread pushes all elements on the \texttt{write\_list} onto the queue and increments the tailversion.
 If a transaction performs only pushes, then the transaction will always commit: a push does not observe any property of the queue, such as the value at the head of the queue or the emptiness of the queue. 
 
 A transactional pop first checks if the queue will be empty, given that the current transaction may intend to pop some values. If the queue will not be empty, the pop returns \texttt{true} and the thread must ensure at commit time that the head of the queue has not been modified by another thread. This is done by comparing the value of the headversion at the time of the pop with the value at commit time. 
-If the queue will be empty, the thread checks if it should perform \emph{read-my-writes} by determining if it intends to push a value onto the queue in this transaction. If so, the thread removes the value from its \texttt{write\_list} and returns \texttt{true}. Otherwise, the return value of the pop is \texttt{false}. At commit time, the thread must check that the queue is still empty by checking the value of the tailversion, which increments each time an item is added to the queue.
+If the queue will be empty, the thread checks if it should perform \emph{read-my-writes}: if the thread intends to push a value onto the queue in this transaction, then the thread removes the value from its \texttt{write\_list} and returns \texttt{true}. Otherwise, the return value of the pop is \texttt{false}. At commit time, the thread must check that the queue is still empty by validating the value of the tailversion, which increments each time an item is added to the queue.
 When a transaction that performed pops commits, it locks the headversion (ensuring atomic access to the head of the queue), removes a value from the head of the queue for every successful transactional pop call, and increments the headversion.
 
 %The design is summarized in Table \ref{table:sto1}.
 
 \subsection{T-QueueP}
-The T-QueueP is also a circular, fixed-size queue, with operations push and pop. The T-QueueP algorithm is a hybrid design integrating the T-QueueO algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library~\cite{tdsl}. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than the T-QueueO, and the algorithm is simpler to implement and describe. 
+The T-QueueP is also a circular, fixed-size, transactional queue with operations push and pop. The T-QueueP algorithm is a hybrid design integrating the T-QueueO algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library~\cite{tdsl}. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than our T-QueueO, and their algorithm is simpler to implement and describe. 
 
-Adding pessimistic locking is done by locking the queue when any pop (a naturally contentious operation) is invoked. The queue is then unlocked only after the transaction is complete. This ensures that no other thread will execute an operation that may invalidate a pop within this thread's transaction. However, operations such as ``push'' that can operate without any wait do not require locking during execution. Therefore, a push follows the same protocol as in the T-QueueO.
+Adding pessimistic locking is done by locking the queue when any pop (a naturally contentious operation) is invoked. The queue is then unlocked only after the transaction is complete. This ensures that no thread will execute a pop that will invalidate another thread's transactional pop. However, a push in the T-QueueP follow the same protocol as a push in the T-QueueO. Because execution of all pushes is delayed until commit time, a transactional push can execute without invalidating another transaction. A push therefore does not acquire a lock at execution time, but rather only needs to lock while installing all the transaction's pushes at commit time. 
 
-Because pop locks the queue, there are no conflicts at commit time. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, ``queueversion,'' acts as the global queue lock. 
+Because a transactional pop locks the queue, there are no conflicts at commit time after a thread performs a transactional pop. A thread only aborts if it fails to obtain the lock after a bounded period of time. The one version, ``queueversion,'' acts as the global queue lock. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
