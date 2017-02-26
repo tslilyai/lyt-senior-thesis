@@ -234,7 +234,7 @@ We start by defining the dependency relations between single operations (Table~\
 \end{table}
 
 With a fully-transactional queue, cyclical dependencies can occur, thus reducing the number of valid histories. The possible interleavings that generate cyclical dependencies are shown in Table~\ref{tab:interleavings}. Note that most of the interleavings that result in cyclical dependencies, and therefore invalid histories, occur when the queue becomes empty. 
-We only see cyclical dependencies in a nonempty queue if both transactions push or pop (a $W-W$ dependency).
+We only see cyclical dependencies in a nonempty queue if both transactions push or pop (a \emph{W-W} dependency).
 
 A transactional queue prevents these interleavings from occurring through delaying push operation execution and using a pessimistic or optimistic approach upon encountering an empty queue.
 
