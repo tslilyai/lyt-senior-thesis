@@ -3,15 +3,14 @@
 
 \vspace{-20pt}
 \section{Cache Misses}
-
-Cache misses are recorded by running the Multi-Thread Singletons Test benchmark with 8 threads, with each thread performing 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
-In the cache miss results presented, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.66\textwidth]{fcqueues/cm.png}
     \caption{Queue Cache Misses}
-\label{fig:cm_queues}
+    \caption*{
+Cache misses are recorded by running the Multi-Thread Singletons Test benchmark with 8 threads, with each thread performing 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
+    In these results, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses.)}
+\label{fig:qcm}
 \end{figure}
 
 \section{Performance of Non-transactional Concurrent Queues}

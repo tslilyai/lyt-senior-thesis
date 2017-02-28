@@ -129,7 +129,7 @@ Note that all operations can be classified as sets of reads and/or writes (as we
 \subsection{Commutativity and Serializability Results}
 
 These results are well-known in the literature about transactional data structure scalability; we repeat them here for reference.
-A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions in the dependency graph (see Schwarz's proof~\cite{schwarz}). This implies that when two operations commute, exchanging the order in which they occur in the history does not affect the serializatiliby of the history. From this, it follows that the number of valid histories of a transactional data structure is dependent on the commutativity of its operations.
+A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions in the dependency graph (see Schwarz's proof~\cite{schwarz}). This implies that when two operations commute, exchanging the order in which they occur in the history does not affect the serializability of the history. From this, it follows that the number of valid histories of a transactional data structure is dependent on the commutativity of its operations.
 
 These results imply that commutativity of a data structure's operations determines the data structure's scalability. In the context of a transactional data structure, a greater number of valid histories leads to lower contention between transactions and greater scalability. 
 
