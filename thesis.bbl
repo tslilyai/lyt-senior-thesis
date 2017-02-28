@@ -161,6 +161,12 @@ H.~T. Kung and C.~H. Papadimitriou.
   on Management of Data}, SIGMOD '79, pages 116--126, New York, NY, USA, 1979.
   ACM.
 
+\bibitem{queue3}
+E.~Ladan-mozes and N.~Shavit.
+\newblock An optimistic approach to lock-free fifo queues.
+\newblock In {\em In Proceedings of the 18th International Symposium on
+  Distributed Computing, LNCS 3274}, pages 117--131. Springer, 2004.
+
 \bibitem{queue1}
 M.~M. Michael and M.~L. Scott.
 \newblock Simple, fast, and practical non-blocking and blocking concurrent
