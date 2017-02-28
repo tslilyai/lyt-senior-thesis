@@ -5,8 +5,8 @@ We first describe the commutativity of queue operations in highly-concurrent, no
 
 To demonstrate this point, we propose a transactional specification that allows for greater operation commutativity, with the expectation that the flat combining technique can achieve better performance under this specification. Our experimental results illustrate that the commutativity of operations in this new setting is essential for the flat combining technique to be effective.
 
-\section{Terminology}
-We first introduce some basic terminology (as defined by Schwarz~\cite{schwarz} and Weihl~\cite{weihl}) that will occur in our discussion.
+\section{Commutativity Terminology and Results}
+We introduce some basic terminology (as defined by Schwarz~\cite{schwarz} and Weihl~\cite{weihl}) that will occur in our discussion.
 
 \subsection{Histories}
 \begin{defn}
@@ -126,22 +126,12 @@ Note that all operations can be classified as sets of reads and/or writes (as we
     Operation $p$ performed by $T1$ \emph{commutes} with operation $q$ of $T2$ when the operations form a \emph{R-R} dependency or no dependency at all~\cite{weihl}.
 \end{defn}
 
-\subsection{Results}
+\subsection{Commutativity and Serializability Results}
 
-These results are well-known in the literature about transactional data structure scalability: we repeat them here for reference.
-\begin{theorem}
-    A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions in the dependency graph (see Schwarz's proof~\cite{schwarz}).
-\end{theorem}
+These results are well-known in the literature about transactional data structure scalability; we repeat them here for reference.
+A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions in the dependency graph (see Schwarz's proof~\cite{schwarz}). This implies that when two operations commute, exchanging the order in which they occur in the history does not affect the serializatiliby of the history. From this, it follows that the number of valid histories of a transactional data structure is dependent on the commutativity of its operations.
 
-\begin{theorem}
-    When operations commute, they can be freely ordered in the history without affecting serializability (follows from definition of commutativity).\lyt{check}
-\end{theorem}
-
-\begin{corollary}
-    The number of valid histories of a transactional data structure is dependent on the commutativity of its operations.
-\end{corollary}
-
-These results indicate that commutativity of data structure operations determines scalability: the greater number of valid histories, the lower the contention between transactions, and the greater the scalability of the transactional data structure. 
+These results imply that commutativity of a data structure's operations determines the data structure's scalability. In the context of a transactional data structure, a greater number of valid histories leads to lower contention between transactions and greater scalability. 
 
 \section{Commutativity of Concurrent and Transactional Queues}
 
@@ -256,4 +246,4 @@ If we take approach (2), the flat combining approach can either perform a pop at
 
 We can also imagine a mix of approaches (1) and (2) where if a transaction $T1$ executes a pop, we disallow any pops from other transactions (using the equivalent of a global lock) but allow other transactions containing only pushes to commit prior to $T1$ completing. This approach prevents interleavings 1 and 3, but requires performing a check of the queue's empty status, as in approach (1), if a pop saw the queue in an empty state. This is because another transaction may have committed a push between the time of $T1$'s pop and $T1$'s completion. This mixed approach outperforms both approach (2) and approach (1), and is the approach described as the flat combining algorithm in Chapter~\ref{queue}. 
 
-As noted previously, all possible approaches to prevent interleavings 1, 2, and 3 rely on additional flat combining calls and increased complexity of previously existing flat combining calls. In addition, acquisition of a global ``lock'' on the queue for approach (2) prevents the combiner thread from applying \emph{all} of the requests it sees: instead, requests will either return ``abort'' to the calling thread or not be applied, leading to additional time spent spinning or repeating requests. We see through our experiments that these changes to the flat combining algorithm reduce its performance such that it performs worse than a naive synchronization algorithm; furthermore, we claim that these changes are necessary in order to provide transactional guarantees. The original flat combining algorithm exploits the property that any correct history of operations in data structures supporting only singleton transactions (i.e., a concurrent, non-transactional data structure) is valid. The combiner thread is allowed to immediately apply all thread's operation requests in arbitrary order. However, this property that makes flat combining so performant disappears as soon as the algorithm has to deal with invalid histories. In the next section, we demonstrate how ignoring invalid histories leads to a version of flat combining that can outperform our T-QueueO and T-QueueP algorithms: this supports our claim that the flat combining algorithm's performance is heavily dependent on what types of transactional guarantees it must provide.
+As previously noted, all possible approaches to prevent interleavings 1, 2, and 3 rely on additional flat combining calls and increased complexity of previously existing flat combining calls. In addition, acquisition of a global ``lock'' on the queue for approach (2) prevents the combiner thread from applying \emph{all} of the requests it sees: instead, requests will either return ``abort'' to the calling thread or not be applied, leading to additional time spent spinning or repeating requests. We see through our experiments that these changes to the flat combining algorithm reduce its performance such that it performs worse than a naive synchronization algorithm; furthermore, we claim that these changes are necessary in order to provide transactional guarantees. The original flat combining algorithm exploits the property that any correct history of operations in data structures supporting only singleton transactions (i.e., a concurrent, non-transactional data structure) is valid. The combiner thread is allowed to immediately apply all thread's operation requests in arbitrary order. However, this property that makes flat combining so performant disappears as soon as the algorithm has to deal with invalid histories. In the next section, we demonstrate how ignoring invalid histories leads to a version of flat combining that can outperform our T-QueueO and T-QueueP algorithms: this supports our claim that the flat combining algorithm's performance is heavily dependent on what types of transactional guarantees it must provide.
