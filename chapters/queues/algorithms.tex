@@ -70,7 +70,7 @@ When a thread T wishes to perform an operation O:
    \item T tries to acquire the global lock. Depending on the result:
    \begin{enumerate}
         \item T acquires the lock and is now the “combiner” thread. T applies all thread requests in the publication list to the data structure in sequence, and writes both the result and an \texttt{<OK>} response to each requesting thread's local record.
-        \item T failed to acquire the lock. T spins on its record until another thread has written the result to T's record with the response \texttt{<OK>} or the lock is released. 
+        \item T failed to acquire the lock. T spins on its record until another thread has written the result to T's record with the response \texttt{<OK>} or the lock is released, in which case T acquires the lock and becomes the combiner thread. 
     \end{enumerate}
 \end{enumerate}
 
