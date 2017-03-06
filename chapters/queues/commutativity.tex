@@ -78,7 +78,11 @@ H & H' & H''\\
 \end{eg}
 
 \begin{defn}
-    A history $H$ is \emph{strictly serializable} and therefore \emph{valid} if it is both serializable and all transactions are linearizable. \emph{Linearizability} means that a transaction appears to occur instantaneously between the time of its start and the time of its commit: if transaction $T1$ commits before transaction $T2$, then $T1$ must appear before $T2$ in the serial history~\cite{harristm}.
+A history is \emph{linearizable} if all transactions appears to occur instantaneously between their start time and their commit time: if transaction $T1$ commits before transaction $T2$, then $T1$ must appear before $T2$ in the serial history~\cite{harristm}.
+\end{defn}
+
+\begin{defn}
+    A history $H$ is \emph{strictly serializable}, or \emph{valid}, if it is both serializable and all transactions are linearizable. 
 \end{defn}
 
 \begin{eg}
