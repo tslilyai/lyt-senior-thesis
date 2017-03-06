@@ -8,16 +8,16 @@ This chapter investigates different concurrent and transactional algorithms for 
 A concurrent queue supporting operations push and pop must adhere to the following specification%
 \footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from that used for pop.}:
 \begin{itemize}
-    \item No duplicate pops: a value is popped off the queue only once
-    \item No duplicate pushes: a value is pushed onto the queue only once
-    \item Correct ordering: values are popped in the order in which they are pushed
+    \item No duplicate pops: a value is popped off the queue only once.
+    \item No duplicate pushes: a value is pushed onto the queue only once.
+    \item Correct ordering: values are popped in the order in which they are pushed.
 \end{itemize}
 
 \noindent
 A transactional queue adds the following invariants to the specification. There must be a serial order of all transactions such that, within one transaction:
 \begin{itemize}
-    \item Any two pop operations pop consecutive values in the queue starting from the head of the queue
-    \item Any two push operations push consecutive values at the tail of the queue
+    \item Any two pop operations pop consecutive values in the queue starting from the head of the queue. This includes values pushed onto the queue by previous push operations in the transaction.
+    \item Any two push operations push consecutive values at the tail of the queue.
 \end{itemize}
 
 \noindent
@@ -28,20 +28,18 @@ To satisfy these invariants, transactional data structures must support \emph{re
 
 STO provides two transactional FIFO queues that adhere to the interface exposed by the queue in the \texttt{C++} standard library. These transactional queue algorithms are designed with transactional correctness primarily in mind and concurrency as a secondary concern. 
 
-These two queue algorithms enforce transactional correctness using \emph{versions}. A version acts as a lock on the data structure: in order to update the data structure, a thread must first lock the version. A version also tracks changes to the data structure by monotonically increasing whenever a thread modifies the data structure. Thus, any version seen by a thread is equivalent to some previous or current state of the data structure. When a transactional operation performs a read of some data structure state, it adds a read of the corresponding version value. This read version value is checked when the transaction commits to ensure that the observed data structure state is still valid: if the version value has changed, then the data structure state has changed as well.
-Note that we need to validate the version's value from the \emph{first} time we perform a read of the version during the transaction; this ensures that every observed state since the start of the transaction is still valid.
-
 \subsection{T-QueueO}
 The T-QueueO is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size, transactional queue.
 
-The queue supports transactional operations push and pop and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue while executing their transactions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. The T-QueueO allows checks on the queues to be done via two versions. Headversion, which tracks the location of the head, is used to check if another thread has popped from the queue; tailversion, which tracks the location of the tail, is used to check if another thread has pushed onto the queue.
+The queue supports transactional operations push and pop and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue while executing their transactions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. The T-QueueO allows checks on the queues to be done via two versions. The head version, which tracks the state of the head, is used to check if another thread has popped from the queue, and the tail version, which tracks the state of the tail, is used to check if another thread has pushed onto the queue.
 
-A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tailversion acts as a lock to prevent any other thread from pushing onto the queue. After locking tailversion, the thread pushes all elements on the \texttt{write\_list} onto the queue and increments the tailversion.
+A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tail version acts as a lock to prevent any other thread from pushing onto the queue. After locking the tail version, the thread pushes all elements on the \texttt{write\_list} onto the queue and increments the tail version.
 If a transaction performs only pushes, then the transaction will always commit: a push does not observe any property of the queue, such as the value at the head of the queue or the emptiness of the queue. 
 
-A transactional pop first checks if the queue will be empty, given that the current transaction may intend to pop some values. If the queue will not be empty, the pop returns \texttt{true} and the thread must ensure at commit time that the head of the queue has not been modified by another thread. This is done by comparing the value of the headversion at the time of the pop with the value at commit time. 
-If the queue will be empty, the thread checks if it should perform \emph{read-my-writes}: if the thread intends to push a value onto the queue in this transaction, then the thread removes the value from its \texttt{write\_list} and returns \texttt{true}. Otherwise, the return value of the pop is \texttt{false}. At commit time, the thread must check that the queue is still empty by validating the value of the tailversion, which increments each time an item is added to the queue.
-When a transaction that performed pops commits, it locks the headversion (ensuring atomic access to the head of the queue), removes a value from the head of the queue for every successful transactional pop call, and increments the headversion.
+A transactional pop first checks if the queue will be empty by observing the current state of the queue and by taking into account how many elements the current transaction is already intending to pop. If the queue will not be empty, the pop returns \texttt{true} and the thread must ensure at commit time that the head of the queue has not been modified by another thread. This is done by comparing the value of the head version at the time of the pop with the value at commit time. 
+
+If the queue will be empty, the thread checks if it should perform \emph{read-my-writes}: if the thread intends to push a value onto the queue in this transaction, then the thread removes the value from its \texttt{write\_list} and returns \texttt{true}. Otherwise, the return value of the pop is \texttt{false}. At commit time, the thread must check that the queue is still empty by validating the value of the tail version, which increments each time an item is added to the queue.
+When a transaction that performs one or more pops commits, it locks the head version (ensuring atomic access to the head of the queue), removes a value from the head of the queue for every successful transactional pop call, and increments the head version.
 
 %The design is summarized in Table \ref{table:sto1}.
 
@@ -69,7 +67,7 @@ When a thread T wishes to perform an operation O:
     \item T writes the opcode and parameters for O to its local record. Specifically for the queue, the thread writes \texttt{<PUSH, value>} or \texttt{<POP,()>} to its local record.
    \item T tries to acquire the global lock. Depending on the result:
    \begin{enumerate}
-        \item T acquires the lock and is now the “combiner” thread. T applies all thread requests in the publication list to the data structure in sequence, and writes both the result and an \texttt{<OK>} response to each requesting thread's local record.
+       \item T acquires the lock and is now the “combiner” thread. T continually iterates through the publication list and applies all the thread requests in the list in sequence, writing both the result and an \texttt{<OK>} response to each requesting thread's local record. T stops this process when the number of iterations in which no operations are performed increases above 50\%, and then releases the lock.
         \item T failed to acquire the lock. T spins on its record until another thread has written the result to T's record with the response \texttt{<OK>} or the lock is released, in which case T acquires the lock and becomes the combiner thread. 
     \end{enumerate}
 \end{enumerate}
@@ -125,7 +123,7 @@ If the value is neither marked by another thread nor unmarked, then the value mu
 
 If the queue is either empty or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
 
-Note that this algorithm does not allow pops to read the values pushed within the same transaction. To do so would require passing in the thread's \texttt{write\_list} in addition to the \texttt{thread\_id} as arguments to the combiner thread. During our evaluation, we leave this part of the transactional queue specification unimplemented (and expect that adding this will only decrease performance).
+Note that this algorithm does not allow pops to read the values pushed within the same transaction. To do so would require passing in the thread's \texttt{write\_list} in addition to the \texttt{thread\_id} as arguments to the combiner thread. During our evaluation, we leave this part of the transactional queue specification unimplemented (and note that adding \emph{read-my-writes} support will only decrease performance).
 
 The \texttt{<EMPTY?, thread\_id>} request is posted at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If \texttt{[<EMPTY?, thread\_id> == true]}, this implies that the queue state is currently empty.
 The thread therefore knows that no other thread has pushed onto the queue since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}, and it can safely commit the transaction. If \texttt{[<EMPTY?, thread\_id> == false]}, the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.

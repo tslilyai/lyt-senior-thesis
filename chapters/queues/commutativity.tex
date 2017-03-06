@@ -82,11 +82,11 @@ A history is \emph{linearizable} if all transactions appears to occur instantane
 \end{defn}
 
 \begin{defn}
-    A history $H$ is \emph{strictly serializable}, or \emph{valid}, if it is both serializable and all transactions are linearizable. 
+    A history $H$ is \emph{strictly serializable}, or \emph{valid}, if it is both serializable and linearizable. 
 \end{defn}
 
 \begin{eg}
-$H$ is a serializable, but not linearizable history. $H'$ is a valid serial ordering of $H$, but violates the rule that the serial order of transactions corresponds to the real time order of the transactions' commits.
+$H$ is a serializable, but not linearizable history. Note that $T2$ should have observed the pushes committed by $T1$. We can find a serial ordering of $H$, shown in $H'$, but $H'$ violates the rule that the serial order of transactions corresponds to the real time order of the transactions' commits.
     
 \begin{figure}[H]
 \singlespacing   
@@ -139,7 +139,7 @@ These results imply that commutativity of a data structure's operations determin
 
 \section{Commutativity of Concurrent and Transactional Queues}
 
-For generality, we reduce each queue operation to a read or write of a particular semantic object: the \texttt{head}, the \texttt{tail}, or the \texttt{empty?} predicate of the queue. This allows for our reasoning to be applied to push or pop operations that differ from our current specification of pop or push. For example, we can imagine an alternative pop operation that returns \texttt{void} regardless of whether the queue was empty, which would perform no visible reads. We summarize the reads and writes of our pop and push specifications in Table \ref{table:qrw}.
+For generality, we reduce each queue operation to a read or write of a particular semantic object: the \texttt{head}, the \texttt{tail}, or the \texttt{empty?} predicate of the queue. This allows for our reasoning to be applied to push or pop operations that differ from our current specification of pop or push. For example, we can imagine an alternative pop operation that returns \texttt{void} regardless of whether the queue was empty, which would perform no visible reads. We summarize the reads and writes of our pop and push specifications in Table~\ref{table:qrw}.
 
 \begin{table}[t]
 \centering
@@ -240,7 +240,7 @@ Because pop operations immediately return values that depend on the state of the
     \item Pessimistic: Prevent $T2$ from committing any operation until after $T1$ commits or aborts.
 \end{enumerate}
 
-The T-QueueO implements the optimistic method: checks of the \texttt{tailversion} and \texttt{headversion} determine at commit time whether the empty status of the queue has been modified by another, already committed transaction. The T-QueueP implements the pessimistic approach, which locks the queue after a pop is performed and only releases the lock if the transaction commits or aborts, therefore preventing any other transaction from committing any operation after the pop.
+The T-QueueO implements the optimistic method: checks of the tail version and the head version determine at commit time whether the empty status of the queue has been modified by another, already committed transaction. The T-QueueP implements the pessimistic approach, which locks the queue after a pop is performed and only releases the lock if the transaction commits or aborts, therefore preventing any other transaction from committing any operation after the pop.
 
 To support transactions, the flat combining approach must do either approach (1) or (2). Here we argue that the flat combining approach cannot do either without introducing overhead that reduces its performance to below that of the T-QueueO or T-QueueP.
 

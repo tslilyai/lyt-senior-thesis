@@ -11,7 +11,7 @@ We evaluate all the queue implementations on a set of microbenchmarks to determi
 
 \emph{Initial Queue Size}. We run our tests with varying numbers of initial entries in the queue. This affects how often the structure becomes empty, which can cause aborts and additional overhead (as described in the algorithms above). It also affects the number of cache lines accessed: a near-empty queue will never require iterating over values contained in more than one cache line.
 
-\emph{Operations per transaction}. We set the number of operations per transaction to 1 (i.e., the transactions are singleton transactions). This provides a more fair evaluation of transactional data structures against concurrent data structures: by keeping a transaction as short as possible, we minimize the performance hit from transactional overhead. Running multiple-operation transactions requires multiple-item support in read- and write-sets, creates scenarios of read-my-writes, and increases the number of aborts and retries, all of which incurs additional overhead. With single operation transactions, we observe an upper bound on the best performance our data structures can achieve. Note that our data structure implementions can correctly handle multiple-operation transactions: we simply benchmark them with singleton transactions to compare performance.
+\emph{Operations per transaction}. We set the number of operations per transaction to 1 (i.e., the transactions are singleton transactions). This provides a more fair evaluation of transactional data structures against concurrent data structures: by keeping a transaction as short as possible, we minimize the performance hit from transactional overhead. Running multiple-operation transactions requires multiple-item support in read- and write-sets, creates scenarios of read-my-writes, and increases the number of aborts and retries, all of which incurs additional overhead. With single operation transactions, we observe an upper bound on the best performance our data structures can achieve. Note that our data structure implementations can correctly handle multiple-operation transactions: we simply benchmark them with singleton transactions to compare performance.
 
 \subsubsection{Tests}
     \emph{2-Thread Push-Pop Test}. This test has one thread that performs only pushes and another thread that performs only pops (a traditional ``producer-consumer'' model). Unless the queue is empty, the two threads should never be modifying the same part of the data structure and will never conflict, leading to an abort rate that should be near 0. We use this test to measure the speed of push/pops on the queue under low or no contention. We expect that our transactional queues should perform just as well as the highly-concurrent queues, if not better: while highly-concurrent, non-transactional algorithms are optimized for multi-threaded access, our simpler implementation should be just as fast with low contention and low abort rates.
@@ -21,8 +21,18 @@ We evaluate all the queue implementations on a set of microbenchmarks to determi
 
 \subsection{Results and Discussion}
 
-We proceed in our discussion by proposing a sequence of hypotheses, which we test using the benchmarks described above. For each hypothesis, we use our benchmark results to formulate a conclusion that either refutes or supports the hypothesis.
+We proceed in our discussion by first presenting an overview of our results, and then explaining each in more detail by proposing a sequence of hypotheses, which we test using the benchmarks described above. For each hypothesis, we use our benchmark results to formulate a conclusion that either refutes or supports the hypothesis.
 We provide a few figures that highlight our results; full results (including abort rates) can be found in Appendix~\ref{app:queues}. 
+
+\subsubsection{Overview}
+Our results demonstrate the following:
+\begin{itemize}
+    \item Contentious operations perform better when implemented with a pessimistic, rather than optimistic, approach.
+    \item Overhead from essential STO system calls is negligible.
+    \item The flat combining technique is a highly effective synchronization technique for queues, and the flat combining, non-transactional queue outperforms all transactional and concurrent queues.
+    \item Performance of the transactional flat combining queue underperforms all transactional queues. The performance loss comes from the greater number and greater complexity of flat combining calls that are necessary to convert the non-transactional flat combining queue to a transactional one.
+\end{itemize}
+
 
 \subsubsection{Hypothesis 1: Pessimistic execution outperforms optimistic execution on contentious operations.}
 \begin{figure}[t]
