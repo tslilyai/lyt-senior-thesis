@@ -1,7 +1,7 @@
 \chapter{FIFO Queue Algorithms and Analysis}
 \label{queue}
 
-This chapter investigates different concurrent and transactional algorithms for queues in order to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently non-transactional: the optimizations taken by these algorithms rely on data structure state and behaviors that must be modified to support transactions. In other words, the synchronization mechanism of the highly-concurrent queue algorithm interferes with the mechanisms that STO uses to provide transactional guarantees.
+This chapter investigates different concurrent and transactional algorithms for queues in order to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently non-transactional: the optimizations taken by these algorithms rely on data structure state and behaviors that must be modified to support transactions. In other words, the synchronization mechanism of highly-concurrent queue algorithms interfere with the mechanisms that STO uses to provide transactional guarantees.
 
 \section{Transactional Queue Specification}
 
@@ -58,7 +58,7 @@ Given the relatively slow performance of our STO queues relative to the best-per
 \subsection{Non-Transactional Flat Combining Queue}
 \label{fcqueuent}
 
-Flat Combining, proposed by Hendler, et al. in 2010~\cite{flatcombining}, is a synchronization technique that is based upon coarse-grained locking and single-thread access to the data structure. The key insight is that the cost of synchronization for certain classes of data structures often outweighs the benefits gained from parallelizing access to the data structure. These classes of data structures include high-contention data structures such as stacks, queues, and priority queues. Created with this insight, the flat combining algorithm proposes a simple, thread-local synchronization technique that allows only one thread to ever access the data structure at once. This both reduces synchronization overhead on points of contention (such as the head of a queue) and achieves better cache performance by leveraging the single-threaded access patterns during data structure design.
+Flat combining, proposed by Hendler et al. in 2010~\cite{flatcombining}, is a synchronization technique that is based upon coarse-grained locking and single-thread access to the data structure. The key insight is that the cost of synchronization for certain classes of data structures often outweighs the benefits gained from parallelizing access to the data structure. These classes of data structures include high-contention data structures such as stacks, queues, and priority queues. Created with this insight, the flat combining algorithm proposes a simple, thread-local synchronization technique that allows only one thread to ever access the data structure at once. This both reduces synchronization overhead on points of contention (such as the head of a queue) and achieves better cache performance by leveraging the single-threaded access patterns during data structure design.
 
 A flat combining data structure has three parts: (1) a sequential implementation of the data structure, (2) a global lock, and (3) per-thread records that are linked together in a global publication list. A thread uses its record to publish to other threads the specifics of any operation it wants to perform; the result of the operation is subsequently written to and retrieved from the record.
 
@@ -77,13 +77,6 @@ When used to implement a concurrent queue, flat combining proves to be an effect
 \subsection{Transactional Flat Combining Queue} 
 \label{fcqueuet}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.45\textwidth]{fcqueue_publist}
-\caption{Invalid order of pop application in the flat combining queue.}
-\label{fig:fcqueue_publist}
-\end{figure}
-
 Recall that, in addition to the requirements for a correct concurrent queue, a transactional queue must guarantee that there exists a serial order of all transactions such that, within one transaction, any two pops pop consecutive values in the queue starting from the head of the queue and any two pushes push consecutive values at the tail of the queue.
 This means that we must consider the order in which threads' requests are applied to the queue to be able to create a transactionally correct flat combining queue. For example, let a transaction in thread T1 be \texttt{\{pop, pop\}} and a transaction in thread T2 be \texttt{\{pop\}}. The combiner thread sees that T1 has published \texttt{<POP,()>} and T2 has published \texttt{<POP,()>} to the publication list. The combiner thread then applies \texttt{T1:Pop} (popping the head of the queue) and \texttt{T2:Pop} (popping the second item on the queue). When the next combining pass executes, the combiner thread will see that T1 has published \texttt{<POP,()>} again to the queue. However, performing T1's second pop violates the queue's transactional specification: the two popped values in T1's transaction will not be consecutive. This sequence is shown in Figure~\ref{fig:fcqueue_publist}. T1 must now abort, which means that T2's pop becomes invalid: it popped the second-frontmost value of the queue, rather than the head of the queue.
 
@@ -97,7 +90,14 @@ Detecting these invalid orderings requires two important changes to flat combini
     \end{enumerate}
 \end{enumerate}
 
-We now describe the new algorithms for push and pop.  We change the types of request a thread can publish to its record on the publication list. Recall that the original flat combining queue supports two requests: \texttt{<PUSH, value>} and \texttt{<POP, ()>}. The transactional queue supports the follow requests:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.45\textwidth]{fcqueue_publist}
+    \caption{A transactional flat combining queue must check that pops in one transaction are consecutive, and pop from the head of the queue. In this example, T1 performs two pops and T2 performs one pop. The combiner thread applies T1's first pop, then T2's pop, and finally T1's second pop. Because T1's pops are not popping consecutive values off the queue, T1 is an invalid transaction, and must abort. When T1 aborts, the head ($v0$) of the queue is restored. T2 now becomes an invalid transaction because it popped a value that was not the head of the queue.}
+\label{fig:fcqueue_publist}
+\end{figure}
+
+We now describe the new algorithms for push and pop.  We change the types of requests a thread can publish to its record on the publication list. Recall that the original flat combining queue supports two requests: \texttt{<PUSH, value>} and \texttt{<POP, ()>}. The transactional queue supports the follow requests:
 \begin{itemize}
     \item \texttt{<PUSH, list>} : push a list of values onto the queue
     \item \texttt{<MARK\_POP, thread\_id>} : mark a value in the queue as ``to be popped'' by this \texttt{thread\_id}
@@ -113,13 +113,20 @@ A pop is implemented with a pessimistic approach. Performing a pop within a tran
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_abort1}
-    \caption{Abort when calling \texttt{<MARK\_POP>} in the transactional flat combining queue.}
+    \caption{T1 and T2 both attempt to mark the head of the queue with their \texttt{thread\_id}. T1's request is applied first, and marks the value $v0$ with the \texttt{thread\_id} 1. The combiner thread attempts to apply T2's request and sees T1's \texttt{thread\_id} marking the head of the queue. It then signals T2 to abort.}
 \label{fig:fcqueue_abort1}
 \end{figure}
 
 If the value is not marked, the combiner thread marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Note that in this scenario, no other thread will be able to mark values in the queue until the calling thread commits or aborts; other threads will abort when seeing the head value marked by the calling thread's \texttt{thread\_id}. 
 
-If the value is neither marked by another thread nor unmarked, then the value must already be marked with this thread's \texttt{thread\_id}, and the combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread's \texttt{thread\_id}. It then marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Upon receiving the response, the calling thread adds a write to a \texttt{pop\_item} to tell the thread to post a \texttt{<DEQ, thread\_id>} request at commit time. This request will tell the combiner thread to actually remove the popped value from the queue.
+If the value is neither marked by another thread nor unmarked, then the value must already be marked with this thread's \texttt{thread\_id}, and the combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread's \texttt{thread\_id}. It then marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Upon receiving the response, the calling thread adds a write to a \texttt{pop\_item} to tell the thread to post a \texttt{<DEQ, thread\_id>} request at commit time. This request will tell the combiner thread to actually remove the popped value from the queue. This procedure is shown in Figure~\ref{fcqueue_deq}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.45\textwidth]{fcqueue_deq}
+    \caption{T1 performs a pop by sending a \texttt{MARK\_POP} request, and marks the value in the queue with its \texttt{thread\_id} 1. At commit time, T1 actually performs the pop by sending a \texttt{DEQ} request.} 
+\label{fig:fcqueue_deq}
+\end{figure}
 
 If the queue is either empty or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
 
@@ -128,13 +135,13 @@ Note that this algorithm does not allow pops to read the values pushed within th
 The \texttt{<EMPTY?, thread\_id>} request is posted at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If \texttt{[<EMPTY?, thread\_id> == true]}, this implies that the queue state is currently empty.
 The thread therefore knows that no other thread has pushed onto the queue since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}, and it can safely commit the transaction. If \texttt{[<EMPTY?, thread\_id> == false]}, the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
 
-\begin{figure}[t]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_abort2}
-    \caption{Abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue.}
+    \caption{This sequence shows how a transaction can abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue. T2 tries to pop from an empty queue, and sees the queue is empty. This means that when T2 commits, T2 will have to check if the queue is empty. T1 commits its transaction and pushes $v0$ onto the queue (recall that a push only executes at commit time). T2 then tries to pop another value off the queue, and sees $v0$, marking it with its \texttt{thread\_id} 2. T2 tries to commit, but sees that the queue is no longer empty: T2 must abort. When T2 aborts, it must clean up any markers it left in the queue.}
 \label{fig:fcqueue_abort2}
 \end{figure}
 
 If a thread ever sees an empty queue when executing a pop \emph{and} subsequently performs a push within the same transaction, the thread must prevent another transaction from committing between the time of the empty check and the installation of its pushed value. This requires adding what is essentially a lock of the tail of the queue. This is implemented via additional machinery in the combiner thread code, which signals whether or not a transaction has locked the queue and prevents any other thread's pushes from being installed until the ``lock'' is released.
 
-The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending pops. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}.
+The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending pops. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}. An example of this is shown in FIgure~\ref{fig:fcqueue_abort2}.
