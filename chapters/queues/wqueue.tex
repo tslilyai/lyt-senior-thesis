@@ -4,14 +4,14 @@ The Weakly Transactional Queue (WT-FCQueue) demonstrates how the transactional f
 \begin{itemize}
     \item Instead of the normal pops, the queue executes \emph{LazyPops} with the following specification:
         \begin{itemize}
-            \item Any two pops within the transaction do not need to pop consecutive values off the queue.
+            \item Any two pops within same the transaction do not need to pop consecutive values off the queue.
             \item A pop's return value \emph{cannot} be accessed during the transaction. The pops are applied and their return values determined only at commit time (hence the name LazyPop). 
         \end{itemize}
-    \item A pop cannot remove an uninstalled value (i.e., a value pushed earlier in the same transaction).
+    \item A pop cannot remove a value pushed earlier in the same transaction (no \emph{read-my-writes}).
     \item The \emph{atomic} property thus becomes: a transaction with multiple pops and multiple pushes guarantees that either the operations will all occur or no operations will occur.
 \end{itemize}
 
-Given this specification, interleavings 1, 2, and 3 in Table~\ref{tab:interleavings} are allowable if the return value of the pop is not accessed within same transaction. This is because two pops in a transaction do not need to pop consecutive values off the queue. Interleaving 4 is prevented by installing all pushes in the same transaction together at commit time, and interleaving 5 is allowed because $T1$'s pop cannot see its earlier pushed value.
+Given this specification, interleavings 1, 2, and 3 in Table~\ref{tab:interleavings} are allowable if the return value of the pop is not accessed within the same transaction. This is because two pops in a transaction do not need to pop consecutive values off the queue. Interleaving 4 is prevented by installing all pushes in the same transaction together at commit time, and interleaving 5 is allowed because $T1$'s pop cannot see its earlier pushed value.
 
 The queue under this specification retains all the fairness properties of a concurrent queue: no value remains in the queue forever, because values are still removed in the order in which they are added. Like Schwarz~\cite{schwarz}, we see uses for this transactional queue as a buffer between producer and consumer activities, in which the exact ordering of values in the buffer is unimportant.
 Our specification differs from that of Schwarz, however, by preventing a pop from seeing a push within the same transaction, and by preventing access to the return value of a pop until after the transaction commits. This allows us to utilize the flat combining approach to its full potential: we do not need to generate additional flat combining calls during transaction execution because the queue does not need to be accessed until commit time.
@@ -30,23 +30,15 @@ The WT-FCQueue uses the flat combining algorithm. We modify the non-transactiona
     Executing a pop returns a LazyPop value. It does not generate a flat combining request or access the queue itself. At commit time, all LazyPops are instantiated with values: for each LazyPop, the thread makes a \texttt{<POP>} flat combining request. This request is completed using the vanilla, concurrent \texttt{<POP>} flat combining implementation, which simply pops an item off the queue.
 
     \item \emph{Pushes}: 
-    Executing a push merely adds the value onto a \texttt{write\_list\_item} and does not access the queue. Pushes from the same transaction are installed together, using the \texttt{<PUSH, list>} flat combining implementation from the transactional flat combining queue that takes the entire list and pushes each value onto the queue.
+    Executing a push merely adds the value onto a \texttt{write\_list\_item} and does not access the queue. Pushes from the same transaction are installed together at commit time, using the \texttt{<PUSH, list>} flat combining implementation from the transactional flat combining queue that takes the entire list and pushes each value onto the queue.
 \end{itemize}
 
 \subsection{Evaluation and Results}
 
 \begin{figure}[H]
     \centering
-	\begin{minipage}{0.75\textwidth}
-        \boxed{\includegraphics[width=\textwidth]{fcqueues/lpQ:PushPop.png}}
-        \caption*{Push-Pop Test}
-        \vspace{12pt}
-	\end{minipage}
-	\begin{minipage}{0.75\textwidth}
-        \boxed{\includegraphics[width=\textwidth]{fcqueues/lpQ:RandSingleOps10000.png}}
-        \caption*{Multi-Thread Singletons Test}
-	\end{minipage}
-    \caption{WT-Queue Performance}
+    \boxed{\includegraphics[width=\textwidth]{fcqueues/lpQ:RandSingleOps10000.png}}
+    \caption{WT-Queue Performance, Multi-Thread Singletons Test}
     \label{fig:wtqs}
 \end{figure}
 

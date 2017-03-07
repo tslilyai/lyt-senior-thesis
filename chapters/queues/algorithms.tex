@@ -93,7 +93,7 @@ Detecting these invalid orderings requires two important changes to flat combini
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_publist}
-    \caption{A transactional flat combining queue must check that pops in one transaction are consecutive, and pop from the head of the queue. In this example, T1 performs two pops and T2 performs one pop. The combiner thread applies T1's first pop, then T2's pop, and finally T1's second pop. Because T1's pops are not popping consecutive values off the queue, T1 is an invalid transaction, and must abort. When T1 aborts, the head ($v0$) of the queue is restored. T2 now becomes an invalid transaction because it popped a value that was not the head of the queue.}
+    \caption[Invalid interleaving of pop requests in the flat combining queue]{A transactional flat combining queue must check that pops in one transaction are consecutive, and pop from the head of the queue. In this example, T1 performs two pops and T2 performs one pop. The combiner thread applies T1's first pop, then T2's pop, and finally T1's second pop. Because T1's pops are not popping consecutive values off the queue, T1 is an invalid transaction, and must abort. When T1 aborts, the head ($v0$) of the queue is restored. T2 now becomes an invalid transaction because it popped a value that was not the head of the queue.}
 \label{fig:fcqueue_publist}
 \end{figure}
 
@@ -113,7 +113,7 @@ A pop is implemented with a pessimistic approach. Performing a pop within a tran
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_abort1}
-    \caption{T1 and T2 both attempt to mark the head of the queue with their \texttt{thread\_id}. T1's request is applied first, and marks the value $v0$ with the \texttt{thread\_id} 1. The combiner thread attempts to apply T2's request and sees T1's \texttt{thread\_id} marking the head of the queue. It then signals T2 to abort.}
+    \caption[Abort when performing conflicting pop requests]{T1 and T2 both attempt to mark the head of the queue with their \texttt{thread\_id}. T1's request is applied first, and marks the value $v0$ with the \texttt{thread\_id} 1. The combiner thread attempts to apply T2's request and sees T1's \texttt{thread\_id} marking the head of the queue. It then signals T2 to abort.}
 \label{fig:fcqueue_abort1}
 \end{figure}
 
@@ -124,7 +124,7 @@ If the value is neither marked by another thread nor unmarked, then the value mu
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_deq}
-    \caption{T1 performs a pop by sending a \texttt{MARK\_POP} request, and marks the value in the queue with its \texttt{thread\_id} 1. At commit time, T1 actually performs the pop by sending a \texttt{DEQ} request.} 
+    \caption[Transactional flat combining pop request execution]{T1 performs a pop by sending a \texttt{MARK\_POP} request, and marks the value in the queue with its \texttt{thread\_id} 1. At commit time, T1 actually performs the pop by sending a \texttt{DEQ} request.} 
 \label{fig:fcqueue_deq}
 \end{figure}
 
@@ -138,7 +138,7 @@ The thread therefore knows that no other thread has pushed onto the queue since 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_abort2}
-    \caption{This sequence shows how a transaction can abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue. T2 tries to pop from an empty queue, and sees the queue is empty. This means that when T2 commits, T2 will have to check if the queue is empty. T1 commits its transaction and pushes $v0$ onto the queue (recall that a push only executes at commit time). T2 then tries to pop another value off the queue, and sees $v0$, marking it with its \texttt{thread\_id} 2. T2 tries to commit, but sees that the queue is no longer empty: T2 must abort. When T2 aborts, it must clean up any markers it left in the queue.}
+    \caption[Abort and cleanup when checking the empty status of the queue]{This sequence shows how a transaction can abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue. T2 tries to pop from an empty queue, and sees the queue is empty. This means that when T2 commits, T2 will have to check if the queue is empty. T1 commits its transaction and pushes $v0$ onto the queue (recall that a push only executes at commit time). T2 then tries to pop another value off the queue, and sees $v0$, marking it with its \texttt{thread\_id} 2. T2 tries to commit, but sees that the queue is no longer empty: T2 must abort. When T2 aborts, it must clean up any markers it left in the queue.}
 \label{fig:fcqueue_abort2}
 \end{figure}
 

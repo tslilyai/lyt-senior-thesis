@@ -86,7 +86,7 @@ A history is \emph{linearizable} if all transactions appears to occur instantane
 \end{defn}
 
 \begin{eg}
-$H$ is a serializable, but not linearizable history. Note that $T2$ should have observed the pushes committed by $T1$. We can find a serial ordering of $H$, shown in $H'$, but $H'$ violates the rule that the serial order of transactions corresponds to the real time order of the transactions' commits.
+$H$ is a serializable, but not linearizable history. This is because $T2$ should have observed the pushes committed by $T1$. We can find a serial ordering of $H$, shown in $H'$, but $H'$ violates the rule that the serial order of transactions corresponds to the real time order of the transactions' commits.
     
 \begin{figure}[H]
 \singlespacing   

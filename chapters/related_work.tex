@@ -14,8 +14,16 @@ TM is therefore unconcerned with the durability property: memory does not persis
 
 Transactional memory transactions also are \emph{linearizable}~\cite{linearizability}: all transactions performed at a later clock time than a committed transaction observe the changes made by the committed transaction. This allows programmers to easily determine the order and effects of transactions.
 
+\subsection{Transaction Execution and Commit Protocol}
+To use a transactional system, a programmer indicates the start and end of the transaction. When the transaction finishes, it runs a commit protocol. The basic commit protocol has four phases~\cite{harristm}:
+\begin{enumerate}
+    \item Lock: Acquire the necessary locks to ensure protected access to any state the transaction intends to modify.
+    \item Check: Any state observed by the transaction must be checked to ensure that the state has not changed in a way that would invalidate the results of the transaction. If the check fails, the transaction aborts.
+    \item Install: All modifications of the transaction are installed.
+    \item Cleanup: Release the locks of any state modified by the transaction. If the transaction aborts during Phase 2 (check) or at any time during the transaction's execution, cleanup also removes any changes that the transaction may have made to the state.
+\end{enumerate}
 
-Systems implementing transactional memory can be optimistic, pessimistic, or some combination of the two, and may use eager and/or lazy updates~\cite{harristm}. 
+The exact details of the commit protocol depend on whether the transactional memory system is optimistic, pessimistic, or some combination of the two, and whether it uses eager and/or lazy updates~\cite{harristm}. 
 Optimistic transactional memory systems and pessimistic transactional memory systems both track the transaction's intended changes in the transaction's \emph{write set} and any state observed during the transaction in the transaction's \emph{read set}. 
 An optimistic system checks for invalidated values in the read set only at commit time. If all values are valid, the system performs the changes in the transaction's write set and the transaction is marked committed. Otherwise, the transaction aborts and the system ensures that the transaction leaves no visible effects (potentially rolling back any changes the transaction has made). An optimistic system therefore assumes (optimistically) that no other thread will conflict with another thread's transaction, and executes all operations of the transaction before it checks if any conflict has indeed occurred.
 
