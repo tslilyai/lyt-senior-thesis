@@ -77,7 +77,7 @@ The comparative performance of the T-QueueO and T-QueueP (Figure~\ref{fig:stoqs}
 
 \subsubsection{Hypothesis 2: Under low contention, a transactional queue with a naive concurrent algorithm performs reasonably well compared to the best concurrent, non-transactional queue algorithms.}
 
-We benchmark a set of the best-performing highly-concurrent queue algorithms against our currently best-performing transactional queue implementation, the T-QueueP, using our low-contention test (the 2-Thread Push-Pop test) that is also optimized for a low abort rate. This acts as a best-case scenario for the T-QueueP algorithm. Selected results are shown in Figure~\ref{fig:ntqs}.
+We benchmark a set of the best-performing highly-concurrent queue algorithms against our transactional queue implementations, the T-QueueO and T-QueueP, using our low-contention test (the 2-Thread Push-Pop test) that is also optimized for a low abort rate. This acts as a best-case scenario for the T-QueueO and T-QueueP algorithm. Selected results are shown in Figure~\ref{fig:ntqs}.
 
 Our implementation of the non-transactional flat combining queue, which we call NT-FCQueue, uses the flat combining queue implemented by the authors of the flat combining paper~\cite{flatcombining} (with minor modifications to remove memory leaks). Our implementation of the other highly-concurrent queues are taken from the open source Concurrent Data Structures (CDS) library implementations~\cite{libcds}. 
 

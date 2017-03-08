@@ -93,7 +93,7 @@ Detecting these invalid orderings requires two important changes to flat combini
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_publist}
-    \caption[Invalid interleaving of pop requests in the flat combining queue]{A transactional flat combining queue must check that pops in one transaction are consecutive, and pop from the head of the queue. In this example, T1 performs two pops and T2 performs one pop. The combiner thread applies T1's first pop, then T2's pop, and finally T1's second pop. Because T1's pops are not popping consecutive values off the queue, T1 is an invalid transaction, and must abort. When T1 aborts, the head ($v0$) of the queue is restored. T2 now becomes an invalid transaction because it popped a value that was not the head of the queue.}
+    \caption[Invalid interleaving of pop requests in the flat combining queue]{This sequence of operations applied to the queue is a possible interleaving that will cause both transactions T1 and T2 to abort. A transactional flat combining queue must ensure that all pops in one transaction are consecutive and are of the head of the queue. In this example, T1 performs two pops and T2 performs one pop. The combiner thread applies T1's first pop, then T2's pop, and finally T1's second pop. Because T1's pops are not popping consecutive values off the queue, T1 is an invalid transaction, and must abort when it commits (not shown). When T1 aborts, the head ($v0$) of the queue is restored. T2 now becomes an invalid transaction because it popped a value that was not the head of the queue.}
 \label{fig:fcqueue_publist}
 \end{figure}
 
@@ -128,9 +128,7 @@ If the value is neither marked by another thread nor unmarked, then the value mu
 \label{fig:fcqueue_deq}
 \end{figure}
 
-If the queue is either empty or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time.
-
-Note that this algorithm does not allow pops to read the values pushed within the same transaction. To do so would require passing in the thread's \texttt{write\_list} in addition to the \texttt{thread\_id} as arguments to the combiner thread. During our evaluation, we leave this part of the transactional queue specification unimplemented (and note that adding \emph{read-my-writes} support will only decrease performance).
+If the queue is empty, or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time. If the calling thread has previously performed a push in the same transaction, the transaction performs \emph{read-my-writes} and removes the head of the \texttt{write\_list}; in this case, the transactional pop returns true. Otherwise, the pop returns false.
 
 The \texttt{<EMPTY?, thread\_id>} request is posted at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If \texttt{[<EMPTY?, thread\_id> == true]}, this implies that the queue state is currently empty.
 The thread therefore knows that no other thread has pushed onto the queue since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}, and it can safely commit the transaction. If \texttt{[<EMPTY?, thread\_id> == false]}, the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
@@ -138,7 +136,7 @@ The thread therefore knows that no other thread has pushed onto the queue since 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_abort2}
-    \caption[Abort and cleanup when checking the empty status of the queue]{This sequence shows how a transaction can abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue. T2 tries to pop from an empty queue, and sees the queue is empty. This means that when T2 commits, T2 will have to check if the queue is empty. T1 commits its transaction and pushes $v0$ onto the queue (recall that a push only executes at commit time). T2 then tries to pop another value off the queue, and sees $v0$, marking it with its \texttt{thread\_id} 2. T2 tries to commit, but sees that the queue is no longer empty: T2 must abort. When T2 aborts, it must clean up any markers it left in the queue.}
+    \caption[Abort and cleanup when checking the empty status of the queue]{This sequence shows how a transaction can abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue. T2 tries to pop from an empty queue, and sees the queue is empty. This means that when T2 commits, T2 will have to check if the queue is empty. T1 commits its transaction and pushes $v0$ onto the queue (recall that a push only executes at commit time). T2 then tries to pop another value off the queue and sees $v0$, marking it with its \texttt{thread\_id} 2. T2 tries to commit, but observes that the queue is no longer empty: T2 must abort. When T2 aborts, it must clean up any markers it left in the queue.}
 \label{fig:fcqueue_abort2}
 \end{figure}
 
