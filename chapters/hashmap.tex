@@ -8,7 +8,7 @@ This chapter investigates different concurrent and transactional algorithms for 
 We present the concurrent and transactional algorithms we analyzed, created, and implemented in our work. Some general terminology: an \emph{element} refers to the key-value pair inserted into the hashmap. A \emph{bucket} is a set of elements, and a hashmap consists of a set of buckets. Various hashmap algorithms use various methods to place elements in buckets and track how buckets and elements are modified.
 
 \subsection{Transactional Chaining Hashmap}
-The transactional chaining hashmap (ChainingHashmap) is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list. Thus, the worst case time complexity for a lookup, insert, or delete is $O(n)$. Inserts require allocating an element corresponding to the inserted key-value pair to insert into the bucket. Each bucket is associated with a \emph{bucketversion} that increments upon any committed addition or removal from the bucket. The bucketversion is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{elementversion} that tracks if the value to the element has been modified or if the element has been removed. Each elementversion is tied to the inserted element's memory address, which is immutable given that we allocate each element.
+The transactional chaining hashmap is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list. Thus, the worst case time complexity for a lookup, insert, or delete is $O(n)$. Inserts require allocating an element corresponding to the inserted key-value pair to insert into the bucket. Each bucket is associated with a \emph{bucketversion} that increments upon any committed addition or removal from the bucket. The bucketversion is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{elementversion} that tracks if the value to the element has been modified or if the element has been removed. Each elementversion is tied to the inserted element's memory address, which is immutable given that we allocate each element.
 
 Elements are inserted at execution time but marked as \emph{phantom}, allowing another transaction that sees ones of these uninstalled elements to realize it is viewing an inconsistent state of the map and therefore abort. If a transaction that performs an insertion later aborts, these phantom elements are removed from the map. Otherwise, the phantom mark is erased during commit. An alternative approach would be to insert all elements at commit time. However, this requires either relying on the bucketversion to determine if another transaction has inserted the same element (which would result in false aborts since the bucketversion increments for \emph{any} inserted value), or redoing the search for the element to see if the insertion can still occur. Thus, we insert at execution time to allow for more fine-grained validation checks at commit time, and to reduce redundant computations. Deletions are delayed until commit time (an optimistic approach). This requires careful handling of cases of \emph{read-my-writes}, such as deleting an element inserted in the same transaction.
 
@@ -22,6 +22,10 @@ If an element $e$ is hashed by the first hash function to a bucket that is alrea
 However, if the shuffling encounters a bucket cycle, the hashmap raises an \texttt{{out\_of\_space}} assertion error. We can imagine an alternative implementation that allows the hashmap to grow in number of buckets or otherwise change its hash functions, reinserting all elements, but for simplicity, we keep the algorithm statically sized.
 
 Because the buckets are statically sized, elements are contained in fixed-size key and value arrays and therefore do not require extra allocations.
+
+Cuckoo hashmaps have been shown to outperform chaining hashmaps when the hashmap can mostly fit in cache. Although cuckoo hashing has the disadvantage of performing two memory accesses for a lookup (one for each bucket in which a key may be placed), the overhead from performing memory accesses is eliminated when the map can fit in cache.
+Furthermore, modern processors can optimize these memory accesses to alleviate some of the overhead~\cite{chm_arch}.
+Cuckoo hashmaps with large bucket sizes also outperform chaining hashmaps at high loads (when the average number of elements per bucket is high)~\cite{chm_load}. This is because the cost of a lookup is always constant time, whereas a chaining hashmap may experience $O(n)$ lookup time. In addition, a lookup that encounters a long chain in a chaining hashmap will follow $O(n)$ pointers, whereas a lookup in a cuckoo hashmap will need to only access two buckets, each of which is a contiguous array in memory.
 
 \subsection{Transactional Cuckoo Hashmap}
 The transactional cuckoo hashmap comes in three flavors: allocating, allocating with key-fragments, and non-allocating. All flavors instrument the non-transactional cuckoo hashmap with STO calls that provide transactional guarantees.
@@ -60,7 +64,17 @@ The test is run twice, once with a probability of 33\% insert, 33\% delete, and 
 \subsection{Results and Discussion}
 
 We measure all the performance of all hashmaps in terms of operations per second, abort rates, and cache performance (number of cache misses). 
-The full results can be found in Appendix~\ref{app:hashmaps}.
+The full results can be found in Appendix~\ref{app:hashmaps}. As with the queue results, we proceed in our discussion by first giving an overview of our conclusions, then show how we reach these conclusions through a sequence of hypotheses.
+
+\subsubsection{Overview}
+Our results demonstrate the following:
+\begin{itemize}
+    \item 
+\end{itemize}
+
+
+
+
 
 \subsubsection{Hypothesis 1: The transactional cuckoo hashmaps will experience a greater number of cache misses.}
 

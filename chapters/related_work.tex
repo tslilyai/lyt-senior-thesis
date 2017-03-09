@@ -18,7 +18,7 @@ Transactional memory transactions also are \emph{linearizable}~\cite{linearizabi
 To use a transactional system, a programmer indicates the start and end of the transaction. When the transaction finishes, it runs a commit protocol. The basic commit protocol has four phases~\cite{harristm}:
 \begin{enumerate}
     \item Lock: Acquire the necessary locks to ensure protected access to any state the transaction intends to modify.
-    \item Check: Any state observed by the transaction must be checked to ensure that the state has not changed in a way that would invalidate the results of the transaction. If the check fails, the transaction aborts.
+    \item Check: Any state observed by the transaction must be checked to ensure that the state has not changed in a way that would invalidate the results of the transaction. If the check fails, the transaction aborts. If the transaction passes the check phase, the transaction will commit at this time.
     \item Install: All modifications of the transaction are installed.
     \item Cleanup: Release the locks of any state modified by the transaction. If the transaction aborts during Phase 2 (check) or at any time during the transaction's execution, cleanup also removes any changes that the transaction may have made to the state.
 \end{enumerate}

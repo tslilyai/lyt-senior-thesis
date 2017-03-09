@@ -187,6 +187,12 @@ Y.~Ni, V.~S. Menon, A.-R. Adl-Tabatabai, A.~L. Hosking, R.~L. Hudson, J.~E.~B.
 \newblock In {\em Proceedings of the 12th ACM SIGPLAN symposium on Principles
   and practice of parallel programming}, pages 68--78. ACM, 2007.
 
+\bibitem{chm_load}
+K.~A. Ross.
+\newblock Efficient hash probes on modern processors.
+\newblock In {\em Data Engineering, 2007. ICDE 2007. IEEE 23rd International
+  Conference on}, pages 1297--1301. IEEE, 2007.
+
 \bibitem{schwarz}
 P.~M. Schwarz and A.~Z. Spector.
 \newblock Synchronizing shared abstract types.
@@ -228,5 +234,11 @@ M.~Zhang, J.~Huang, M.~Cao, and M.~D. Bond.
 \newblock Larktm: Efficient, strongly atomic software transactional memory.
 \newblock Technical report, Technical Report OSUCISRC-11/12-TR17, Computer
   Science \& Engineering, Ohio State University, 2012.
+
+\bibitem{chm_arch}
+M.~Zukowski, S.~H{\'e}man, and P.~Boncz.
+\newblock Architecture-conscious hashing.
+\newblock In {\em Proceedings of the 2Nd International Workshop on Data
+  Management on New Hardware}, DaMoN '06, New York, NY, USA, 2006. ACM.
 
 \end{thebibliography}
