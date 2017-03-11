@@ -32,7 +32,7 @@ Cuckoo hashmaps with large bucket sizes also outperform chaining hashmaps at hig
 The transactional cuckoo hashmap comes in three flavors: two that allocate an element per insertion, and one that does not perform any allocations. All cuckoo hashmaps instrument the non-transactional cuckoo hashmap with STO calls that provide transactional guarantees.
 Both allocating and non-allocating versions use the same synchronization algorithm: like the chaining hashmap, each bucket has a \emph{bucket version} and lock, and each element has an \emph{element version}. Because insertions can occur due to cuckoo shuffling as well as an external insertion call, the bucket version increments only when an element \emph{not already contained in the map} is inserted into the bucket (i.e., elements inserted via a call to insert and not via cuckoo shuffling). Elements are inserted at execution time with a \emph{phantom} flag that is then erased at commit time, and deletions are delayed until commit time.
 
-The two variants of the allocating transactional cuckoo hashmap allocate elements upon insertion. One variant (T-CuckooIE) consists of buckets containing pointers to the elements, allowing STO to track elements by their memory address to verify element versions at commit time. The key-fragments variant (T-CuckooKF) expands buckets to contain both an array of keys and an array of element pointers. This allows for a lookup to compare keys directly, because the keys are themselves contained in the bucket. Without the key fragments, the lookup would have to follow pointers contained in the bucket to access and compare the key value. For many workloads, this reduces the number of cache line accesses. STO can still track elements by their memory address in the element pointer array, but these pointers are only accessed if the value of the element is needed. This only happens during a present lookup, which accesses exactly one pointer, namely that of the searched-for element.
+The two variants of the allocating transactional cuckoo hashmap allocate elements upon insertion. One variant (T-CuckooA) consists of buckets containing pointers to the elements, allowing STO to track elements by their memory address to verify element versions at commit time. The key-fragments variant (T-CuckooKF) expands buckets to contain both an array of keys and an array of element pointers. This allows for a lookup to compare keys directly, because the keys are themselves contained in the bucket. Without the key fragments, the lookup would have to follow pointers contained in the bucket to access and compare the key value. For many workloads, this reduces the number of cache line accesses. STO can still track elements by their memory address in the element pointer array, but these pointers are only accessed if the value of the element is needed. This only happens during a present lookup, which accesses exactly one pointer, namely that of the searched-for element.
 
 The non-allocating transactional cuckoo hashmap (T-CuckooNA) consists of buckets containing a fixed-sized array of elements. In this variant of the cuckoo hashmap, STO tracks elements by their keys rather than their memory address. Therefore, to verify if an element version has changed at commit time, the check procedure performs a find of the element using the key (searching at most two buckets) and validates the corresponding element version. Although this reduces the number of allocations, elements can now move between buckets and invalidate the values in the previous bucket: this greatly complicates the process of correctly checking and synchronizing element version reads. Our transactional algorithm for this hashmap reflects this complexity: the tracking set size is not minimal, and therefore we achieve more coarse-grained locking at commit time. For example, the non-allocating cuckoo hashmap locks both bucket versions to check any element version, because the element could move between buckets during the check. The allocating cuckoo hashmap needs only to lock the element version, because the hashmap has access to the element's unchanging memory address. 
 
@@ -138,8 +138,8 @@ The non-transactional cuckoo hashmap experiences the least number of cache misse
 As we see in Figure~\ref{fig:hm_cm5}, T-Chaining has the best cache performance of the transactional hashmaps when the maximum fullness (i.e., the maximum load on the hashmap) is set to 5. This is likely due to the low number of element pointer accesses when T-Chaining performs a find: the chains are relatively short, and an absent find requires following no pointers. In comparison, the cuckoo hashmaps must search through two entire bucket arrays on an absent find. The difference in the number of cache misses between T-Chaining and T-CuckooKF increases as maximum fullness increases; this occurs because T-Chaining, on average, has to follow more pointers each time it performs a lookup, because the chain lengths are longer on average.
 
 Figures~\ref{fig:hm_cm10} and~\ref{fig:hm_cm15} indicate that when the hashmap has longer chains or bucket sizes (maximum fullness 10 or 15) and cannot fit entirely in cache (i.e., the number of buckets is 125K or 1M), T-CuckooKF achieves the best transactional hashmap cache performance, followed by the T-CuckooNA. 
-The T-Chaining and T-CuckooIE hashmaps experienced a decrease in cache performance in these scenarios because a find will not need to follow pointers in the buckets of either T-CuckooKF or T-CuckooNA, whereas every find in the T-Chaining and T-CuckooIE requires following pointers. As the maximum fullness increases, the T-CuckooIE and T-Chaining maps follow an increasing number of pointers per find.
-We conjecture that the T-CuckooKF has fewer cache misses than the T-CuckooNA because the additional memory accesses from following pointers is minimal (a present find follows only one pointer), and the additional lookups in the T-CuckooNA mean that the T-CuckooNA accesses approximately twice the number of buckets per operation compared to the T-CuckooKF\footnote{Our preliminary performance results for the T-CuckooNA demonstrate a similar trend, in which it performs better than the T-CuckooIE and worse than the T-CuckooNA. We omit these results because the correctness of the T-CuckooNA implementation has not been confirmed.}.
+T-Chaining and T-CuckooA experienced a decrease in cache performance in these scenarios because a find will not need to follow pointers in the buckets of either T-CuckooKF or T-CuckooNA, whereas every find in the T-Chaining and T-CuckooA requires following pointers. As the maximum fullness increases, the T-CuckooA and T-Chaining maps follow an increasing number of pointers per find.
+We conjecture that the T-CuckooKF has fewer cache misses than the T-CuckooNA because the additional memory accesses from following pointers is minimal (a present find follows only one pointer), and the additional lookups in the T-CuckooNA mean that the T-CuckooNA accesses approximately twice the number of buckets per operation compared to the T-CuckooKF\footnote{Our preliminary performance results for the T-CuckooNA demonstrate a similar trend, in which it performs better than the T-CuckooA and worse than the T-CuckooNA. We omit these results because the correctness of the T-CuckooNA implementation has not been confirmed.}.
 
 \vspace{12pt}
 \noindent\fbox{\begin{minipage}{\textwidth}
@@ -164,7 +164,7 @@ We conjecture that the T-CuckooKF has fewer cache misses than the T-CuckooNA bec
 
 To evaluate this hypothesis, we look at our results for a map with 10K buckets with a low maximum fullness of 5, which fits entirely in cache (Figure~\ref{hm_5}).
 For all hashmaps, performance with 90\% finds (5\% inserts/erases) is approximately $1.5\times$ that of the 33\% finds/inserts/erases. This is expected: a find is both faster to perform than an insert or delete, and a find requires only reading a bucket version for all transactional hashmaps.
-On both benchmarks, the cuckoo hashmaps achieve performance approximately $1.2\times$ that of T-Chaining. There is little difference between the performance of T-CuckooIE and the performance of T-CuckooKF, because cache performance does not play a significant role in these benchmarks.
+On both benchmarks, the cuckoo hashmaps achieve performance approximately $1.2\times$ that of T-Chaining. There is little difference between the performance of T-CuckooA and the performance of T-CuckooKF, because cache performance does not play a significant role in these benchmarks.
 
 We note that this result is consistent with the claims made about cuckoo hashmaps in Section~\ref{section:ntchm_algo}.
 
@@ -175,18 +175,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
 \end{minipage}}
 
 
-\subsubsection{Hypothesis 3: As maximum fullness increases, the transactional cuckoo hashmaps outperform the transactional chaining hashmap by a greater margin.}
-
-To evaluate this hypothesis, we look at our results for a map with all sizes of buckets with a high maximum fullness of 5 compared with a maximum fullness of 15.
-
-We first consider the results from the 33\% finds/inserts/erases test. Our results show that the transactional cuckoo hashmaps, in particular T-CuckooKF, achieves performance $1.5$-$2\times$ that of T-Chaining as maximum fullness increases to 15 and when the number of buckets is 10K or 125K (Figures~\ref{fig:hm_33_1} and~\ref{fig:hm_33_2}). This is mainly due to a decrease in performance in T-Chaining, rather than an increase in performance of T-CuckooKF, whose performance remains essentially unchanged.
-When the number of buckets is 1M, we see that the transactional cuckoo hashmaps also experience a decrease in performance when maximum fullness increases, which means their performance is approximately equivalent to that of T-chaining (Figure~\ref{fig:hm_33_3}). 
-In general, the performance of the cuckoo hashmaps decreases slightly (less than 20\%) as hashmap size increases from 10K to 1M buckets (Figures~\ref{fig:hm_33_1},~\ref{fig:hm_33_2}). However, the chaining hashmap experiences nearly no decrease in performance. 
-
-This is not entirely due to the number of cache misses, because T-CuckooKF still experiences fewer cache misses than T-Chaining, as we discussed in Section~\ref{section:hmcm}.
-The decrease in performance of the cuckoo hashmap when the number of buckets is large may be caused by \lyt{TODO}
-
-Our results from the 33\% finds/inserts/erases test support our hypothesis at low (10K and 125K) sizes of the cuckoo hashmap: the difference between T-CuckooKF's performance and T-Chaining's performance increases as fullness increases. However, we do not observe this phenomenon when using hashmaps with 1M buckets.
+\subsubsection{Hypothesis 3: As maximum fullness increases, the transactional cuckoo hashmap outperforms the transactional chaining hashmap by a greater margin.}
 
 \begin{figure}[H]
     \centering
@@ -229,16 +218,28 @@ Our results from the 33\% finds/inserts/erases test support our hypothesis at lo
     \label{fig:hm_33_3}
 \end{figure}
 
+To evaluate this hypothesis, we analyze our results for maps with various number of buckets and compare their performance with a high maximum fullness of 5 to that with a maximum fullness of 15.
+
+We first consider the results from the 33\% finds/inserts/erases test. Our results show that T-CuckooKF achieves performance $1.5$-$2\times$ that of T-Chaining as maximum fullness increases to 15, regardless of the number of buckets (Figures~\ref{fig:hm_33_1},~\ref{fig:hm_33_2}, and~\ref{fig:hm_33_3}). 
+This is caused by a decrease in the performance of T-Chaining by approximately 50\%, rather than an increase in performance of T-CuckooKF, whose performance remains decreases only slightly or remains essentially unchanged.
+
+
+Our results from the 33\% finds/inserts/erases test support our hypothesis regardless of the number of buckets in the hashmap: the difference between T-CuckooKF's performance and T-Chaining's performance increases as fullness increases. 
 
 We also consider our results from the 90\% finds (5\% inserts/erases) test to see if they support our hypothesis.
-Fullness seems to have a drastic impact on T-Chaining's performance regardless of the number of buckets in the hashmap (performance drops by approximately 50\%) and almost no impact on the performance of T-CuckooKF (Figures~\ref{fig:hm_90_1},~\ref{fig:hm_90_2}, and~\ref{fig:hm_90_3}). This is expected, because of the increased difference in the number of cache misses when T-Chaining has to follow pointers in a long chain during a lookup. 
+Again, fullness seems to have a drastic impact on T-Chaining's performance regardless of the number of buckets in the hashmap (performance drops by approximately 50\%) and almost no impact on the performance of T-CuckooKF (Figures~\ref{fig:hm_90_1},~\ref{fig:hm_90_2}, and~\ref{fig:hm_90_3}). 
 
 When the hashmap contains 10K buckets, the T-CuckooKF's performance is approximately $1.2\times$ that of T-Chaining at a fullness of 5. This difference increases with fullness: T-CuckooKF performs over $2\times$ better than T-Chaining at a fullness of 15 (Figure~\ref{fig:hm_90_1}).
 We observe a similar phenomenon when the map has 125K buckets (Figure~\ref{fig:hm_90_2}) and 1M buckets (Figure~\ref{fig:hm_90_3}): T-CuckooKF's performance goes from approximately $2\times$ the performance of T-Chaining at a fullness of 5, to over $3\times$ at a fullness of 15.
  
 This result is consistent with the claims made about cuckoo hashmaps in Section~\ref{section:ntchm_algo}. Regardless of the number of buckets in the map, T-Chaining experiences a much more drastic drop in performance than T-CuckooKF as fullness increases, and the difference in performance therefore increases.
 
-We note that our results for both tests indicate that number of cache misses is strongly correlated with performance: T-CuckooIE performs worse than T-CuckooKF on all benchmarks, although it still performs at least as well as T-Chaining. 
+We note that our results for both tests indicate that the number of cache misses is strongly correlated with performance.
+In general, the performance of all hashmaps decreases slightly (less than 20\%) as hashmap size increases from 10K to 1M buckets.
+We attribute this to the increasing number of cache misses with increasing numbers of buckets.
+
+The greater difference between T-CuckooKF's performance and T-Chaining's performance as fullness increases is also mirrored in the increased difference between T-CuckooKF's and T-Chaining's number of cache misses (discussed in Section~\ref{section:hmcm}). T-CuckooA's performance also drops more significantly than T-CuckooKF's as fullness increases (we observe, however, that T-CuckooA still performs at least as well as T-Chaining). T-CuckooA uses the same algorithm as T-CuckooKF, but has worse cache usage, which provides further evidence that cache usage plays a crucial part in performance. 
+
 
 \begin{figure}[H]
     \centering
@@ -284,7 +285,7 @@ We note that our results for both tests indicate that number of cache misses is 
 
 \vspace{12pt}
 \noindent\fbox{\begin{minipage}{\textwidth}
-    \textbf{SUPPORTED}: The transactional cuckoo hashmaps outperform the transactional chaining hashmap by a greater margin as maximum fullness increases.
+    \textbf{SUPPORTED}: The transactional cuckoo hashmap outperforms the transactional chaining hashmap by a greater margin as maximum fullness increases.
 \end{minipage}}
 
 \subsubsection{Hypothesis 4: Performance is not heavily affected by abort rate.}

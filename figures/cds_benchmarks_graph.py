@@ -32,42 +32,42 @@ fullnesses = [5, 10, 15]#, 20]
 map_cache_misses_5 = {
     "T-Chaining":[205,334,422],
     "T-CuckooKF":[250,418,495],
-    "T-CuckooIE":[253,645,735],
+    "T-CuckooA":[253,645,735],
     "T-CuckooNA":[180,463,569],
     "NT-Cuckoo": [115,200,289],
 }
 map_cache_misses_10 = {
     "T-Chaining":[229,546,660],
     "T-CuckooKF":[273,464,545],
-    "T-CuckooIE":[294,931,969],
+    "T-CuckooA":[294,931,969],
     "T-CuckooNA":[208,591,659],
     "NT-Cuckoo": [107,191,252],
 }
 map_cache_misses_15 = {
     "T-Chaining":[260,711,886],
     "T-CuckooKF":[298,527,609],
-    "T-CuckooIE":[348,1000,1000],
+    "T-CuckooA":[348,1000,1000],
     "T-CuckooNA":[237,669,766],
     "NT-Cuckoo": [138,225,301],
 }
 map_cache_misses_5_90 = {
     "T-Chaining":[37,197,300],
     "T-CuckooKF":[52,284,359],
-    "T-CuckooIE":[53,509,484],
+    "T-CuckooA":[53,509,484],
     "T-CuckooNA":[43,400,424],
     "NT-Cuckoo": [28,113,226],
 }
 map_cache_misses_10_90 = {
     "T-Chaining":[40,433,513],
     "T-CuckooKF":[60,347,443],
-    "T-CuckooIE":[61,772,761],
+    "T-CuckooA":[61,772,761],
     "T-CuckooNA":[50,489,572],
     "NT-Cuckoo": [31,152,246],
 }
 map_cache_misses_15_90 = {
     "T-Chaining":[48,677,740],
     "T-CuckooKF":[72,409,537],
-    "T-CuckooIE":[98,1000,1000],
+    "T-CuckooA":[98,1000,1000],
     "T-CuckooNA":[57,536,654],
     "NT-Cuckoo": [34,171,304],
 }
@@ -439,7 +439,7 @@ class Plotter():
             self.get_randops_graphs(queues, allindices, filename+"all", colors, patterns, results, name)
 
     def hashmaps_graphs(self):
-        maps = ["T-Chaining", "T-CuckooIE", "T-CuckooKF", "T-CuckooNA", "NT-Cuckoo"]
+        maps = ["T-Chaining", "T-CuckooA", "T-CuckooKF", "T-CuckooNA", "NT-Cuckoo"]
         filename='maps/'
         colors = ["red","green","green","green","blue"]
         test_names = [
@@ -455,7 +455,7 @@ class Plotter():
         self.get_cm_graphs(maps, colors, patterns, filename+'90', map_cache_misses_5_90,5)
         self.get_cm_graphs(maps, colors, patterns, filename+'90', map_cache_misses_10_90,10)
         self.get_cm_graphs(maps, colors, patterns, filename+'90', map_cache_misses_15_90,15)
-        maps = ["T-Chaining", "T-CuckooIE", "T-CuckooKF", "NT-Cuckoo"]
+        maps = ["T-Chaining", "T-CuckooA", "T-CuckooKF", "NT-Cuckoo"]
         colors = ["red","green","green","blue"]
         patterns = ["solid","--","solid","solid"]
         for name in test_names:
