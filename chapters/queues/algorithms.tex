@@ -44,7 +44,7 @@ When a transaction that performs one or more pops commits, it locks the head ver
 %The design is summarized in Table \ref{table:sto1}.
 
 \subsection{T-QueueP}
-The T-QueueP is also a circular, fixed-size, transactional queue with operations push and pop. The T-QueueP algorithm is a hybrid design integrating the T-QueueO algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Library~\cite{tdsl}. Their pessimistic transactional queue appears to achieve better performance in their benchmarks than our T-QueueO, and their algorithm is simpler to implement and describe. 
+The T-QueueP is also a circular, fixed-size, transactional queue with operations push and pop. The T-QueueP algorithm is a hybrid design integrating the T-QueueO algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Libraries~\cite{tdsl}. We hypothesize that T-QueueP will perform better than T-QueueO, based on the TDSL benchmarks results showing that the TDSL pessimistic transactional queue achieves better performance than T-QueueO. 
 
 Adding pessimistic locking is done by locking the queue when any pop (a naturally contentious operation) is invoked. The queue is then unlocked only after the transaction is complete. This ensures that no thread will execute a pop that will invalidate another thread's transactional pop. However, a push in the T-QueueP follow the same protocol as a push in the T-QueueO. Because execution of all pushes is lazy and delayed until commit time, a transactional push can execute without invalidating another transaction. A push therefore does not acquire a lock at execution time, but rather only needs to lock while installing all the transaction's pushes at commit time. 
 
@@ -53,7 +53,7 @@ Because a transactional pop locks the queue, there are no conflicts at commit ti
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Flat Combining Queue Algorithms}
-Given the relatively slow performance of our STO queues relative to the best-performing highly-concurrent queue algorithms (see Section~\ref{eval:hypo3}), we looked for a highly-concurrent, non-transactional queue algorithm that might be promising to use in STO's transactional framework. After running several benchmarks (see Figure~\ref{fig:ntqs}), we found the most promising to be the Flat-Combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
+Given the relatively slow performance of our STO queues relative to the best-performing highly-concurrent queue algorithms (see Section~\ref{eval:hypo3}), we looked for a highly-concurrent, non-transactional queue algorithm that might be promising to use in STO's transactional framework. After running several benchmarks (see Figure~\ref{fig:ntqs}), we found the most promising to be the flat combining technique, which not only outperforms other queue algorithms, but also addresses several of the bottlenecks we observe in the STO queues.
 
 \subsection{Non-Transactional Flat Combining Queue}
 \label{fcqueuent}
@@ -88,7 +88,10 @@ Detecting these invalid orderings requires two important changes to flat combini
         \item The algorithm can delay a transaction's pops until commit time. This then means the algorithm must track which values in the queue are going to be popped within the transaction. This prevents duplicate pops and detects if the queue will be ``empty'' by tracking how many values will be popped off the queue during this transaction. If another thread performs a pop or push during the transaction's lifetime, this can cause the transaction to abort: the ``empty'' status of the queue at commit time may now be inconsistent with what the transaction saw during execution. 
         \item The algorithm does not execute flat combining requests from other threads until the transaction has committed or aborted (a pessimistic approach). Because only this thread can execute commands, pops can be performed eagerly at execution time (and restored to the head of the queue if the transaction aborts). This can be implemented either by aborting the other threads' transactions or by forcing the other threads to block or spin.
     \end{enumerate}
+
+        We choose to implement approach (a) based on microbenchmarks that show that approach (b) is both more complicated and less performant.
 \end{enumerate}
+
 
 \begin{figure}[H]
 \centering
@@ -119,7 +122,7 @@ A pop is implemented with a pessimistic approach. Performing a pop within a tran
 
 If the value is not marked, the combiner thread marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Note that in this scenario, no other thread will be able to mark values in the queue until the calling thread commits or aborts; other threads will abort when seeing the head value marked by the calling thread's \texttt{thread\_id}. 
 
-If the value is neither marked by another thread nor unmarked, then the value must already be marked with this thread's \texttt{thread\_id}, and the combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread's \texttt{thread\_id}. It then marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Upon receiving the response, the calling thread adds a write to a \texttt{pop\_item} to tell the thread to post a \texttt{<DEQ, thread\_id>} request at commit time. This request will tell the combiner thread to actually remove the popped value from the queue. This procedure is shown in Figure~\ref{fcqueue_deq}.
+If the value is neither marked by another thread nor unmarked, then the value must already be marked with this thread's \texttt{thread\_id}, and the combiner thread iterates sequentially through the queue values until it reaches a value not marked by the calling thread's \texttt{thread\_id}. It then marks the value with the caller's \texttt{thread\_id} and returns \texttt{<OK>}. Upon receiving the response, the calling thread adds a write to a \texttt{pop\_item} to tell the thread to post a \texttt{<DEQ, thread\_id>} request at commit time. This request will tell the combiner thread to actually remove the popped value from the queue. This procedure is shown in Figure~\ref{fig:fcqueue_deq}.
 
 \begin{figure}[t]
 \centering
@@ -130,8 +133,8 @@ If the value is neither marked by another thread nor unmarked, then the value mu
 
 If the queue is empty, or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time. If the calling thread has previously performed a push in the same transaction, the transaction performs \emph{read-my-writes} and removes the head of the \texttt{write\_list}; in this case, the transactional pop returns true. Otherwise, the pop returns false.
 
-The \texttt{<EMPTY?, thread\_id>} request is posted at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If \texttt{[<EMPTY?, thread\_id> == true]}, this implies that the queue state is currently empty.
-The thread therefore knows that no other thread has pushed onto the queue since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}, and it can safely commit the transaction. If \texttt{[<EMPTY?, thread\_id> == false]}, the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
+The \texttt{<EMPTY?, thread\_id>} request is posted at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If the thread receives \texttt{[<EMPTY?, thread\_id> == true]}, then the queue state is currently empty.
+The thread therefore knows that no other thread has increased the size of the queue since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}. The transaction can safely commit. If the thread instead receives \texttt{[<EMPTY?, thread\_id> == false]}, then it knows the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
 
 \begin{figure}[H]
 \centering

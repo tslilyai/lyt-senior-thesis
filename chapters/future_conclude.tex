@@ -4,7 +4,6 @@
 One extension that would further increase performance is to specialize our data structures for singleton transactions. As we saw in Chapter~\ref{commutativity}, the commutativity of singleton transaction allows for optimizations that are impossible when a transaction contains more than one operation. However, singleton transactions would need to be carefully handled for the case in which they interleave with multi-operation transactions. 
 
 We would also like to further test the idea that we can increase the performance of transactional STO data structures by incorporating highly-concurrent data structures with STO only if the data structures' algorithms do not need to be heavily modified to support transactions (i.e., the algorithms do not heavily depend on operation commutativity).
-As noted in Chapter~\ref{hashmap}, we can also further optimize our transactional cuckoo hashmap by eliminating element allocations, which are unavoidable in the chaining hashmap. Correctly doing so, however, remains an open challenge.
 
 For algorithms in which transactional modifications cripple their optimizations (such as the FIFO queue or priority queue), alternative weaker transactional specifications, such as the one we proposed for the queue, can be explored. These specifications can be tuned to provide some useful guarantees beyond that of a simple concurrent data structure, yet still allow for concurrent algorithm optimizations to increase performance.
 
