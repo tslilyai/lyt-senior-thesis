@@ -196,6 +196,46 @@ class Plotter():
         #plt.show()
         plt.close()
 
+    def get_fullness_graphs(self, ds_index, filename, color, testname):
+        width = 0.2
+        fig = plt.figure(figsize=(7,5))
+        ax = fig.add_subplot(111)
+        bars = []
+        labels = ["Fullness 5", "Fullness 10", "Fullness 15"]
+        data = []
+        x = range(len(NTHREADS))
+
+        patterns = ["", "..", "//"]
+        test_5_vals = self.hmtests[5][testname][10000]['speed']
+        test_10_vals = self.hmtests[10][testname][10000]['speed']
+        test_15_vals = self.hmtests[15][testname][10000]['speed']
+
+        for f, fullness_data in enumerate([test_5_vals, test_10_vals, test_15_vals]):
+            bar_data = []
+            for i in range(len(NTHREADS)):
+                bar_data.append(fullness_data[ds_index][i])
+            medians = [median(metrics) for metrics in bar_data]
+            err_low = [medians[i] - min(metrics) for i,metrics in enumerate(bar_data)]
+            err_high = [max(metrics)-medians[i] for i,metrics in enumerate(bar_data)]
+            bars.append(ax.bar(x, medians, width, color=color, hatch=patterns[f], yerr=[err_low, err_high], ecolor='black'))
+            x = [v+width for v in x]
+        
+        ncols = 3 
+        legend = ax.legend(bars, labels, bbox_to_anchor=(0., 1.0, 1., 0.2), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
+        ax.set_ylabel("Speed" + MEASURES['speed'])
+        ax.set_xlabel('Number of Threads')
+        ax.set_xticks(np.arange(len(NTHREADS)) + (1.5)*width)
+        ax.set_xticklabels(NTHREADS)
+   
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width, box.height*0.85])
+        ax.set_ylim(0, 0.5e8)
+        ax.set_position([box.x0, box.y0, box.width, box.height*.92])
+
+        plt.savefig(filename+testname + "_fullness.png")
+        #plt.show()
+        plt.close()
+
 
     def get_pushpop_graphs(self, queues, indices, filename, colors, patterns, results):
         width = 0.5/len(indices)
@@ -274,8 +314,8 @@ class Plotter():
                 for i in indices:
                     data = qdata[i]['aborts']
                     f.write(queues[i] + ' & ' 
-                            + '{0:.3f}'.format(median(data[0])) + ' & ' 
-                            + '{0:.3f}'.format(median(data[1])) + '\\\\\n' 
+                            + '{0:.5f}'.format(median(data[0])) + ' & ' 
+                            + '{0:.5f}'.format(median(data[1])) + '\\\\\n' 
                     )
                 for line in end_lines:
                     f.write(line + '\n')
@@ -378,7 +418,7 @@ class Plotter():
                     thread_data = []
                     for j, val in enumerate(datum):
                         if j % 2 == 1:
-                            thread_data.append('{0:.3f}'.format(median(val)))
+                            thread_data.append('{0:.5f}'.format(median(val)))
                     f.write(ds[i] + ' & ' + ' & '.join(thread_data) + '\\\\\n')
                 for line in end_lines:
                     f.write(line + '\n')
@@ -448,7 +488,7 @@ class Plotter():
             "HM10K:F34,I33,E33","HM10K:F90,I5,E5",
         ]
 
-        patterns = ['','//','','..','']
+        '''patterns = ['','//','','..','']
         self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_5,5)
         self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_10,10)
         self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_15,15)
@@ -462,6 +502,10 @@ class Plotter():
             for fullness in fullnesses:
                 results = self.hmtests[fullness][name]
                 self.get_randops_graphs(maps, range(len(maps)), filename, colors, patterns, results, name, fullness)
+        '''
+        for name in test_names:
+            self.get_fullness_graphs(0, filename+"chaining", colors[0], name) 
+            self.get_fullness_graphs(2, filename+"kf", colors[2], name) 
 
 def main():
     p = Plotter()
