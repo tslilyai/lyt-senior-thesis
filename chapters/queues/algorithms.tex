@@ -5,8 +5,8 @@ This chapter investigates different concurrent and transactional algorithms for 
 
 \section{Transactional Queue Specification}
 
-A concurrent queue supporting operations push and pop must adhere to the following specification%
-\footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from that used for pop.}:
+A concurrent queue supporting operations push and pop must adhere to the following specification:%
+\footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from that used for pop.}
 \begin{itemize}
     \item No duplicate pops: a value is popped off the queue only once.
     \item No duplicate pushes: a value is pushed onto the queue only once.
