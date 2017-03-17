@@ -8,13 +8,6 @@ This chapter investigates different concurrent and transactional algorithms for 
 We present the concurrent and transactional algorithms we analyzed, created, and implemented in our work. Some general terminology: an \emph{element} refers to the key-value pair inserted into the hashmap. A \emph{bucket} is a set of elements, and a hashmap consists of a set of buckets. Various hashmap algorithms use various methods to place elements in buckets and track how buckets and elements are modified. Figure~\ref{fig:hashmap_buckets} depicts the bucket structure of the hashmaps described below.
 
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{hashmap_finds}
-    \caption[Bucket Structure of Different Hashmaps]{This figure depicts two buckets in each type of hashmap. The static size of a bucket in each cuckoo hashmap is set to 3. Arrows represent pointers to allocated elements; contiguous memory is represented horizontally.}
-\label{fig:hashmap_buckets}
-\end{figure}
-
 
 \subsection{Transactional Chaining Hashmap}
 The transactional chaining hashmap is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list. Thus, the worst case time complexity for a lookup, insert, or delete is $O(n)$. Inserts require allocating an element corresponding to the inserted key-value pair to insert into the bucket. Each bucket is associated with a \emph{bucket version} that increments upon any committed addition or removal from the bucket. The bucket version is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{element version} that tracks if the value to the element has been modified or if the element has been removed. Each element version is tied to the inserted element's memory address, which is immutable given that we allocate each element.
@@ -46,6 +39,13 @@ The two variants of the allocating transactional cuckoo hashmap allocate element
 The non-allocating transactional cuckoo hashmap (T-CuckooNA) consists of buckets containing a fixed-sized array of elements. In this variant of the cuckoo hashmap, STO tracks elements by their keys rather than their memory address. Therefore, to verify if an element version has changed at commit time, the check procedure performs a find of the element using the key (searching at most two buckets) and validates the corresponding element version. Although this reduces the number of allocations, elements can now move between buckets and invalidate the values in the previous bucket: this greatly complicates the process of correctly checking and synchronizing element version reads. Our transactional algorithm for this hashmap reflects this complexity: the tracking set size is not minimal, and therefore we achieve more coarse-grained locking at commit time. For example, the non-allocating cuckoo hashmap locks both bucket versions to check any element version, because the element could move between buckets during the check. The allocating cuckoo hashmap needs only to lock the element version, because the hashmap has access to the element's unchanging memory address. 
 
 Although a non-allocating transactional cuckoo hashmap is more complex, we build it to improve cache performance during lookups: the algorithm does not need to follow any pointers. Nonetheless, we may not see a great improvement in cache usage because we now must execute approximately double the number of lookups: each find requires performing two lookups (one during execution, and another during commit to check if the element version is still valid).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{hashmap_finds}
+    \caption[Bucket Structure of Different Hashmaps]{This figure depicts two buckets in each type of hashmap. The static size of a bucket in each cuckoo hashmap is set to 3. Arrows represent pointers to allocated elements; contiguous memory is represented horizontally.}
+\label{fig:hashmap_buckets}
+\end{figure}
 
 
 \section{Evaluation}
@@ -118,7 +118,7 @@ We conjecture that the T-CuckooKF has fewer cache misses than the T-CuckooNA bec
             \boxed{\includegraphics[width=\textwidth]{maps/905cm.png}}
             \caption*{90\%Find, 5\%Insert, 5\%Delete}
         \end{minipage}
-        \caption{Hashmap Cache Misses (Max Fullness 5)}
+        \caption[Hashmap Cache Misses (Max Fullness 5)]{Hashmap Cache Misses (Max Fullness 5): T-Chaining has the best cache performance of the transactional hashmaps.}
 		\label{fig:hm_cm5}
     \end{figure}
 
@@ -135,7 +135,7 @@ We conjecture that the T-CuckooKF has fewer cache misses than the T-CuckooNA bec
             \boxed{\includegraphics[width=\textwidth]{maps/9010cm.png}}
             \caption*{90\%Find, 5\%Insert, 5\%Delete}
         \end{minipage}
-        \caption{Hashmap Cache Misses (Max Fullness 10)}
+        \caption[Hashmap Cache Misses (Max Fullness 10)]{Hashmap Cache Misses (Max Fullness 10): T-CuckooKF has the best cache performance of the transactional hashmaps, followed by T-CuckooNA.}
 		\label{fig:hm_cm10}
     \end{figure}
 
@@ -152,7 +152,7 @@ We conjecture that the T-CuckooKF has fewer cache misses than the T-CuckooNA bec
             \boxed{\includegraphics[width=\textwidth]{maps/9015cm.png}}
             \caption*{90\%Find, 5\%Insert, 5\%Delete}
         \end{minipage}
-        \caption{Hashmap Cache Misses (Max Fullness 15)}
+        \caption[Hashmap Cache Misses (Max Fullness 15)]{Hashmap Cache Misses (Max Fullness 15): T-CuckooKF has the best cache performance of the transactional hashmaps, followed by T-CuckooNA. We see that the difference between T-CuckooKF's cache performance and T-Chaining's cache performance is increasing as fullness increases.}
 		\label{fig:hm_cm15}
     \end{figure}
 
@@ -168,7 +168,7 @@ We conjecture that the T-CuckooKF has fewer cache misses than the T-CuckooNA bec
     \begin{minipage}{0.75\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/5HM10K:F34,I33,E33.png}}
 	\caption*{33F/33I/33E}
     \end{minipage}
-    \caption{Hashmap Performance: 10K Buckets, Maximum Fullness 5}
+    \caption[Hashmap Performance: 10K Buckets, Maximum Fullness 5]{Hashmap Performance: 10K Buckets, Maximum Fullness 5. The transactional cuckoo hashmaps outperform T-Chaining with a hashmap that fits in cache.}
     \label{fig:hm_5}
 \end{figure}
 
@@ -196,7 +196,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
     \begin{minipage}{0.7\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/kfHM10K:F34,I33,E33_fullness.png}}
     \caption*{T-CuckooKF}
     \end{minipage}
-    \caption{T-Chaining vs. T-CuckooKF: Performance as fullness increases (10K Buckets, 33F/33I/33E)}
+    \caption[T-Chaining vs. T-CuckooKF: Performance as fullness increases (10K Buckets, 33F/33I/33E)]{T-Chaining vs. T-CuckooKF: Performance as fullness increases (10K Buckets, 33F/33I/33E). The drop in performance of T-Chaining as fullness increases is more significant than the drop in performance of T-CuckooKF.}
     \label{fig:hm_fullness_33_1}
 \end{figure}
 
@@ -209,7 +209,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
     \begin{minipage}{0.7\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/kfHM1M:F34,I33,E33_fullness.png}}
     \caption*{T-CuckooKF}
     \end{minipage}
-    \caption{T-Chaining vs. T-CuckooKF: Performance as fullness increases (1M Buckets, 33F/33I/33E)}
+    \caption[T-Chaining vs. T-CuckooKF: Performance as fullness increases (1M Buckets, 33F/33I/33E)]{T-Chaining vs. T-CuckooKF: Performance as fullness increases (1M Buckets, 33F/33I/33E). The drop in performance of T-Chaining as fullness increases is more significant than the drop in performance of T-CuckooKF. T-Chaining's performance decreases by over 50\% with 1M buckets as fullness increases.}
     \label{fig:hm_fullness_33_2}
 \end{figure}
 
@@ -222,7 +222,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
    \begin{minipage}{0.75\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/15HM10K:F34,I33,E33.png}}
     \caption*{10K Buckets, Maximum Fullness 15}
     \end{minipage}
-	\caption{Hashmap Performance: 10K Buckets, 33F/33I/33E}
+	\caption[Hashmap Performance: 10K Buckets, 33F/33I/33E]{Hashmap Performance: 10K Buckets, 33F/33I/33E. T-Cuckoo outperforms T-Chaining by greater amounts as fullness increases to 15. Performance of T-Chaining drops by approximately 33\% from fullness 5 to fullness 15.}
     \label{fig:hm_33_1}
 \end{figure}
 
@@ -236,7 +236,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
     \caption*{1M Buckets, Maximum Fullness 15}
         \vspace{12pt}
     \end{minipage}
-	\caption{Hashmap Performance: 1M Buckets, 33F/33I/33E}
+	\caption[Hashmap Performance: 1M Buckets, 33F/33I/33E]{Hashmap Performance: 1M Buckets, 33F/33I/33E. T-Cuckoo outperforms T-Chaining by greater amounts as fullness increases to 15. Performance of T-Chaining drops by approximately 33\% from fullness 5 to fullness 15.}
     \label{fig:hm_33_3}
 \end{figure}
 
@@ -256,7 +256,7 @@ Our results from the 33\% finds/inserts/erases test therefore support our hypoth
     \begin{minipage}{0.7\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/kfHM10K:F34,I33,E33_fullness.png}}
     \caption*{T-CuckooKF}
     \end{minipage}
-    \caption{T-Chaining vs. T-CuckooKF: Performance as fullness increases (10K Buckets, 90F/5I/5E)}
+    \caption[T-Chaining vs. T-CuckooKF: Performance as fullness increases (10K Buckets, 90F/5I/5E)]{T-Chaining vs. T-CuckooKF: Performance as fullness increases (10K Buckets, 90F/5I/5E). The drop in performance of T-Chaining as fullness increases is more significant than the drop in performance of T-CuckooKF.}
     \label{fig:hm_fullness_90_1}
 \end{figure}
 
@@ -269,7 +269,7 @@ Our results from the 33\% finds/inserts/erases test therefore support our hypoth
     \begin{minipage}{0.70\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/kfHM1M:F34,I33,E33_fullness.png}}
     \caption*{T-CuckooKF}
     \end{minipage}
-    \caption{T-Chaining vs. T-CuckooKF: Performance as fullness increases (1M Buckets, 90F/5I/5E)}
+    \caption[T-Chaining vs. T-CuckooKF: Performance as fullness increases (1M Buckets, 90F/5I/5E)]{T-Chaining vs. T-CuckooKF: Performance as fullness increases (1M Buckets, 90F/5I/5E). The drop in performance of T-Chaining as fullness increases is more significant than the drop in performance of T-CuckooKF. T-Chaining's performance decreases by over 50\% with 1M buckets as fullness increases.}
     \label{fig:hm_fullness_90_2}
 \end{figure}
 
@@ -283,7 +283,7 @@ Our results from the 33\% finds/inserts/erases test therefore support our hypoth
     \caption*{10K Buckets, Maximum Fullness 15}
         \vspace{12pt}
     \end{minipage}
-	\caption{Hashmap Performance: 10K Buckets, 90F/5I/5E}
+	\caption[Hashmap Performance: 10K Buckets, 90F/5I/5E]{Hashmap Performance: 10K Buckets, 90F/5I/5E. T-Cuckoo outperforms T-Chaining by greater amounts as fullness increases to 15.}
     \label{fig:hm_90_1}
 \end{figure}
 
@@ -297,7 +297,7 @@ Our results from the 33\% finds/inserts/erases test therefore support our hypoth
     \caption*{1M Buckets, Maximum Fullness 15}
         \vspace{12pt}
     \end{minipage}
-	\caption{Hashmap Performance: 1M Buckets, 90F/5I/5E}
+	\caption[Hashmap Performance: 1M Buckets, 90F/5I/5E]{Hashmap Performance: 1M Buckets, 90F/5I/5E. T-Cuckoo outperforms T-Chaining by greater amounts as fullness increases to 15, achieving performance over $3\times$ that of T-Chaining at fullness 15.}
     \label{fig:hm_90_3}
 \end{figure}
 
