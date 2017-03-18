@@ -41,7 +41,7 @@ Although a non-allocating transactional cuckoo hashmap is more complex, we build
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{hashmap_finds}
+\includegraphics[width=0.85\textwidth]{hashmap_finds}
     \caption[Bucket Structure of Different Hashmaps]{This figure depicts two buckets in each type of hashmap. The static size of a bucket in each cuckoo hashmap is set to 3. Arrows represent pointers to allocated elements; contiguous memory is represented horizontally.}
 \label{fig:hashmap_buckets}
 \end{figure}
@@ -221,7 +221,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
    \begin{minipage}{0.75\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/15HM10K:F34,I33,E33.png}}
     \caption*{10K Buckets, Maximum Fullness 15}
     \end{minipage}
-	\caption[Hashmap Performance: 10K Buckets, 33F/33I/33E]{Hashmap Performance: 10K Buckets, 33F/33I/33E. T-Cuckoo outperforms T-Chaining by greater margins as fullness increases to 15. Performance of T-Chaining drops by approximately 33\% from fullness 5 to fullness 15.}
+	\caption[Hashmap Performance: 10K Buckets, 33F/33I/33E]{Hashmap Performance: 10K Buckets, 33F/33I/33E. T-CuckooKF outperforms T-Chaining by greater margins as fullness increases to 15. Performance of T-Chaining drops by approximately 33\% from fullness 5 to fullness 15.}
     \label{fig:hm_33_1}
 \end{figure}
 
@@ -235,7 +235,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
     \caption*{1M Buckets, Maximum Fullness 15}
         \vspace{12pt}
     \end{minipage}
-	\caption[Hashmap Performance: 1M Buckets, 33F/33I/33E]{Hashmap Performance: 1M Buckets, 33F/33I/33E. T-Cuckoo outperforms T-Chaining by greater margins as fullness increases to 15. Performance of T-Chaining drops by approximately 33\% as fullness increases from 5 to 15.}
+	\caption[Hashmap Performance: 1M Buckets, 33F/33I/33E]{Hashmap Performance: 1M Buckets, 33F/33I/33E. T-CuckooKF outperforms T-Chaining by greater margins as fullness increases to 15. Performance of T-Chaining drops by approximately 33\% as fullness increases from 5 to 15.}
     \label{fig:hm_33_3}
 \end{figure}
 
@@ -282,7 +282,7 @@ Our results from the 33\% finds/inserts/erases test therefore support our hypoth
     \caption*{10K Buckets, Maximum Fullness 15}
         \vspace{12pt}
     \end{minipage}
-	\caption[Hashmap Performance: 10K Buckets, 90F/5I/5E]{Hashmap Performance: 10K Buckets, 90F/5I/5E. T-Cuckoo outperforms T-Chaining by greater margins as fullness increases to 15.}
+	\caption[Hashmap Performance: 10K Buckets, 90F/5I/5E]{Hashmap Performance: 10K Buckets, 90F/5I/5E. T-CuckooKF outperforms T-Chaining by greater margins as fullness increases to 15.}
     \label{fig:hm_90_1}
 \end{figure}
 
@@ -296,7 +296,7 @@ Our results from the 33\% finds/inserts/erases test therefore support our hypoth
     \caption*{1M Buckets, Maximum Fullness 15}
         \vspace{12pt}
     \end{minipage}
-	\caption[Hashmap Performance: 1M Buckets, 90F/5I/5E]{Hashmap Performance: 1M Buckets, 90F/5I/5E. T-Cuckoo outperforms T-Chaining by greater margins as fullness increases to 15, achieving performance over $3\times$ that of T-Chaining at fullness 15.}
+	\caption[Hashmap Performance: 1M Buckets, 90F/5I/5E]{Hashmap Performance: 1M Buckets, 90F/5I/5E. T-CuckooKF outperforms T-Chaining by greater margins as fullness increases to 15, achieving performance over $3\times$ that of T-Chaining at fullness 15.}
     \label{fig:hm_90_3}
 \end{figure}
 
