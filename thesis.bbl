@@ -167,6 +167,11 @@ E.~Ladan-mozes and N.~Shavit.
 \newblock In {\em In Proceedings of the 18th International Symposium on
   Distributed Computing, LNCS 3274}, pages 117--131. Springer, 2004.
 
+\bibitem{lie}
+S.~Lie.
+\newblock {\em Hardware support for unbounded transactional memory}.
+\newblock PhD thesis, Citeseer, 2004.
+
 \bibitem{queue1}
 M.~M. Michael and M.~L. Scott.
 \newblock Simple, fast, and practical non-blocking and blocking concurrent
