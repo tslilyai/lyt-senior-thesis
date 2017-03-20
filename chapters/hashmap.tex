@@ -241,7 +241,7 @@ We note that this result is consistent with the claims made about cuckoo hashmap
 
 To evaluate this hypothesis, we analyze our results for maps with various number of buckets and compare their performance with a high maximum fullness of 5 to that with a maximum fullness of 15. We show the results for maps with 10K and 1M buckets (full results are in Appendix~\ref{app:hashmaps}).
 
-We first consider the results from the 33\% finds/inserts/erases test. Our results show that T-CuckooKF achieves performance $1.5$-$2\times$ that of T-Chaining as maximum fullness increases to 15, regardless of the number of buckets (Figures~\ref{fig:hm_33_1} and~\ref{fig:hm_33_3}). 
+We first consider the results from the 33\% finds/inserts/erases test. Our results show that T-CuckooKF achieves performance $1.5$--$2\times$ that of T-Chaining as maximum fullness increases to 15, regardless of the number of buckets (Figures~\ref{fig:hm_33_1} and~\ref{fig:hm_33_3}). 
 This is caused by a decrease in the performance of T-Chaining as fullness increases. Performance decreases by approximately 33\% when the hashmap has 10K buckets (Figure~\ref{fig:hm_fullness_33_1}), and by over 50\% when the hashmap has 1M buckets (Figure~\ref{fig:hm_fullness_33_2}). T-CuckooKF's performance, in contrast, decreases only slightly or remains essentially unchanged.
 
 Our results from the 33\% finds/inserts/erases test therefore support our hypothesis regardless of the number of buckets in the hashmap: the difference between T-CuckooKF's performance and T-Chaining's performance increases as fullness increases. 

@@ -26,25 +26,43 @@ To satisfy these invariants, transactional data structures must support \emph{re
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Naive Synchronization Queue Algorithms}
 
-STO provides two transactional FIFO queues that adhere to the interface exposed by the queue in the \texttt{C++} standard library. These transactional queue algorithms are designed with transactional correctness primarily in mind and concurrency as a secondary concern. 
+STO provides two transactional FIFO queues that support push and pop operations with the interface shown in Figure~\ref{fig:q_interface}. These transactional queue algorithms are designed with transactional correctness primarily in mind and concurrency as a secondary concern. 
+
+\begin{figure}[t]
+    \centering
+    \begin{lstlisting}
+        // adds value v onto the tail of the queue
+        // always succeeds
+        void push(const value_type& v); 
+       
+        // returns true if successfully removes a value
+        // from the head of the queue
+        bool pop();                     
+    \end{lstlisting}
+    \caption{STO Queue Operations Interface}
+    \label{fig:q_interface}
+\end{figure}
 
 \subsection{T-QueueO}
-The T-QueueO is the first implementation of the transactional queue data structure using STO's framework. It implements a circular, fixed-size, transactional queue.
+The T-QueueO is the first implementation of the transactional queue data structure using STO's framework. It implements a bounded-length transactional queue using a circular buffer.
 
 The queue supports transactional operations push and pop and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue while executing their transactions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. The T-QueueO allows checks on the queues to be done via two versions. The head version, which tracks the state of the head, is used to check if another thread has popped from the queue, and the tail version, which tracks the state of the tail, is used to check if another thread has pushed onto the queue.
 
-A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tail version acts as a lock to prevent any other thread from pushing onto the queue. After locking the tail version, the thread pushes all elements on the \texttt{write\_list} onto the queue and increments the tail version.
-If a transaction performs only pushes, then the transaction will always commit: a push does not observe any property of the queue, such as the value at the head of the queue or the emptiness of the queue. 
+A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tail version acts as a lock to prevent any other thread from pushing onto the queue. After locking the tail version, the thread pushes all elements on the \texttt{write\_list} onto the queue and increments the tail version. If the queue is full, the queue will fail.
+If a transaction performs only pushes, then the transaction will always commit unless the bounded size overflows: a push does not observe any property of the queue, such as the value at the head of the queue or the emptiness of the queue. 
 
 A transactional pop first checks if the queue will be empty by observing the current state of the queue and by taking into account how many elements the current transaction is already intending to pop. If the queue will not be empty, the pop returns \texttt{true} and the thread must ensure at commit time that the head of the queue has not been modified by another thread. This is done by comparing the value of the head version at the time of the pop with the value at commit time. 
 
-If the queue will be empty, the thread checks if it should perform \emph{read-my-writes}: if the thread intends to push a value onto the queue in this transaction, then the thread removes the value from its \texttt{write\_list} and returns \texttt{true}. Otherwise, the return value of the pop is \texttt{false}. At commit time, the thread must check that the queue is still empty by validating the value of the tail version, which increments each time an item is added to the queue.
+If the queue will be empty, the thread checks for earlier pushes by the same transaction: if the thread intends to push a value onto the queue in this transaction, then the thread removes the value from its \texttt{write\_list} and returns \texttt{true}. Otherwise, the return value of the pop is \texttt{false}. At commit time, the thread must check that the queue is still empty by validating the value of the tail version, which increments each time an item is added to the queue.
 When a transaction that performs one or more pops commits, it locks the head version (ensuring atomic access to the head of the queue), removes a value from the head of the queue for every successful transactional pop call, and increments the head version.
+
+We note that this algorithm can be potentially improved by using a predicate on the emptiness of the queue, rather than the head version, to check for changes in queue emptiness in the specific case in which a pop encounters an empty queue.
+\lyt{todo}
 
 %The design is summarized in Table \ref{table:sto1}.
 
 \subsection{T-QueueP}
-The T-QueueP is also a circular, fixed-size, transactional queue with operations push and pop. The T-QueueP algorithm is a hybrid design integrating the T-QueueO algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Libraries~\cite{tdsl}. We hypothesize that T-QueueP will perform better than T-QueueO, based on the TDSL benchmarks results showing that the TDSL pessimistic transactional queue achieves better performance than T-QueueO. 
+The T-QueueP is also a bounded-length transactional queue with a circular buffer supporting operations push and pop. The T-QueueP algorithm is a hybrid design integrating the T-QueueO algorithm with another transactional algorithm: pessimistic locking. This takes inspiration from the transactional queue from the Transactional Data Structures Libraries~\cite{tdsl}. We hypothesize that T-QueueP will perform better than T-QueueO, based on the TDSL benchmarks results showing that the TDSL pessimistic transactional queue achieves better performance than T-QueueO. 
 
 Adding pessimistic locking is done by locking the queue when any pop (a naturally contentious operation) is invoked. The queue is then unlocked only after the transaction is complete. This ensures that no thread will execute a pop that will invalidate another thread's transactional pop. However, a push in the T-QueueP follow the same protocol as a push in the T-QueueO. Because execution of all pushes is lazy and delayed until commit time, a transactional push can execute without invalidating another transaction. A push therefore does not acquire a lock at execution time, but rather only needs to lock while installing all the transaction's pushes at commit time. 
 
@@ -82,14 +100,18 @@ This means that we must consider the order in which threads' requests are applie
 
 Detecting these invalid orderings requires two important changes to flat combining (we describe the rationale for these changes in Chapter~\ref{commutativity}): 
 \begin{enumerate}
-\item A push cannot be applied to the queue during a transaction's execution, and must instead be performed when a transaction commits.
+    \item A push cannot be applied to the queue during a transaction's execution, and must instead be performed when a transaction commits. A push still only needs to make one flat combining call, because pushes do not need to access the queue until commit time: a push returns no observable value to the caller.
 \item An uncommitted pop in a thread's transaction must be unobservable by any other thread. This can be implemented in two ways:  
     \begin{enumerate}
         \item The algorithm can delay a transaction's pops until commit time. This then means the algorithm must track which values in the queue are going to be popped within the transaction. This prevents duplicate pops and detects if the queue will be ``empty'' by tracking how many values will be popped off the queue during this transaction. If another thread performs a pop or push during the transaction's lifetime, this can cause the transaction to abort: the ``empty'' status of the queue at commit time may now be inconsistent with what the transaction saw during execution. 
+        A pop therefore accesses the queue twice, once at execution time to see if the pop can succeed, and again to check and commit the pop at commit time. 
         \item The algorithm does not execute flat combining requests from other threads until the transaction has committed or aborted (a pessimistic approach). Because only this thread can execute commands, pops can be performed eagerly at execution time (and restored to the head of the queue if the transaction aborts). This can be implemented either by aborting the other threads' transactions or by forcing the other threads to block or spin.
+        A pop therefore accesses the queue twice, once at execution time to execute the pop, and again to release the queue after committing so that other threads can execute flat combining requests.
     \end{enumerate}
 
+        Because both approaches for a pop access the queue twice, a pop now requires two flat combining requests instead of the one flat combining request required by the non-transactional flat combining queue.
         We choose to implement approach (a) based on microbenchmarks that show that approach (b) is both more complicated and less performant.
+
 \end{enumerate}
 
 
@@ -131,7 +153,7 @@ If the value is neither marked by another thread nor unmarked, then the value mu
 \label{fig:fcqueue_deq}
 \end{figure}
 
-If the queue is empty, or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time. If the calling thread has previously performed a push in the same transaction, the transaction performs \emph{read-my-writes} and removes the head of the \texttt{write\_list}; in this case, the transactional pop returns true. Otherwise, the pop returns false.
+If the queue is empty, or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time. If the calling thread has previously performed a push in the same transaction, the transaction removes the head of the \texttt{write\_list}; in this case, the transactional pop returns true. Otherwise, the pop returns false.
 
 The \texttt{<EMPTY?, thread\_id>} request is posted at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If the thread receives \texttt{[<EMPTY?, thread\_id> == true]}, then the queue state is currently empty.
 The thread therefore knows that no other thread has increased the size of the queue since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}. The transaction can safely commit. If the thread instead receives \texttt{[<EMPTY?, thread\_id> == false]}, then it knows the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
