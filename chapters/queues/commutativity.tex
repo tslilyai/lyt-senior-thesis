@@ -10,7 +10,7 @@ We introduce some basic terminology (as defined by Schwarz~\cite{schwarz} and We
 
 \subsection{Histories}
 \begin{defn}
-    A \emph{history} is a sequence of \texttt{(transaction, operation, result)} tuples that represent an interleaving of operations of all committed transactions. Knowledge of both the history and initial conditions of a data structure leads to complete knowledge of the (high-level) end state of the structure.
+    A \emph{history} is a sequence of \texttt{(transaction, operation, result)} tuples that represent an interleaving of operations of all committed transactions. A history also includes \texttt{(transaction, COMMIT)} tuples that represent the time of the transaction's commit. Knowledge of both the history and initial conditions of a data structure leads to complete knowledge of the (high-level) end state of the structure.
 
 \begin{eg}
     \singlespacing   
@@ -22,6 +22,8 @@ We introduce some basic terminology (as defined by Schwarz~\cite{schwarz} and We
     (T1, Q.pop(), true)
     (T2, Q.push(a), ())
     (T1, Q.pop(), true)
+    (T1, COMMIT)
+    (T2, COMMIT)
     // Final State: Q.size() == 0 
     \end{lstlisting}
     \doublespacing
@@ -38,7 +40,7 @@ We introduce some basic terminology (as defined by Schwarz~\cite{schwarz} and We
 \end{defn}
 
 \begin{defn}
-    A history $H$ is \emph{serial} if all tuples are ordered as if all transactions were executed in a serial order.
+    A history $H$ is \emph{serial} if all tuples are grouped by transaction: if $i\le j\le k$ and $H_i$ and $H_k$ are from the same transaction, then $H_j$ is also from that transaction. This means the tuples form a serial transaction order.
 \end{defn}
 \begin{defn}
     A history $H$ is \emph{serializable} if there exists a serial history $H'$ s.t. $H'$ is consistent with $H$.
@@ -46,7 +48,7 @@ We introduce some basic terminology (as defined by Schwarz~\cite{schwarz} and We
 \end{defn}
 
 \begin{eg}
-$H$ is a serializable history whose corresponding serial execution is $H'$. $H''$ represents a serial history but is inconsistent with $H$.
+    $H$ is a serializable history whose corresponding serial execution is $H'$. $H''$ represents a serial history, but is inconsistent with $H$ because its pop operations return different results.
 \begin{figure}[H]
 \singlespacing   
    \begin{tabular}{c|c|c}
@@ -58,6 +60,8 @@ H & H' & H''\\
 (T1, Q.pop(), true)
 (T2, Q.push(a), ())
 (T1, Q.pop(), true)
+(T1, COMMIT)
+(T2, COMMIT)
 \end{lstlisting} & 
 \begin{lstlisting}
 // Q.size() == 0 
@@ -65,6 +69,8 @@ H & H' & H''\\
 (T2, Q.push(a), ())
 (T1, Q.pop(), true)
 (T1, Q.pop(), true)
+(T1, COMMIT)
+(T2, COMMIT)
 \end{lstlisting} &
 \begin{lstlisting}
 // Q.size() == 0 
@@ -72,6 +78,8 @@ H & H' & H''\\
 (T1, Q.pop(), false)
 (T2, Q.push(a), ())
 (T2, Q.push(a), ()) 
+(T1, COMMIT)
+(T2, COMMIT)
 \end{lstlisting}
 \end{tabular}
 \end{figure}
@@ -89,6 +97,7 @@ A history is \emph{linearizable} if all transactions appears to occur instantane
 $H$ is a serializable, but not linearizable history. This is because $T2$ should have observed the pushes committed by $T1$. We can find a serial ordering of $H$, shown in $H'$, but $H'$ violates the rule that the serial order of transactions corresponds to the real time order of the transactions' commits.
     
 \begin{figure}[H]
+    \centering
 \singlespacing   
     \begin{tabular}{c|c}
 H & H'\\
@@ -97,15 +106,19 @@ H & H'\\
 // Q empty                          
 (T1, Q.push(a), ())                
 (T1, Q.push(a), ())               
-(T1, Q.pop(), true)  // T1 commits
-(T2, Q.pop(), false) // T2 commits
+(T1, Q.pop(), true)
+(T1, COMMIT)
+(T2, Q.pop(), false)
+(T2, COMMIT)
 \end{lstlisting} & 
 \begin{lstlisting}
 // Q empty
-(T2, Q.pop(), false) // T2 commits
+(T2, Q.pop(), false)
+(T2, COMMIT)
 (T1, Q.push(a), ())                       
 (T1, Q.push(a), ())
-(T1, Q.pop(), true)// T1 commits
+(T1, Q.pop(), true)
+(T1, COMMIT)
 \end{lstlisting}
     \end{tabular}
 \end{figure}
@@ -133,7 +146,7 @@ Note that all operations can be classified as sets of reads and/or writes (as we
 \subsection{Commutativity and Serializability Results}
 
 These results are well-known in the literature about transactional data structure scalability; we repeat them here for reference.
-A history $H$ is serializable if there are no cycles in \emph{R-W}, \emph{W-R}, or \emph{W-W} dependencies between any two transactions in the dependency graph (see Schwarz's proof~\cite{schwarz}). This implies that when two operations commute, exchanging the order in which they occur in the history does not affect the serializability of the history. From this, it follows that the number of valid histories of a transactional data structure is dependent on the commutativity of its operations.
+A history $H$ is serializable if there are no \emph{cyclic dependencies}---cycles consisting of some number of \emph{R-W}, \emph{W-R}, or \emph{W-W} dependency edges between any two transactions in the dependency graph (see Schwarz's proof~\cite{schwarz}). This implies that when two operations commute, exchanging the order in which they occur in the history does not affect the serializability of the history. From this, it follows that the number of valid histories of a transactional data structure is dependent on the commutativity of its operations.
 
 These results imply that commutativity of a data structure's operations determines the data structure's scalability. In the context of a transactional data structure, a greater number of valid histories leads to lower contention between transactions and greater scalability. 
 
@@ -149,87 +162,128 @@ For generality, we reduce each queue operation to a read or write of a particula
     pop & \texttt{empty?} & \texttt{head}, \texttt{empty?}\\
     push & & \texttt{tail}, \texttt{empty?}\\
 \end{tabular}
-    \caption{Objects read or written by queue operations}
+    \caption[Objects read or written by queue operations]{Objects read or written by queue operations. A push or pop only performs a write of \texttt{empty?} if it changes the empty status of the queue.}
     \label{table:qrw}
 \end{table}
 
-\subsection{Concurrent Non-Transactional Queues}
+We begin our discussion by examining the dependencies generated by singleton transactions (Table~\ref{tab:queuesimpledeps}) and the cyclic dependencies generated by multi-operation transactions that cause invalid histories (Table~\ref{tab:interleavings}). 
+Dependencies generated by singleton transactions indicate which operations need to be synchronized for concurrent correctness: the presence of a non-$R$-$R$ dependency between two operations (i.e., two singleton transactions) indicates that the two operations need to be synchronized for correctness in a concurrent, but non-transactional, setting.
+In a transactional setting, we encounter cyclic dependencies that cause invalid histories. To prevent these dependency cycles, a transactional queue algorithm can implement one of several methods, which we describe in detail.
+We then demonstrate that, while the flat combining algorithm achieves high performance when correctly synchronizing singleton transactions, integrating the flat combining algorithm with one of the methods to deal with cyclic dependencies greatly reduces its effectiveness.
 
-In the following discussion, we reason about the commutativity and scalability of a concurrent, non-transactional queue using notions of transactional dependencies. This requires that the concurrent, non-transactional queue satisfies the guarantees of a transactional data structure performing singleton transactions.
-We note that, in general, the guarantees of concurrent, non-transactional queues are \emph{nearly}, but not quite equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable: the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned) may not be visible to an operation that is performed after $P$ returns.
+\subsection{Operation Dependencies of Concurrent, Non-Transactional Queues}
 
-The flat combining technique provides serializable, atomic, \emph{and} linearizable singleton transactions~\cite{flatcombining}. We can therefore reason about the commutativity of a concurrent, non-transactional flat combining queue using notions of transactional dependencies.
+We use the dependencies of singleton transactions to determine when two operations must be synchronized in a concurrent, non-transactional queue. This requires that the concurrent, non-transactional queue satisfies the guarantees of a transactional data structure performing singleton transactions.
+The flat combining technique provides serializable, atomic, and linearizable singleton transactions~\cite{flatcombining}. We can therefore use transactional dependencies of singleton transactions to reason about when the concurrent, non-transactional flat combining queue must add mechanisms to ensure correct synchronization.\footnote{We note that, in general, the guarantees of concurrent, non-transactional queues are almost, but not exactly, equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable: the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned) may not be visible to an operation that is performed after $P$ returns. An example of this is the Stone concurrent queue~\cite{stone}, in which a slow enqueue may cause a subsequent dequeue to observe an empty queue.}
 
-We begin by defining the dependency relations between single operations (Table~\ref{table:queuesimpledeps}). A concurrent, non-transactional queue cannot have any cyclical dependencies, since such dependencies necessarily require that there exists a transaction with more than one operation. Therefore, synchronization is only necessary to ensure correctness when two threads attempt to write (\emph{W-W}) or when simultaneously one thread writes and another reads (\emph{W-R} or \emph{R-W}) the same object: the main performance bottleneck is concurrent access synchronization. As we have shown, the flat combining approach works particularly well in a highly-concurrent setting to minimize the overhead of this synchronization cost.
+The dependency relations between singleton transactions are shown in Table~\ref{tab:queuesimpledeps}. 
+A concurrent, non-transactional queue cannot have any cyclic dependencies, since such dependencies require that there a transaction can have more than one operation. Therefore, all histories are strictly serializable. Synchronization is only necessary to ensure correctness when two threads attempt to write (\emph{W-W}) the same object, or when one thread writes and another thread simultaneously reads (\emph{W-R} or \emph{R-W}) the same object; this means that synchronizing concurrent access creates the main performance bottleneck. As we have shown, the flat combining approach works particularly well in a highly-concurrent setting to minimize the overhead of this synchronization cost.
 
-\begin{table}[t]
+\begin{table}[H]
+    \singlespace
     \centering
-\begin{tabular}{c||c|c|c|c}
-    Object & Pop-Pop & Pop-Push & Push-Pop & Push-Push\\
+    \begin{tabular}{|l|c|}
+        \hline
+        \multicolumn{1}{|c|}{Interleaving} & Generated Dependencies\\
+        \hline
+
+\begin{lstlisting}
+(T1, Q.pop(), true/false) 
+(T2, Q.pop(), true/false)
+\end{lstlisting} &
+W-W, R-W, W-R, R-R
+       \\ 
     \hline
-    head & W-W & & & \\
-    tail & & & & W-W\\
-    empty? & W$^e$-R & R-W$^e$ & W$^e$-R, W$^e$-W$^e$ & \\
+\begin{lstlisting}
+(T1, Q.push(a), ())
+(T2, Q.push(a), ())
+\end{lstlisting} &
+W-W
+\\
+\hline
+\begin{lstlisting}
+(T1, Q.pop(), true/false) 
+(T2, Q.push(a), ()) 
+\end{lstlisting} &
+R-W, W-W
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, Q.push(a), ())
+(T2, Q.pop(), true)
+\end{lstlisting} &
+W-R, W-W
+\\
+    \hline
 \end{tabular}
-    \caption*{$X$-$Y$ = thread 1 performs operation $X$, thread 2 performs operation $Y$.\\$X^e$ = the operation X modifies the empty status of the queue.\\R-R relations are not shown.}
-    \caption{Dependencies of pairs of queue operations}
-    \label{table:queuesimpledeps}
+    \caption[Dependencies generated by singleton transactions that require synchronization.]{Dependencies generated by singleton transactions that require synchronization. A write of \texttt{empty?} occurs only when the operation changes the empty status of the queue; dependencies generated by these writes are included. R-R dependencies are omitted because they do not require synchronization.
+}
+    \label{tab:queuesimpledeps}
 \end{table}
 
-\subsection{Transactional Queues}
+\subsection{Operation Dependencies of Transactional Queues}
 
 \begin{table}
     \centering
-    \begin{tabular}{|l|}
+    \begin{tabular}{|c|l|c|}
         \hline
+\multicolumn{2}{|c|}{Interleaving} & Generated Dependencies\\
+        \hline
+1. & 
 \begin{lstlisting}
-1) // Q.size() > 1 
-   (T1, Q.pop(), true)  
-   (T2, Q.pop(), true)       // W-W
-   (T1, Q.pop(), true/false) // W-W
-\end{lstlisting}
+(T1, Q.pop(), true/false)  
+(T2, Q.pop(), true/false)       
+(T1, Q.pop(), true/false)
+\end{lstlisting} &
+W-W-W, R-W-W, W-R-W, R-W-R, W-W-R 
        \\ 
     \hline
+        2. & 
 \begin{lstlisting}
-2) // Q.size() == 1  
-   (T1, Q.pop(), true) // Q empty  
-   (T2, Q.push(a), ()) // R-W
-   (T1, Q.pop(), true) // W-R
-    \end{lstlisting}
+// Q.size() == 1  
+(T1, Q.pop(), true) // Q empty  
+(T2, Q.push(a), ())
+(T1, Q.pop(), true)
+\end{lstlisting} &
+R-W-R
        \\ 
     \hline
+        3. & 
 \begin{lstlisting}
-3) // Q.size() == 1  
-   (T1, Q.pop(), true)  // Q empty  
-   (T2, Q.pop(), false) // W-W     
-   (T1, Q.push(a), ())  // R-W     
-   \end{lstlisting} 
+// Q.size() == 1  
+(T1, Q.pop(), true)  // Q empty  
+(T2, Q.pop(), false)
+(T1, Q.push(a), ())
+\end{lstlisting} &
+W-W-W, W-R-W
 \\
 \hline
+        4. &
 \begin{lstlisting}
-4) // Q.size() >= 0 
-   (T1, Q.push(a), ()) 
-   (T2, Q.push(a), ()) // W-W
-   (T1, Q.push(a), ()) // W-W
-\end{lstlisting}
+(T1, Q.push(a), ()) 
+(T2, Q.push(a), ())
+(T1, Q.push(a), ())
+\end{lstlisting} &
+W-W-W
 \\
 \hline
+        5. &
 \begin{lstlisting}
-5) // Q.size() == 0 
-   (T1, Q.push(a), ())       
-   (T2, Q.pop(), true)  // W-R, Q empty
-   (T1, Q.pop(), false) // W-W
-\end{lstlisting}
+// Q.size() == 0 
+(T1, Q.push(a), ())       
+(T2, Q.pop(), true)  // Q empty
+(T1, Q.pop(), false) 
+\end{lstlisting} &
+W-R-W, W-W-W
 \\
     \hline
 \end{tabular}
-    \caption*{Interleavings that create R-R dependencies or no dependencies are omitted.}
-    \caption{Operation interleavings generating dependency cycles.}
+    \caption[Dependency cycles generated by multi-operation transactions that cause invalid histories.]{Dependency cycles generated by multi-operation transactions that cause invalid histories. A write of \texttt{empty?} occurs only when the operation changes the empty status of the queue. We show only those specific scenarios that generate writes and therefore create problematic dependencies cycles. Cycles that contain R-R dependencies are omitted.}
     \label{tab:interleavings}
 \end{table}
 
-Cyclical dependencies can occur within a fully transactional queue, thus reducing the number of valid histories. The possible interleavings that generate cyclical dependencies are shown in Table~\ref{tab:interleavings}. Nearly all of the interleavings that result in cyclical dependencies, and therefore invalid histories, occur when the queue becomes empty. 
-We only see cyclical dependencies in a nonempty queue if both transactions push or both transactions pop (a \emph{W-W} dependency).
+Cyclic dependencies can occur in a transactional queue supporting multi-operation transactions, thus reducing the number of valid histories. The possible interleavings that generate cyclic dependencies that cause invalid histories are shown in Table~\ref{tab:interleavings}. Nearly all of the interleavings that result in cyclic dependencies, and therefore invalid histories, occur when the queue becomes empty. 
+We only see cyclic dependencies that cause invalid histories in a nonempty queue if both transactions push or both transactions pop (a \emph{W-W} dependency).
 
 A transactional queue prevents these invalid interleavings from occurring through delayed push operation execution and a pessimistic or optimistic approach when encountering an empty queue.
 

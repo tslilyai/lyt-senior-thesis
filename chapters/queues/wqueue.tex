@@ -1,6 +1,6 @@
 \section{The Weakly Transactional Queue} 
 
-The Weakly Transactional Queue (WT-FCQueue) demonstrates how the transactional flat combining technique's performance depends upon the number of histories that the transactional specification deems invalid. This queue implements a weaker transactional specification, which meets all the invariants of a concurrent queue, but provides the following weakly transactional guarantees instead of the transactional ones listed earlier in Chapter~\ref{queue}:
+The Weakly Transactional Queue (WT-FCQueue) demonstrates how the transactional flat combining technique's performance depends upon the number of histories that the transactional specification deems invalid. This queue implements a weaker transactional specification, which meets all the invariants of a \emph{concurrent} queue, but provides the following weakly transactional guarantees instead of the transactional ones listed earlier in Chapter~\ref{queue}:
 \begin{itemize}
     \item Instead of the normal pops, the queue executes \emph{LazyPops} with the following specification:
         \begin{itemize}
