@@ -28,6 +28,12 @@ Here we present the concurrent and transactional hashmap algorithms we implement
     \label{fig:hm_interface}
 \end{figure}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{hashmap_finds}
+    \caption[Bucket Structure of Different Hashmaps]{This figure depicts two buckets in each type of hashmap. The static size of a bucket in each cuckoo hashmap is set to 3. Arrows represent pointers to allocated elements; contiguous memory is represented horizontally.}
+\label{fig:hashmap_buckets}
+\end{figure}
 
 \subsection{Transactional Chaining Hashmap}
 The transactional chaining hashmap is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list, shown in Figure~\ref{fig:hashmap_buckets} (a). Thus, the worst case time complexity for a lookup, insert, or delete is $O(n)$. Inserts require allocating an element corresponding to the inserted key-value pair to insert into the bucket. Each bucket is associated with a \emph{bucket version} that increments upon any committed addition or removal from the bucket. The bucket version is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{element version} that tracks if the value to the element has been modified or if the element has been removed. Each element version is tied to the inserted element's memory address.
@@ -56,6 +62,9 @@ However, if the shuffling encounters a bucket cycle, the hashmap raises an \text
 Because the buckets are statically sized, elements are contained in fixed-size key and value arrays and therefore do not require extra allocations. The bucket structure is shown in Figure~\ref{fig:hashmap_buckets} (b). 
 
 \subsection{Transactional Cuckoo Hashmap}
+
+We hypothesize that, unlike the flat combining algorithm, the key optimizations of the cuckoo hashing algorithm---better cache usage at a high fullness and constant time (or amortized constant time) operations---are not crippled by integrating the algorithm into a transactional setting. This is because the modifications necessary to support transactions do not interfere with these optimizations taken by cuckoo hashing. We investigate this further in our evaluation (Section~\ref{hm_eval}) and hashmap dependencies discussion (Section~\ref{hm_deps}).
+
 The transactional cuckoo hashmap comes in three flavors: two that allocate an element per insertion, and one that does not perform any allocations. All cuckoo hashmaps instrument the non-transactional cuckoo hashmap with STO calls that provide transactional guarantees.
 Both allocating and non-allocating versions use the same synchronization algorithm: like the chaining hashmap, each bucket has a \emph{bucket version} and lock, and each element has an \emph{element version}. Because insertions can occur due to cuckoo shuffling as well as an external insertion call, the bucket version increments only when an element \emph{not already contained in the map} is inserted into the bucket (i.e., elements inserted via a call to insert and not via cuckoo shuffling). Elements are inserted at execution time with a \emph{phantom} flag that is then erased at commit time, and erasures are delayed until commit time.
 
@@ -65,17 +74,11 @@ The non-allocating transactional cuckoo hashmap (T-CuckooNA) consists of buckets
 
 Although a non-allocating transactional cuckoo hashmap is more complex, we build it to improve cache performance during lookups: the algorithm does not need to follow any pointers. Nonetheless, we may not see a great improvement in cache usage because we now must execute approximately double the number of lookups: each find requires performing two lookups (one during execution, and another during commit to check if the element version is still valid).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.9\textwidth]{hashmap_finds}
-    \caption[Bucket Structure of Different Hashmaps]{This figure depicts two buckets in each type of hashmap. The static size of a bucket in each cuckoo hashmap is set to 3. Arrows represent pointers to allocated elements; contiguous memory is represented horizontally.}
-\label{fig:hashmap_buckets}
-\end{figure}
-
 
 \section{Evaluation}
+\label{hm_eval}
 
-As with the queue, we evaluate all hashmaps on a set of microbenchmarks to determine their scalability and performance. We hypothesize that, unlike the flat combining algorithm, the key optimizations of the cuckoo hashing algorithm---better cache usage at a high fullness and constant time (or amortized constant time) operations---are not crippled by integrating the algorithm into a transactional setting.
+As with the queue, we evaluate all hashmaps on a set of microbenchmarks to determine their scalability and performance. We aim to provide evidence for our hypothesis that, unlike the flat combining queue, the cuckoo hashmap will retain its scalability and behavior even in a transactional setting.
 
 \subsection{Microbenchmarks}
 All experiments are run on the same machine as the queue experiments (with 100GB DRAM, two 6-core Intel Xeon X5690 processors with hyperthreading clocked at 3.47GHz and a 64-bit Linux 3.2.0 operating system). All benchmarks and STO data structures are compiled with \texttt{g++-5.3}. In all performance graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
@@ -268,7 +271,6 @@ We note that this result is consistent with the claims made about cuckoo hashmap
     \label{fig:hm_90_3}
 \end{figure}
 
-
 To evaluate this hypothesis, we analyze our results for maps with various number of buckets and compare their performance with a high maximum fullness of 5 to that with a maximum fullness of 15. We show the results for maps with 1M buckets (full results are in Appendix~\ref{app:hashmaps}).
 
 We first consider the results from the 33\% finds/inserts/erases test. Our results show that T-CuckooKF achieves performance $1.5$--$2\times$ that of T-Chaining as maximum fullness increases to 15, regardless of the number of buckets (Figure~\ref{fig:hm_33_3}). 
@@ -323,6 +325,133 @@ We see that cache performance affects overall performance more than the abort ra
 \noindent\fbox{\begin{minipage}{\textwidth}
     \textbf{SUPPORTED}: The number of cache misses is strongly correlated with performance, but abort rate does not heavily affect performance.
 \end{minipage}}
+
+\subsection{Hashmap Dependencies}
+\label{hm_deps}
+\lyt{TODO THIS WHOLE SECTION}
+
+Again, for generality, we reduce each hashmap operation to a read or write of a particular semantic object: the 
+
+
+. We summarize the reads and writes of our operation specifications in Table~\ref{table:hmrw}.
+
+\begin{table}[t]
+\centering
+\begin{tabular}{c||c|c}
+    Operation & Read & Write\\
+    \hline
+    find & \texttt{empty?} & \texttt{head}, \texttt{empty?}\\
+    insert & & \texttt{tail}, \texttt{empty?}\\
+    empty & & \texttt{tail}, \texttt{empty?}\\
+\end{tabular}
+    \caption[Objects read or written by hashmap operations]{Objects read or written by hashmap operations.}
+    \label{table:hmrw}
+\end{table}
+
+We begin our discussion by examining the dependencies generated by singleton transactions (Table~\ref{tab:queuesimpledeps}) and the cyclic dependencies generated by multi-operation transactions that cause invalid histories (Table~\ref{tab:interleavings}). 
+Dependencies generated by singleton transactions indicate which operations need to be synchronized for concurrent correctness: the presence of a non-$R$-$R$ dependency between two operations (i.e., two singleton transactions) indicates that the two operations need to be synchronized for correctness in a concurrent, but non-transactional, setting.
+In a transactional setting, we encounter cyclic dependencies that cause invalid histories. To prevent these dependency cycles, a transactional queue algorithm can implement one of several methods, which we describe in detail.
+We then demonstrate that, while the flat combining algorithm achieves high performance when correctly synchronizing singleton transactions, integrating the flat combining algorithm with any of the methods to deal with cyclic dependencies greatly reduces its effectiveness.
+
+\subsection{Operation Dependencies of Concurrent, Non-Transactional Queues}
+
+We use the dependencies of singleton transactions to determine when two operations must be synchronized in a concurrent, non-transactional queue. This requires that the concurrent, non-transactional queue satisfies the guarantees of a transactional data structure performing singleton transactions.
+The flat combining technique provides serializable, atomic, and linearizable singleton transactions~\cite{flatcombining}. We can therefore use transactional dependencies of singleton transactions to reason about when the concurrent, non-transactional flat combining queue must add mechanisms to ensure correct synchronization.\footnote{We note that, in general, the guarantees of concurrent, non-transactional queues are almost, but not exactly, equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable: the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned) may not be visible to an operation that is performed after $P$ returns. An example of this is the Stone concurrent queue~\cite{stone}, in which a slow enqueue may cause a subsequent dequeue to observe an empty queue.}
+
+The dependency relations between singleton transactions are shown in Table~\ref{tab:queuesimpledeps}. 
+A concurrent, non-transactional queue cannot have any cyclic dependencies, since such dependencies require that there a transaction can have more than one operation. Therefore, all histories are strictly serializable. Synchronization is only necessary to ensure correctness when two threads attempt to write (\emph{W-W}) the same object, or when one thread writes and another thread simultaneously reads (\emph{W-R} or \emph{R-W}) the same object; this means that synchronizing concurrent access creates the main performance bottleneck. As we have shown, the flat combining approach works particularly well in a highly-concurrent setting to minimize the overhead of this synchronization cost.
+
+\begin{table}[H]
+    \singlespace
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \multicolumn{1}{|c|}{Interleaving} & Generated Dependencies\\
+        \hline
+
+\begin{lstlisting}
+\end{lstlisting} &
+W-W, R-W, W-R, R-R
+       \\ 
+    \hline
+\end{tabular}
+    \caption[Dependencies generated by singleton transactions that require synchronization.]{Dependencies generated by singleton transactions that require synchronization. A W-W dependency indicates that both transactions wrote the same object; a R-W dependency indicates that T1 read and later T2 wrote the same object; etc.
+
+    A write of \texttt{empty?} occurs only when the operation changes the empty status of the queue; dependencies generated by these writes are included. R-R dependencies are omitted because they do not require synchronization.
+}
+    \label{tab:queuesimpledeps}
+\end{table}
+
+\subsection{Dependency Cycles in Transactional Queues}
+
+\begin{table}
+    \centering
+    \begin{tabular}{|c|l|c|}
+        \hline
+\multicolumn{2}{|c|}{Interleaving} & Generated Dependency Cycle\\
+        \hline
+1. & 
+\begin{lstlisting}
+(T1, Q.pop(), true/false)  
+(T2, Q.pop(), true/false)       
+(T1, Q.pop(), true/false)
+\end{lstlisting} &
+W-W-W, R-W-W, W-R-W, R-W-R, W-W-R 
+       \\ 
+    \hline
+        2. & 
+\begin{lstlisting}
+// Q.size() == 1  
+(T1, Q.pop(), true) // Q empty  
+(T2, Q.push(a), ())
+(T1, Q.pop(), true)
+\end{lstlisting} &
+R-W-R
+       \\ 
+    \hline
+        3. & 
+\begin{lstlisting}
+// Q.size() == 1  
+(T1, Q.pop(), true)  // Q empty  
+(T2, Q.pop(), false)
+(T1, Q.push(a), ())
+\end{lstlisting} &
+W-W-W, W-R-W
+\\
+\hline
+        4. &
+\begin{lstlisting}
+(T1, Q.push(a), ()) 
+(T2, Q.push(a), ())
+(T1, Q.push(a), ())
+\end{lstlisting} &
+W-W-W
+\\
+\hline
+        5. &
+\begin{lstlisting}
+// Q.size() == 0 
+(T1, Q.push(a), ())       
+(T2, Q.pop(), true)  // Q empty
+(T1, Q.pop(), false) 
+\end{lstlisting} &
+W-R-W, W-W-W
+\\
+    \hline
+\end{tabular}
+    \caption[Dependency cycles generated by multi-operation transactions that cause invalid histories.]{Dependency cycles generated by multi-operation transactions that cause invalid histories. 
+    A W-W-W cycle indicates that T1 first wrote to an object $o$, then T2 wrote to $o$, and then T1 again wrote $o$; A R-W-W cycle indicates that T1 first read an object $o$, then T2 wrote to $o$, and then T1 wrote to $o$; etc.
+    
+    A write of \texttt{empty?} occurs only when the operation changes the empty status of the queue. We show only those specific scenarios that encounter empty queues and therefore generate writes, creating problematic dependencies cycles. Cycles that contain R-R dependencies are omitted.}
+    \label{tab:interleavings}
+\end{table}
+
+Cyclic dependencies can occur in a transactional queue supporting multi-operation transactions, thus reducing the number of valid histories. The possible interleavings that generate cyclic dependencies that cause invalid histories are shown in Table~\ref{tab:interleavings}. Nearly all of the interleavings that result in cyclic dependencies, and therefore invalid histories, occur when the queue becomes empty. 
+We only see cyclic dependencies that cause invalid histories in a nonempty queue if both transactions push or both transactions pop (a \emph{W-W} dependency).
+
+\lyt{XXX CHECK}
+Cyclic dependencies add an additional level of dependencies that the algorithm must handle. An algorithm must still correctly handle dependencies between operations, but now must also handle the extra cyclic dependencies that form between transactions. This requires, as indicated by the transactional commit protocol, that a transactional algorithm provide methods to perform the operation both at execution and at install time, to later check that it did not observe something that another transaction did that would make its operation results invalid, and to undo any eagerly-made updates if it must abort. 
+
 
 \subsection{Conclusion}
 

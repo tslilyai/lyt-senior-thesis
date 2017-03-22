@@ -10,45 +10,45 @@ Warning--can't use both author and editor fields in lazyset
 Warning--can't use both volume and number fields in herlihytm
 Warning--can't use both volume and number fields in galois
 Warning--empty institution in queue1
-You've used 41 entries,
+You've used 43 entries,
             2118 wiz_defined-function locations,
-            753 strings with 11430 characters,
-and the built_in function-call counts, 16967 in all, are:
-= -- 1766
-> -- 746
-< -- 27
-+ -- 296
-- -- 252
-* -- 1161
-:= -- 2628
-add.period$ -- 144
-call.type$ -- 41
-change.case$ -- 247
+            766 strings with 11850 characters,
+and the built_in function-call counts, 17771 in all, are:
+= -- 1849
+> -- 781
+< -- 28
++ -- 312
+- -- 264
+* -- 1217
+:= -- 2755
+add.period$ -- 151
+call.type$ -- 43
+change.case$ -- 259
 chr.to.int$ -- 0
-cite$ -- 48
-duplicate$ -- 690
-empty$ -- 1315
-format.name$ -- 252
-if$ -- 3733
+cite$ -- 50
+duplicate$ -- 724
+empty$ -- 1376
+format.name$ -- 264
+if$ -- 3908
 int.to.chr$ -- 0
-int.to.str$ -- 41
-missing$ -- 39
-newline$ -- 207
-num.names$ -- 82
-pop$ -- 282
+int.to.str$ -- 43
+missing$ -- 41
+newline$ -- 217
+num.names$ -- 86
+pop$ -- 292
 preamble$ -- 1
-purify$ -- 208
+purify$ -- 218
 quote$ -- 0
-skip$ -- 527
+skip$ -- 553
 stack$ -- 0
-substring$ -- 1091
-swap$ -- 248
-text.length$ -- 27
+substring$ -- 1141
+swap$ -- 259
+text.length$ -- 28
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 156
+type$ -- 164
 warning$ -- 7
-while$ -- 168
-width$ -- 43
-write$ -- 494
+while$ -- 176
+width$ -- 45
+write$ -- 519
 (There were 7 warnings)

@@ -24,6 +24,12 @@ C.~Cascaval, C.~Blundell, M.~Michael, H.~W. Cain, P.~Wu, S.~Chiras, and
 \newblock Software transactional memory: Why is it only a research toy?
 \newblock {\em Queue}, 6(5):40, 2008.
 
+\bibitem{scrule}
+A.~T. Clements, M.~F. Kaashoek, N.~Zeldovich, R.~T. Morris, and E.~Kohler.
+\newblock The scalable commutativity rule: Designing scalable software for
+  multicore processors.
+\newblock {\em ACM Transactions on Computer Systems (TOCS)}, 32(4):10, 2015.
+
 \bibitem{tl2}
 D.~Dice, O.~Shalev, and N.~Shavit.
 \newblock Transactional locking ii.
@@ -221,6 +227,13 @@ A.~Spiegelman, G.~Golan-Gueta, and I.~Keidar.
 \newblock In {\em Proceedings of the 37th ACM SIGPLAN Conference on Programming
   Language Design and Implementation}, PLDI '16, pages 682--696, New York, NY,
   USA, 2016. ACM.
+
+\bibitem{stone}
+J.~M. Stone.
+\newblock A simple and correct shared-queue algorithm using compare-and-swap.
+\newblock In {\em Proceedings of the 1990 ACM/IEEE Conference on
+  Supercomputing}, Supercomputing '90, pages 495--504, Los Alamitos, CA, USA,
+  1990. IEEE Computer Society Press.
 
 \bibitem{weihl}
 W.~E. Weihl.
