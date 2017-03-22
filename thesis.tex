@@ -2,6 +2,7 @@
 \usepackage{epsfig,amsmath,amsthm,amssymb,multirow,color,xspace,fancyvrb,verbatim,url,listings,verbatim,alltt}
 \usepackage{array, tabularx}
 \usepackage{appendix}
+\usepackage{longtable}
 \captionsetup{width=0.8\textwidth}
 
 \usepackage{enumitem}
@@ -11,6 +12,11 @@
 \usepackage{float}
 \floatstyle{boxed}
 \BeforeBeginEnvironment{tabular}{\sf\small}
+%\restylefloat{figure}
+
+\usepackage{float}
+\floatstyle{boxed}
+\BeforeBeginEnvironment{longtable}{\sf\small}
 %\restylefloat{figure}
 
 \usepackage[bottom]{footmisc}

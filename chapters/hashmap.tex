@@ -1,7 +1,7 @@
 \chapter{Hashmap Algorithms and Analysis}
 \label{hashmap}
 
-This chapter investigates different concurrent and transactional algorithms for hashmaps, and demonstrates how a concurrent hashmap algorithm---cuckoo hashing---can retain the benefits from its performance optimizations even in a transactional setting. We begin with an overview of concurrent and transactional hashmap specifications and algorithms, and evaluate how these hashmaps perform on several microbenchmarks. We then discuss why and how a transactional cuckoo hashing algorithm, unlike the flat combining algorithm, retains its scalability and expected behavior.
+This chapter investigates different concurrent and transactional algorithms for hashmaps, and demonstrates how a concurrent hashmap algorithm---cuckoo hashing---can retain the benefits from its performance optimizations even in a transactional setting. We begin with an overview of concurrent and transactional hashmap specifications and algorithms, and evaluate how these hashmaps perform on several microbenchmarks. We then discuss why and how a strongly-transactional cuckoo hashing algorithm, unlike the flat combining algorithm, retains its scalability and expected behavior by examining the dependencies of strongly-transactional hashmap operations.
 
 \section{Algorithms}
 
@@ -36,7 +36,7 @@ Here we present the concurrent and transactional hashmap algorithms we implement
 \end{figure}
 
 \subsection{Transactional Chaining Hashmap}
-The transactional chaining hashmap is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list, shown in Figure~\ref{fig:hashmap_buckets} (a). Thus, the worst case time complexity for a lookup, insert, or delete is $O(n)$. Inserts require allocating an element corresponding to the inserted key-value pair to insert into the bucket. Each bucket is associated with a \emph{bucket version} that increments upon any committed addition or removal from the bucket. The bucket version is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{element version} that tracks if the value to the element has been modified or if the element has been removed. Each element version is tied to the inserted element's memory address.
+The transactional chaining hashmap is a concurrent, transactional hashmap implemented using a standard chaining algorithm. If two elements are mapped to the same bucket, they are chained in a linked list, shown in Figure~\ref{fig:hashmap_buckets} (a). Thus, the worst case time complexity for a lookup, insert, or delete is $O(n)$. Inserts require allocating an element corresponding to the inserted key-value pair to insert into the bucket. Each bucket is associated with a \emph{bucket version} that increments upon any committed addition or removal from the bucket. The bucket version is used to verify that no thread has added an element that was absent during a transaction's find. In addition, each bucket has a lock that synchronizes access to the bucket. Each inserted element is associated with an \emph{element version} that tracks if the value of the element has been modified or if the element has been removed. Each element version is tied to the inserted element's memory address.
 
 Elements are inserted eagerly at execution time with a \emph{phantom} flag, allowing another transaction that sees ones of these uninstalled elements to realize it is viewing an inconsistent state of the map and therefore abort. If a transaction that performs an insertion later aborts, these phantom elements are removed from the map. Otherwise, the phantom mark is erased during commit. An alternative approach would be to insert all elements at commit time. However, this requires either relying on the bucket version to determine if another transaction has inserted the same element (which would result in false aborts since the bucket version increments for \emph{any} inserted value), or redoing the search for the element to see if the insertion can still occur. Thus, we insert at execution time to allow for more fine-grained validation checks at commit time, and to reduce redundant computations. 
 
@@ -189,6 +189,17 @@ We conjecture that T-CuckooKF has fewer cache misses than T-CuckooNA because the
 
 \subsubsection{Hypothesis 2: When the hashmap can fit entirely or mostly in cache, the transactional cuckoo hashmaps outperform the transactional chaining hashmap.}
 
+To evaluate this hypothesis, we look at our results for a map with 10K buckets with a low maximum fullness of 5, which fits entirely in cache (Figure~\ref{fig:hm_5}).
+For all hashmaps, performance with 90\% finds (5\% inserts/erases) is approximately $1.5\times$ that of the 33\% finds/inserts/erases. This is expected: a find is both faster to perform than an insert or delete, and a find requires only reading a bucket version for all transactional hashmaps.
+On both benchmarks, the cuckoo hashmaps achieve performance approximately $1.2\times$ that of T-Chaining. There is little difference between the performance of T-CuckooA and the performance of T-CuckooKF, because cache performance does not play a significant role in these benchmarks.
+
+We note that this result is consistent with the claims made about cuckoo hashmaps in Section~\ref{section:ntchm_algo}.
+
+\vspace{12pt}
+\noindent\fbox{\begin{minipage}{\textwidth}
+    \textbf{SUPPORTED}: The transactional cuckoo hashmaps outperform the transactional chaining hashmap when the hashmap can fit in cache.
+\end{minipage}}
+
 \begin{figure}[H]
     \centering
     \begin{minipage}{0.75\textwidth}\boxed{\includegraphics[width=\textwidth]{maps/5HM10K:F90,I5,E5.png}}
@@ -202,20 +213,28 @@ We conjecture that T-CuckooKF has fewer cache misses than T-CuckooNA because the
     \label{fig:hm_5}
 \end{figure}
 
-To evaluate this hypothesis, we look at our results for a map with 10K buckets with a low maximum fullness of 5, which fits entirely in cache (Figure~\ref{fig:hm_5}).
-For all hashmaps, performance with 90\% finds (5\% inserts/erases) is approximately $1.5\times$ that of the 33\% finds/inserts/erases. This is expected: a find is both faster to perform than an insert or delete, and a find requires only reading a bucket version for all transactional hashmaps.
-On both benchmarks, the cuckoo hashmaps achieve performance approximately $1.2\times$ that of T-Chaining. There is little difference between the performance of T-CuckooA and the performance of T-CuckooKF, because cache performance does not play a significant role in these benchmarks.
 
-We note that this result is consistent with the claims made about cuckoo hashmaps in Section~\ref{section:ntchm_algo}.
+\subsubsection{Hypothesis 3: As maximum fullness increases, T-CuckooKF outperforms T-Chaining by a greater margin.}
 
+We analyze our results for maps with various number of buckets and compare their performance with a high maximum fullness of 5 to that with a maximum fullness of 15. We show the results for maps with 1M buckets (full results are in Appendix~\ref{app:hashmaps}).
+
+We first consider the results from the 33\% finds/inserts/erases test. Our results show that T-CuckooKF achieves performance $1.5$--$2\times$ that of T-Chaining as maximum fullness increases to 15, regardless of the number of buckets (Figure~\ref{fig:hm_33_3}). 
+This is caused by a decrease in the performance of T-Chaining as fullness increases. Performance decreases by approximately 33\% when the hashmap has 10K buckets, and by over 50\% when the hashmap has 1M buckets (Figure~\ref{fig:hm_fullness_33_2}). T-CuckooKF's performance, in contrast, decreases only slightly or remains essentially unchanged.
+
+Our results from the 33\% finds/inserts/erases test therefore support our hypothesis regardless of the number of buckets in the hashmap: the difference between T-CuckooKF's performance and T-Chaining's performance increases as fullness increases. 
+
+We also consider our results from the 90\% finds (5\% inserts/erases) test to see if they support our hypothesis.
+Again, fullness seems to have a drastic impact on T-Chaining's performance regardless of the number of buckets in the hashmap (performance drops by approximately 50\%) and almost no impact on the performance of T-CuckooKF (Figure~\ref{fig:hm_fullness_90_2}). 
+
+When the hashmap contains 10K buckets, T-CuckooKF's performance is approximately $1.2\times$ that of T-Chaining at a fullness of 5. This difference increases with fullness: T-CuckooKF performs over $2\times$ better than T-Chaining at a fullness of 15.
+We observe a similar phenomenon when the map has 125K buckets and 1M buckets (Figure~\ref{fig:hm_90_3}): T-CuckooKF's performance goes from approximately $2\times$ the performance of T-Chaining at a fullness of 5, to over $3\times$ at a fullness of 15.
+ 
+This result is consistent with the claims made about cuckoo hashmaps in Section~\ref{section:ntchm_algo}. Regardless of the number of buckets in the map, T-Chaining experiences a much more drastic drop in performance than T-CuckooKF as fullness increases, and the difference in performance therefore increases.
 
 \vspace{12pt}
 \noindent\fbox{\begin{minipage}{\textwidth}
-    \textbf{SUPPORTED}: The transactional cuckoo hashmaps outperform the transactional chaining hashmap when the hashmap can fit in cache.
+    \textbf{SUPPORTED}: T-CuckooKF outperforms T-Chaining by a greater margin as maximum fullness increases.
 \end{minipage}}
-
-
-\subsubsection{Hypothesis 3: As maximum fullness increases, T-CuckooKF outperforms T-Chaining by a greater margin.}
 
 \begin{figure}[H]
     \centering
@@ -271,28 +290,15 @@ We note that this result is consistent with the claims made about cuckoo hashmap
     \label{fig:hm_90_3}
 \end{figure}
 
-To evaluate this hypothesis, we analyze our results for maps with various number of buckets and compare their performance with a high maximum fullness of 5 to that with a maximum fullness of 15. We show the results for maps with 1M buckets (full results are in Appendix~\ref{app:hashmaps}).
-
-We first consider the results from the 33\% finds/inserts/erases test. Our results show that T-CuckooKF achieves performance $1.5$--$2\times$ that of T-Chaining as maximum fullness increases to 15, regardless of the number of buckets (Figure~\ref{fig:hm_33_3}). 
-This is caused by a decrease in the performance of T-Chaining as fullness increases. Performance decreases by approximately 33\% when the hashmap has 10K buckets, and by over 50\% when the hashmap has 1M buckets (Figure~\ref{fig:hm_fullness_33_2}). T-CuckooKF's performance, in contrast, decreases only slightly or remains essentially unchanged.
-
-Our results from the 33\% finds/inserts/erases test therefore support our hypothesis regardless of the number of buckets in the hashmap: the difference between T-CuckooKF's performance and T-Chaining's performance increases as fullness increases. 
-
-We also consider our results from the 90\% finds (5\% inserts/erases) test to see if they support our hypothesis.
-Again, fullness seems to have a drastic impact on T-Chaining's performance regardless of the number of buckets in the hashmap (performance drops by approximately 50\%) and almost no impact on the performance of T-CuckooKF (Figure~\ref{fig:hm_fullness_90_2}). 
-
-When the hashmap contains 10K buckets, T-CuckooKF's performance is approximately $1.2\times$ that of T-Chaining at a fullness of 5. This difference increases with fullness: T-CuckooKF performs over $2\times$ better than T-Chaining at a fullness of 15.
-We observe a similar phenomenon when the map has 125K buckets and 1M buckets (Figure~\ref{fig:hm_90_3}): T-CuckooKF's performance goes from approximately $2\times$ the performance of T-Chaining at a fullness of 5, to over $3\times$ at a fullness of 15.
- 
-This result is consistent with the claims made about cuckoo hashmaps in Section~\ref{section:ntchm_algo}. Regardless of the number of buckets in the map, T-Chaining experiences a much more drastic drop in performance than T-CuckooKF as fullness increases, and the difference in performance therefore increases.
-
-\vspace{12pt}
-\noindent\fbox{\begin{minipage}{\textwidth}
-    \textbf{SUPPORTED}: T-CuckooKF outperforms T-Chaining by a greater margin as maximum fullness increases.
-\end{minipage}}
-
 
 \subsubsection{Hypothesis 4: An algorithm's cache usage most heavily affects performance on our benchmarks; abort rate has a negligible effect on performance.}
+
+    We pose this hypothesis to determine if the bottleneck in performance is the algorithm's cache usage or its abort rate. 
+Our results for both tests discussed in Hypothesis 3 indicate that the number of cache misses is strongly correlated with performance. In general, the performance of all hashmaps decreases slightly (less than 20\%) as hashmap size increases from 10K to 1M buckets. We attribute this to the increasing number of cache misses with increasing numbers of buckets.
+
+The greater difference between T-CuckooKF's performance and T-Chaining's performance as fullness increases is also mirrored in the increased difference between T-CuckooKF's and T-Chaining's number of cache misses (discussed in Section~\ref{section:hmcm}). T-CuckooA's performance also drops more significantly than T-CuckooKF's as fullness increases (we observe, however, that T-CuckooA still performs at least as well as T-Chaining). T-CuckooA uses the same algorithm as T-CuckooKF, but has worse cache usage, which provides further evidence that cache usage plays a crucial part in performance. 
+
+    Our results in Table~\ref{tab:hm_aborts} and in Appendix~\ref{app:hm_aborts} indicate that the abort rate remains relatively constant regardless of the fullness of the hashmap, but decreases as the number of buckets in the map increases. A greater number of buckets decreases the abort rates, since the probability that two threads will simultaneously attempt to read/modify the same bucket decreases. Abort rate is negligible in nearly all tests, with the chaining hashmap experiencing the highest abort rates (the median of 5 trials never exceeding 0.006\%).
 
     \begin{table}[t]
     \centering
@@ -312,13 +318,6 @@ This result is consistent with the claims made about cuckoo hashmaps in Section~
 		\label{tab:hm_aborts}
     \end{table}
 
-    We pose this hypothesis to determine if the bottleneck in performance is the algorithm's cache usage or its abort rate. 
-Our results for both tests discussed in Hypothesis 3 indicate that the number of cache misses is strongly correlated with performance. In general, the performance of all hashmaps decreases slightly (less than 20\%) as hashmap size increases from 10K to 1M buckets. We attribute this to the increasing number of cache misses with increasing numbers of buckets.
-
-The greater difference between T-CuckooKF's performance and T-Chaining's performance as fullness increases is also mirrored in the increased difference between T-CuckooKF's and T-Chaining's number of cache misses (discussed in Section~\ref{section:hmcm}). T-CuckooA's performance also drops more significantly than T-CuckooKF's as fullness increases (we observe, however, that T-CuckooA still performs at least as well as T-Chaining). T-CuckooA uses the same algorithm as T-CuckooKF, but has worse cache usage, which provides further evidence that cache usage plays a crucial part in performance. 
-
-    Our results in Table~\ref{tab:hm_aborts} and in Appendix~\ref{app:hm_aborts} indicate that the abort rate remains relatively constant regardless of the fullness of the hashmap, but decreases as the number of buckets in the map increases. A greater number of buckets decreases the abort rates, since the probability that two threads will simultaneously attempt to read/modify the same bucket decreases. Abort rate is negligible in nearly all tests, with the chaining hashmap experiencing the highest abort rates (the median of 5 trials never exceeding 0.006\%).
-
 We see that cache performance affects overall performance more than the abort rate; as the number of buckets increases, performance drops even while the abort rate decreases. The major factor detracting from performance appears to be the significant increase in the number of cache misses.
 
 \vspace{12pt}
@@ -326,132 +325,262 @@ We see that cache performance affects overall performance more than the abort ra
     \textbf{SUPPORTED}: The number of cache misses is strongly correlated with performance, but abort rate does not heavily affect performance.
 \end{minipage}}
 
-\subsection{Hashmap Dependencies}
+\subsection{Commutativity of Strongly-Transactional Hashmaps}
 \label{hm_deps}
-\lyt{TODO THIS WHOLE SECTION}
 
-Again, for generality, we reduce each hashmap operation to a read or write of a particular semantic object: the 
+In this section, we discuss the commutativity of strongly-transactional hashmap operations, and determine that commutativity does not prevent either chaining or cuckoo hashmaps from  
 
-
-. We summarize the reads and writes of our operation specifications in Table~\ref{table:hmrw}.
+Again, for generality, we reduce each hashmap operation to a read or write of particular semantic objects, which in this case simply correspond to the buckets \texttt{b} of the hashmap. We summarize the reads and writes of our operation specifications in Table~\ref{table:hmrw}.
 
 \begin{table}[t]
 \centering
 \begin{tabular}{c||c|c}
     Operation & Read & Write\\
     \hline
-    find & \texttt{empty?} & \texttt{head}, \texttt{empty?}\\
-    insert & & \texttt{tail}, \texttt{empty?}\\
-    empty & & \texttt{tail}, \texttt{empty?}\\
+    find & \texttt{b} & \\
+    insert & \texttt{b} & \texttt{b} \\
+    erase & \texttt{b} & \texttt{b}
 \end{tabular}
-    \caption[Objects read or written by hashmap operations]{Objects read or written by hashmap operations.}
+    \caption[Objects read or written by hashmap operations]{Objects read or written by hashmap operations. A write of a bucket is performed only if the operation successfully adds or removes an element from the bucket.}
     \label{table:hmrw}
 \end{table}
 
-We begin our discussion by examining the dependencies generated by singleton transactions (Table~\ref{tab:queuesimpledeps}) and the cyclic dependencies generated by multi-operation transactions that cause invalid histories (Table~\ref{tab:interleavings}). 
-Dependencies generated by singleton transactions indicate which operations need to be synchronized for concurrent correctness: the presence of a non-$R$-$R$ dependency between two operations (i.e., two singleton transactions) indicates that the two operations need to be synchronized for correctness in a concurrent, but non-transactional, setting.
-In a transactional setting, we encounter cyclic dependencies that cause invalid histories. To prevent these dependency cycles, a transactional queue algorithm can implement one of several methods, which we describe in detail.
-We then demonstrate that, while the flat combining algorithm achieves high performance when correctly synchronizing singleton transactions, integrating the flat combining algorithm with any of the methods to deal with cyclic dependencies greatly reduces its effectiveness.
+We first examine the dependencies generated by singleton transactions (Table~\ref{tab:hmsimpledeps}). Both concurrent chaining and cuckoo hashing algorithms provide ways to handle singleton transaction dependencies that require concurrent access synchronization: in both algorithms, each bucket is associated with a lock that synchronizes concurrent access to the bucket.
 
-\subsection{Operation Dependencies of Concurrent, Non-Transactional Queues}
+the fundamental assumption is that operations performed on separate buckets commute with each other
+(or in CHM case, all but two buckets)
+retained in transactional case! all invalid dependency cycles occur within one bucket---same granularity of locking.
 
-We use the dependencies of singleton transactions to determine when two operations must be synchronized in a concurrent, non-transactional queue. This requires that the concurrent, non-transactional queue satisfies the guarantees of a transactional data structure performing singleton transactions.
-The flat combining technique provides serializable, atomic, and linearizable singleton transactions~\cite{flatcombining}. We can therefore use transactional dependencies of singleton transactions to reason about when the concurrent, non-transactional flat combining queue must add mechanisms to ensure correct synchronization.\footnote{We note that, in general, the guarantees of concurrent, non-transactional queues are almost, but not exactly, equivalent to that of singleton transactions. A history of singleton transactions is automatically serializable: the history corresponding to the ordering of operation execution is a serial ordering of transactions. The atomicity of transactions is guaranteed by the correctness properties of the concurrent data structure. However, single operations are not always linearizable: depending on the implementation of the data structure, the effects of a operation $P$ that has ``committed'' (i.e., has returned) may not be visible to an operation that is performed after $P$ returns. An example of this is the Stone concurrent queue~\cite{stone}, in which a slow enqueue may cause a subsequent dequeue to observe an empty queue.}
+ and the invalid dependency cycles generated by multi-operation transactions that cause invalid histories (Table~\ref{tab:hm_interleavings}).
 
-The dependency relations between singleton transactions are shown in Table~\ref{tab:queuesimpledeps}. 
-A concurrent, non-transactional queue cannot have any cyclic dependencies, since such dependencies require that there a transaction can have more than one operation. Therefore, all histories are strictly serializable. Synchronization is only necessary to ensure correctness when two threads attempt to write (\emph{W-W}) the same object, or when one thread writes and another thread simultaneously reads (\emph{W-R} or \emph{R-W}) the same object; this means that synchronizing concurrent access creates the main performance bottleneck. As we have shown, the flat combining approach works particularly well in a highly-concurrent setting to minimize the overhead of this synchronization cost.
+furthermore, we propose a method for handling invalid dependency cycles that allows both algorithms to retain their behavior and scale even while implementing a strongly-transactional hashmap satisfying our hashmap operation interface. This demonstrates that, unlike our queue operation interface, our hashmap operation interface (and specified commutativity of operations in a strongly-transactional setting) allows for a scalable implementation of a strongly-transactional hashmap.
 
-\begin{table}[H]
+\begin{table}[t]
     \singlespace
     \centering
     \begin{tabular}{|l|c|}
         \hline
         \multicolumn{1}{|c|}{Interleaving} & Generated Dependencies\\
         \hline
-
 \begin{lstlisting}
+(T1, M.find(k,v), true/false) 
+(T2, M.find(k,v), true/false)
 \end{lstlisting} &
-W-W, R-W, W-R, R-R
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.find(k,v), false) 
+(T2, M.insert(k,v), true)
+\end{lstlisting} &
+R$_1$-W$_2$
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.find(k,v), true) 
+(T2, M.erase(k), true)
+\end{lstlisting} &
+R$_1$-W$_2$
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.insert(k,v), true) 
+(T2, M.insert(k,v), false)
+\end{lstlisting} &
+W$_1$-R$_2$
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.insert(k,v), true) 
+(T2, M.find(k,v), true)
+\end{lstlisting} &
+W$_1$-R$_2$
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.insert(k,v), true/false) 
+(T2, M.erase(k), true/false)
+\end{lstlisting} &
+W$_1$-R$_2$, R$_1$-W$_2$, W$_1$-W$_2$
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.erase(k), true) 
+(T2, M.erase(k), false)
+\end{lstlisting} &
+W$_1$-R$_2$
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.erase(k), true) 
+(T2, M.find(k,v), false)
+\end{lstlisting} &
+W$_1$-R$_2$
+       \\ 
+    \hline
+\begin{lstlisting}
+(T1, M.erase(k), true/false) 
+(T2, M.insert(k,v), true/false)
+\end{lstlisting} &
+W$_1$-R$_2$, R$_1$-W$_2$, W$_1$-W$_2$
        \\ 
     \hline
 \end{tabular}
-    \caption[Dependencies generated by singleton transactions that require synchronization.]{Dependencies generated by singleton transactions that require synchronization. A W-W dependency indicates that both transactions wrote the same object; a R-W dependency indicates that T1 read and later T2 wrote the same object; etc.
+    \caption[Hashmap dependencies generated by singleton transactions that require synchronization.]{Hashmap dependencies generated by singleton transactions that require synchronization.
 
-    A write of \texttt{empty?} occurs only when the operation changes the empty status of the queue; dependencies generated by these writes are included. R-R dependencies are omitted because they do not require synchronization.
+    A write of the bucket \texttt{b} occurs only if the operation successfully adds or removes an element from the bucket; we show only those specific scenarios in which writes occur and generate dependencies that require synchronization. R-R dependencies are omitted because they do not require synchronization.
 }
-    \label{tab:queuesimpledeps}
+    \label{tab:hmsimpledeps}
 \end{table}
 
-\subsection{Dependency Cycles in Transactional Queues}
-
-\begin{table}
-    \centering
-    \begin{tabular}{|c|l|c|}
-        \hline
+\newpage
+\begin{center}
+    \singlespace
+\begin{longtable}{|c|l|c|}
+    \hline
 \multicolumn{2}{|c|}{Interleaving} & Generated Dependency Cycle\\
         \hline
 1. & 
 \begin{lstlisting}
-(T1, Q.pop(), true/false)  
-(T2, Q.pop(), true/false)       
-(T1, Q.pop(), true/false)
+(T1, M.find(k,v), false)  
+(T2, M.insert(k,v), true)       
+(T1, M.find(k,v), true)
 \end{lstlisting} &
-W-W-W, R-W-W, W-R-W, R-W-R, W-W-R 
+R$_1$-W$_2$-R$_1$
        \\ 
     \hline
-        2. & 
+2. & 
 \begin{lstlisting}
-// Q.size() == 1  
-(T1, Q.pop(), true) // Q empty  
-(T2, Q.push(a), ())
-(T1, Q.pop(), true)
+(T1, M.find(k,v), true)  
+(T2, M.erase(k), true)       
+(T1, M.find(k,v), false)
 \end{lstlisting} &
-R-W-R
+R$_1$-W$_2$-R$_1$
        \\ 
     \hline
-        3. & 
+3. & 
 \begin{lstlisting}
-// Q.size() == 1  
-(T1, Q.pop(), true)  // Q empty  
-(T2, Q.pop(), false)
-(T1, Q.push(a), ())
+(T1, M.find(k,v), false)  
+(T2, M.insert(k,v), true)       
+(T1, M.insert(k,v), false)
 \end{lstlisting} &
-W-W-W, W-R-W
-\\
-\hline
-        4. &
-\begin{lstlisting}
-(T1, Q.push(a), ()) 
-(T2, Q.push(a), ())
-(T1, Q.push(a), ())
-\end{lstlisting} &
-W-W-W
-\\
-\hline
-        5. &
-\begin{lstlisting}
-// Q.size() == 0 
-(T1, Q.push(a), ())       
-(T2, Q.pop(), true)  // Q empty
-(T1, Q.pop(), false) 
-\end{lstlisting} &
-W-R-W, W-W-W
-\\
+R$_1$-W$_2$-R$_1$
+       \\ 
     \hline
-\end{tabular}
-    \caption[Dependency cycles generated by multi-operation transactions that cause invalid histories.]{Dependency cycles generated by multi-operation transactions that cause invalid histories. 
-    A W-W-W cycle indicates that T1 first wrote to an object $o$, then T2 wrote to $o$, and then T1 again wrote $o$; A R-W-W cycle indicates that T1 first read an object $o$, then T2 wrote to $o$, and then T1 wrote to $o$; etc.
+4. & 
+\begin{lstlisting}
+(T1, M.find(k,v), false)  
+(T2, M.insert(k,v), true)       
+(T1, M.erase(k), true)
+\end{lstlisting} &
+R$_1$-W$_2$-W$_1$
+       \\ 
+    \hline
+5. & 
+\begin{lstlisting}
+(T1, M.find(k,v), true)  
+(T2, M.erase(k), true)       
+(T1, M.erase(k), false)
+\end{lstlisting} &
+R$_1$-W$_2$-R$_1$
+       \\ 
+    \hline
+6. & 
+\begin{lstlisting}
+(T1, M.find(k,v), true)  
+(T2, M.erase(k), true)       
+(T1, M.insert(k,v), true)
+\end{lstlisting} &
+R$_1$-W$_2$-W$_1$
+       \\ 
+    \hline
+7. & 
+\begin{lstlisting}
+(T1, M.insert(k,v), true)  
+(T2, M.find(k,v), true)       
+(T1, M.erase(k), true)
+\end{lstlisting} &
+W$_1$-R$_2$-W$_1$
+       \\ 
+    \hline
+8. & 
+\begin{lstlisting}
+(T1, M.insert(k,v), true)  
+(T2, M.erase(k), true)       
+(T1, M.insert(k,v), true)
+\end{lstlisting} &
+W$_1$-W$_2$-W$_1$
+       \\ 
+    \hline
+9. & 
+\begin{lstlisting}
+(T1, M.insert(k,v), true)  
+(T2, M.erase(k), true)       
+(T1, M.erase(k), false)
+\end{lstlisting} &
+W$_1$-W$_2$-R$_1$
+       \\ 
+    \hline
+10. & 
+\begin{lstlisting}
+(T1, M.insert(k,v), true)  
+(T2, M.erase(k), true)       
+(T1, M.find(k,v), false)
+\end{lstlisting} &
+W$_1$-W$_2$-R$_1$
+       \\ 
+    \hline
+11. & 
+\begin{lstlisting}
+(T1, M.insert(k,v), true)  
+(T2, M.insert(k,v), false)       
+(T1, M.erase(k), true)
+\end{lstlisting} &
+W$_1$-R$_2$-W$_1$
+       \\ 
+    \hline
+12. & 
+\begin{lstlisting}
+(T1, M.erase(k), true)  
+(T2, M.erase(k), false)       
+(T1, M.insert(k,v), true)
+\end{lstlisting} &
+W$_1$-R$_2$-W$_1$
+       \\ 
+    \hline
+13. & 
+\begin{lstlisting}
+(T1, M.erase(k), true)  
+(T2, M.find(k,v), false)       
+(T1, M.insert(k,v), true)
+\end{lstlisting} &
+W$_1$-R$_2$-W$_1$
+       \\ 
+    \hline
+14. & 
+\begin{lstlisting}
+(T1, M.erase(k), true)  
+(T2, M.insert(k,v), true)       
+(T1, M.insert(k,v), false)
+\end{lstlisting} &
+W$_1$-W$_2$-R$_1$
+       \\ 
+    \hline
+15. & 
+\begin{lstlisting}
+(T1, M.erase(k), true)  
+(T2, M.insert(k,v), true)       
+(T1, M.find(k), true)
+\end{lstlisting} &
+W$_1$-W$_2$-R$_1$
+       \\ 
+    \hline
+    \caption[Invalid dependency cycles of a strongly-transactional hashmap.]{Invalid dependency cycles of a strongly-transactional hashmap. 
     
-    A write of \texttt{empty?} occurs only when the operation changes the empty status of the queue. We show only those specific scenarios that encounter empty queues and therefore generate writes, creating problematic dependencies cycles. Cycles that contain R-R dependencies are omitted.}
-    \label{tab:interleavings}
-\end{table}
-
-Cyclic dependencies can occur in a transactional queue supporting multi-operation transactions, thus reducing the number of valid histories. The possible interleavings that generate cyclic dependencies that cause invalid histories are shown in Table~\ref{tab:interleavings}. Nearly all of the interleavings that result in cyclic dependencies, and therefore invalid histories, occur when the queue becomes empty. 
-We only see cyclic dependencies that cause invalid histories in a nonempty queue if both transactions push or both transactions pop (a \emph{W-W} dependency).
-
-\lyt{XXX CHECK}
-Cyclic dependencies add an additional level of dependencies that the algorithm must handle. An algorithm must still correctly handle dependencies between operations, but now must also handle the extra cyclic dependencies that form between transactions. This requires, as indicated by the transactional commit protocol, that a transactional algorithm provide methods to perform the operation both at execution and at install time, to later check that it did not observe something that another transaction did that would make its operation results invalid, and to undo any eagerly-made updates if it must abort. 
-
+    A write of bucket \texttt{b} occurs only if the operation successfully adds or removes an element from the bucket; we show only those specific scenarios in which writes occur and create invalid dependencies cycles.} 
+    \label{tab:hm_interleavings}
+\end{longtable}
+\end{center}
+\doublespacing
 
 \subsection{Conclusion}
 

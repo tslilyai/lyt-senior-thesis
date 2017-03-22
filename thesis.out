@@ -11,9 +11,9 @@
 \BOOKMARK [1][-]{section.3.2}{Naive\040Synchronization\040Queue\040Algorithms}{chapter.3}% 11
 \BOOKMARK [1][-]{section.3.3}{Flat\040Combining\040Queue\040Algorithms}{chapter.3}% 12
 \BOOKMARK [1][-]{section.3.4}{Evaluation}{chapter.3}% 13
-\BOOKMARK [0][-]{chapter.4}{Commutativity\040in\040Transactional\040and\040Weakly\040Transactional\040Queue\040Specifications}{}% 14
+\BOOKMARK [0][-]{chapter.4}{Commutativity\040in\040Transactional\040Queue\040Specifications}{}% 14
 \BOOKMARK [1][-]{section.4.1}{Commutativity\040Terminology\040and\040Results}{chapter.4}% 15
-\BOOKMARK [1][-]{section.4.2}{Commutativity\040of\040Concurrent\040and\040Transactional\040Queues}{chapter.4}% 16
+\BOOKMARK [1][-]{section.4.2}{Commutativity\040of\040Strongly-Transactional\040Queues}{chapter.4}% 16
 \BOOKMARK [1][-]{section.4.3}{The\040Weakly\040Transactional\040Queue}{chapter.4}% 17
 \BOOKMARK [0][-]{chapter.5}{Hashmap\040Algorithms\040and\040Analysis}{}% 18
 \BOOKMARK [1][-]{section.5.1}{Algorithms}{chapter.5}% 19
@@ -21,8 +21,8 @@
 \BOOKMARK [0][-]{chapter.6}{Future\040Work\040and\040Conclusion}{}% 21
 \BOOKMARK [1][-]{section.6.1}{Future\040Work}{chapter.6}% 22
 \BOOKMARK [1][-]{section.6.2}{Conclusion}{chapter.6}% 23
-\BOOKMARK [0][-]{chapter*.53}{References}{}% 24
-\BOOKMARK [0][-]{section*.54}{Appendices}{}% 25
+\BOOKMARK [0][-]{chapter*.52}{References}{}% 24
+\BOOKMARK [0][-]{section*.53}{Appendices}{}% 25
 \BOOKMARK [0][-]{appendix.A}{Queue\040Results}{}% 26
 \BOOKMARK [1][-]{section.A.1}{Cache\040Misses}{appendix.A}% 27
 \BOOKMARK [1][-]{section.A.2}{Performance\040of\040Non-transactional\040Concurrent\040Queues}{appendix.A}% 28
