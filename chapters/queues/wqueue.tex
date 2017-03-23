@@ -1,4 +1,11 @@
+\section{Commutativity in the Weak Queue Specification}
+To demonstrate how the strong queue interface and the corresponding commutativity of transactions prevents a scalable transactional queue implementation, we can imagine a different queue interface---a \emph{weak queue specification}---that increases commutativity of operations and transactions, and \emph{does} allow for a scalable transactional queue implementation.
+
+in which a pop operation returns \texttt{void} instead of \texttt{bool}. A transaction executing a pop would not observe the empty status of the queue, which would allow a pop to commute with all other operations in the history (exchanging the order of a pop and another operation would have no observable effect to the caller). This would also mean that all transactions would commute: given our constructive approach, there would be no singleton transactions that do not commute, and therefore, no starting $T1$ or $T2$ to extend to construct further transactions that fail to commute. With this interface, a queue satisfying the strongly-transactional specification could simply execute all operations at commit time using any concurrent queue algorithm, and do nothing (except return \texttt{void}) at execution time. This would make the queue equally as scalable as any concurrent queue algorithm. We describe this interface in detail and implement a scalable example in Section~\ref{wqueue}.
+
+
 \section{The Weakly Transactional Queue} 
+\label{wqueue}
 
 The Weakly Transactional Queue (WT-FCQueue) demonstrates how the transactional flat combining technique's performance depends upon the number of histories that the transactional specification deems invalid. This queue implements the weakly-transactional specification, which meets all the invariants of a \emph{concurrent} queue, but provides the following weakly transactional guarantees instead of the transactional ones listed earlier in Chapter~\ref{queue}:
 \begin{itemize}
