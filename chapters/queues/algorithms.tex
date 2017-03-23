@@ -4,7 +4,7 @@
 This chapter investigates different concurrent and transactional algorithms for queues in order to draw conclusions about concurrent queue algorithms in transactional settings. We begin with an overview of concurrent and transactional queue specifications and algorithms. We then evaluate how these queues perform on several microbenchmarks. Given our results, we conjecture that highly-concurrent queue algorithms are inherently non-transactional: the optimizations taken by these algorithms rely on data structure state and behaviors that must be modified to support transactions. In other words, the synchronization mechanism of highly-concurrent queue algorithms interfere with the mechanisms that STO uses to provide transactional guarantees.
 
 \section{Transactional Queue Specification}
-
+\label{q_spec}
 A concurrent queue supporting operations push and pop must adhere to the following specification:%
 \footnote{In the following discussion of our queue algorithms, we omit the discussion of the front operation to simplify reasoning about the state of the queue. An appropriate algorithm for front can be easily inferred from that used for pop.}
 \begin{itemize}
@@ -31,15 +31,15 @@ STO provides two transactional FIFO queues that support push and pop operations 
 \begin{figure}[t]
     \centering
     \begin{lstlisting}
-        // push adds value v onto the tail of the queue
-        // always succeeds
-        void push(const value_type& v); 
-       
-        // pop removes a value from the head of the queue
-        // succeeds if the queue is nonempty 
-        bool pop();                     
+            // push adds value v onto the tail of the queue
+            // always succeeds
+            void push(const value_type& v); 
+           
+            // pop removes a value from the head of the queue
+            // succeeds if the queue is nonempty 
+            bool pop();                     
     \end{lstlisting}
-    \caption{STO Queue Operations Interface}
+    \caption{Queue Operations Interface}
     \label{fig:q_interface}
 \end{figure}
 

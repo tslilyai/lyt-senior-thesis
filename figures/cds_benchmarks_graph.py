@@ -76,7 +76,7 @@ queue_cache_misses = {
     "T-FCQueue": [765],
     "NT-FCQueue": [157],
     "NT-FCQueueWrapped": [173],
-    "WT-Queue": [477],
+    #"WT-Queue": [477],
     "T-QueueO": [232],
     "T-QueueP": [184],
 }
@@ -161,7 +161,7 @@ class Plotter():
         x = range(num_entries)
 
         if num_entries == 1:
-            order = [0,1,6,2,3,4,5]
+            order = [0,1,2,3,4,5]
         else:
             order = range(len(ds))
         for i in order:
@@ -324,7 +324,7 @@ class Plotter():
         data = defaultdict(dict)
         labels = [ds[i] for i in indices]
         for size, data_lists in results.items():
-            assert(len(ds) == len(data_lists['speed']))
+            #assert(len(ds) == len(data_lists['speed']))
 
             for index in range(len(ds)):
                 data[index]['speed'] = []
@@ -354,7 +354,7 @@ class Plotter():
             if len(labels) < 5:
                 ax.set_position([box.x0, box.y0, box.width, box.height*.85])
                 if 'map' not in filename:
-                    ax.set_title("Initial Size %s" % (size), y=1.15)
+                    ax.set_title("Initial Size %s" % (size), y=1.2)
                 ncols = len(labels)
                 legend = ax.legend(labels, bbox_to_anchor=(0., 1.05, 1., .1), loc="upper center", ncol=ncols, borderaxespad=0, prop={'size':11})
             else:
@@ -444,12 +444,13 @@ class Plotter():
             self.get_randops_graphs(queues, range(len(queues)), filename, colors, patterns, results, name)
 
     def fcqueues_graphs(self):
-        queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "NT-FCQueueWrapped", "T-FCQueue", "WT-FCQueue", "WT-Queue"]
+        queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "NT-FCQueueWrapped", "T-FCQueue", "WT-FCQueue"]
         stoindices = [0,1]
         ntindices = [2,3]
         tindices = [1,3,4]
-        lpindices = [1,6,3,4,5]
-        allindices = [0,1,6,3,4,5]
+        lpindices = [1,3,4,5]
+        #allindices = [0,1,6,3,4,5]
+        allindices = [0,1,3,4,5]
 
         filename='fcqueues/'
         colors = ["red","red","green","green","purple","purple","red"]
@@ -509,8 +510,8 @@ class Plotter():
 
 def main():
     p = Plotter()
-    p.hashmaps_graphs()
-    #p.fcqueues_graphs()
+    #p.hashmaps_graphs()
+    p.fcqueues_graphs()
     #p.concurrent_queues_graphs()
 
 if __name__ == "__main__":

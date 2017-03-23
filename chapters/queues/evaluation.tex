@@ -142,16 +142,16 @@ Selected results are shown in Figure~\ref{fig:wrappedqs}.
 	morekeywords={true, false},
 }
 	\begin{lstlisting}
-		Sto::start_transaction();
-		try {
-			do_queue_op(push, 1);
-			do_queue_op(pop, 0);
-			if (Sto::try_commit()) {
-				printf("committed");
-			}
-		} catch (Transaction::Abort e) {
-			printf("aborted");
-		}
+            Sto::start_transaction();
+            try {
+                do_queue_op(push, 1);
+                do_queue_op(pop, 0);
+                if (Sto::try_commit()) {
+                    printf("committed");
+                }
+            } catch (Transaction::Abort e) {
+                printf("aborted");
+            }
 	\end{lstlisting}
 \caption{Example usage of STO wrapper calls}
 \label{fig:wrappers}
