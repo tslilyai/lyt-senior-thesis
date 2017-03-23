@@ -218,7 +218,7 @@ We also must now consider when \texttt{COMMIT\_TXN} operations do not commute. N
     \item We extend $T1$ with operations $O_4$ added to the front of $O_1$. $O_4$ is an ordered set of operations such that at least one pop in $O_1$ observes an empty queue in $H_{new}$ or $H'_{new}$, and a nonempty queue in the other. Then $T1$ performing $O_4 + O_1$ does not commute with $T2$ by definition.
 \end{itemize}
 
-Conversely, we know that these arbitrarily large, non-commuting transactions that we find through our construction are the \emph{only} transactions that do not commute: 
+\noindent Conversely, we know that these arbitrarily large, non-commuting transactions that we find through our construction are the \emph{only} transactions that do not commute: 
 \begin{itemize}
     \item Let transaction $T1$ perform some ordered set of operations $P$ and transaction $T2$ perform some ordered set of operations $Q$.
     \item We are given that $T1$ and $T2$ do not commute. WLOG, this means that we can find some $o \in P$ s.t. $o$'s return value changes when we exchange the order of $T'$ and $T''$ in the history, and $o$ is the first such operation (necessarily a pop) in $P$ s.t.\ this occurs.
@@ -288,13 +288,13 @@ Conversely, we know that these arbitrarily large, non-commuting transactions tha
     \label{tab:txnal_strongq_commute}
     \end{table}
 
-We provide some examples of larger transactions that fail to commute in Table~\ref{tab:strongq_commute}.
+\noindent We provide some examples of larger transactions that fail to commute in Table~\ref{tab:txnal_strongq_commute}.
 
 Based on this commutativity analysis, we note that, in addition to the non-commutativity of pop operations in particular scenarios involving empty, or near-empty queues, we now have a further lack of commutativity of transactions (identified by their \texttt{COMMIT\_TXN} operations) even in scenarios in which the queue may contain far more than one element. For example, even if a transaction starts with a relatively non-empty queue, a large transaction that performs several pops may reduce the queue to a near-empty state, and therefore contain a pop operation that observes the empty status of the queue. This transaction will likely \emph{not} commute with any other transaction performing a push or pop.  By the scalable commutativity rule, this means that there is no scalable queue implementation for a strong transactional queue whenever \texttt{COMMIT\_TXN} operations do not commute.
 
 We hypothesize that any implementation of our strong queue specification in a transactional setting that must handle scenarios in which queues may become empty will not scale. A concurrent queue already lacks a scalable implementation for pop due to the high likelihood that a pop operation will not commute with any other operation when the queue nears empty. When this queue is put in a transactional setting, there is an even higher likelihood that two transactions will not commute, even if the queue contains more values. This prevents an efficient, scalable implementation of a strong transactional queue. In Section~\ref{wqueue}, we provide a counterexample, a transactional queue satisfying the \emph{weak queue specification}, and demonstrate how increased commutativity in this new specification allows for a scalable implementation.
 
-\subsection{Strong Transactional Flat Combining Queue Performance}
+\subsection{The Strong Transactional Flat Combining Queue}
 The flat combining algorithm is an example of a queue algorithm that implements the strong queue interface and loses its effectiveness in a transactional setting. Recall that our results from testing Hypothesis 5 demonstrate that flat combining's effectiveness is lost in a transactional setting. Here, we argue that this is due to a decrease in the amount of commutativity in the transactional setting: in addition to non-commutative single operations (pops and pushes), transactions may not always commute.
 
 Flat combining's fundamental principle is that requests posted to the publication list can be blindly applied to the queue in an arbitrary order. It handles the non-commutativity on the level of individual pop operations by synchronizing concurrent access to the queue with the combiner thread: only one thread is allowed to perform an operation on the queue at a time.\footnote{We note that flat combining is not a scalable implementation of pop (or push): the combiner thread's application of requests can only be as efficient as a sequential execution of all thread operations. As our results from testing Hypothesis 3 show, flat combining is nonetheless the most efficient of all concurrent queue algorithms evaluated.}
