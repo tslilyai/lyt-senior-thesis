@@ -11,18 +11,18 @@ Here we present the concurrent and transactional hashmap algorithms we implement
 \begin{figure}[t]
     \centering
     \begin{lstlisting}
-        // find searches for key k, storing the 
-        // associated value it finds in v
-        // succeeds only if the key is in the map
-        bool find(const key_type& k, mapped_type& v); 
-       
-        // insert adds the key-value pair (k, v) to the map
-        // succeeds only if the key is not already in the map
-        bool insert(const key_type& k, const mapped_type& v); 
+            // find searches for key k, storing the 
+            // associated value it finds in v
+            // succeeds only if the key is in the map
+            bool find(const key_type& k, mapped_type& v); 
+           
+            // insert adds the key-value pair (k, v) to the map
+            // succeeds only if the key is not already in the map
+            bool insert(const key_type& k, const mapped_type& v); 
 
-        // erase removes the element corresponding to k from the map
-        // succeeds only if the key is in the map
-        bool erase(const key_type& k); 
+            // erase removes the element corresponding to k from the map
+            // succeeds only if the key is in the map
+            bool erase(const key_type& k); 
     \end{lstlisting}
     \caption{STO Hashmap Operations Interface}
     \label{fig:hm_interface}
@@ -304,11 +304,14 @@ We contrast our results with that of the strong transactional flat combining que
 \section{Commutativity of Transactional Hashmaps}
 \label{hm_deps}
 
-In this section, we discuss the commutativity of non-transactional and transactional hashmap operations, and argue that the additional machinery needed to synchronize of non-commutative transactions does not cripple the scalability of the chaining or cuckoo hashmap algorithms. This is because there are few added commutativity constraints for a hashmap in a transactional setting.
+In this section, we discuss the commutativity of non-transactional and transactional hashmap operations. We argue that synchronizing non-commutative transactions does not cripple the scalability of hashmaps implementing our hashmap interface, and that this occurs because the transactional setting adds few additional commutativity constraints to our hashmap interface. This is exemplified by our transactional chaining or cuckoo hashmap algorithms, which both scale in a transactional setting. 
+
+Our commutativity and scalability results with cuckoo and chaining hashmaps are in sharp contrast with our results from the strong flat combining queue. In Chapter~\ref{commutativity}, we saw how the flat combining technique relies on operation commutativity that is heavily reduced in a transactional setting, and that the modifications to flat combining required to synchronize non-commuting transactions reduce the effectiveness of the flat combining technique and cripple its scalability. 
+As we discover, the hashmap interface experiences only a slight loss of operation commutativity in a transactional setting; this allows transactional cuckoo and chaining hashing algorithms to scale.
 
 In a non-transactional hashmap, insert and erase operations do not commute with finds, other inserts, or other erases when both (1) the same key is used as an argument or the argument keys collide by being hashed to the same bucket, and (2) at least one insert or delete succeeds.
     These are shown in Table~\ref{tab:hm_commute}. Both cuckoo and chaining hashmaps synchronize these non-commutative operations with per-bucket locks: an insert or erase in a chaining hashmap acquires a bucket-specific lock that protects access to the bucket during the duration of the insert or delete, while an insert or erase in a cuckoo hashmap locks both buckets in which the element may be placed. If the hashmap is large and if the workload uses a large range of keys, it is very likely that two operations will commute because they will modify or read separate buckets.
-By the scalable commutativity rule, there exists a implementation of a hashmap algorithm that scales whenever insert or erase operations occur in separate buckets. Indeed, common implementations of non-transactional chaining and cuckoo algorithms will scale given most hashmap workloads and a large enough map.
+By the scalable commutativity rule, there exists a implementation of a hashmap algorithm that scales whenever insert or erase operations occur in separate buckets. Indeed, there are several examples of non-transactional chaining and cuckoo hashmap implementations that scale (with most reasonable hashmap workloads and a large enough map).
 
 \begin{table}[t]
     \singlespace
@@ -373,11 +376,13 @@ By the scalable commutativity rule, there exists a implementation of a hashmap a
     \label{tab:hm_commute}
     \end{table}
 
-In a transactional setting, we have the added constraint that no transaction $T1$ commutes with another transaction $T2$ if exchanging the order of $T1$ and $T2$ means that (a) any operation in one transaction observes that a key is present given one order, but not the other; and/or (b) the presence of any key in the map immediately after both transactions have committed in the history is different in one order from the resulting size in the other.
-   
-As we did with queue transactions, we can extend either $T1$ or $T2$ to create a transaction that does not commute with the other. WLOG, choose $T1$ to extend with ordered sets of operations, and let $O_1$ be the operations performed by $T1$. We choose $O_{app}$ to append to $O_1$ and $O_{cons}$ to add to the front of $O_1$. $O_{app}$ and $O_{cons}$ may be empty, and satisfy the properties that the new $T1$ and $T2$ do not commute: one or both of (a) and (b) must hold for $T1 = O_{cons} + O_1 + O_{app}$ and $T2$.
+In a transactional setting, we have the added constraint that no two transactions commute if exchanging the order of of the two transactions means that (a) any operation in one transaction observes that a key is present given one order, but not the other; and/or (b) the presence of any key in the map immediately after both transactions have committed in the history is different in one order from the resulting size in the other.
 
-Again, it is simple to show that this extension constructs all possible non-commutative pairs of transactions, as was done in Section~\ref{com_scale}; we omit the equivalent explanation here. Examples of larger transactions that fail to commute are shown in Table~\ref{tab:txnal_hm_commute}.
+We can reason about commutativity in a transactional setting in terms of \emph{sets} of buckets that overlap between two transactions, rather than individual buckets that are both modified/read by two operations. If an operation in a transaction modifies a bucket that is read or modified by an operation in another transaction, then the two transactions will not commute.
+Examples of larger transactions that fail to commute are shown in Table~\ref{tab:txnal_hm_commute}.
+
+As in the non-transactional setting, if the hashmap is large and if the workload uses a large range of keys, it is very likely that two transactions will commute because they will modify or read separate sets of buckets. 
+The intersection between the set of buckets modified in one transaction, and the set of buckets modified in the other, is likely to be empty or small (depending on the length of the transactions and the particular workload). We can therefore expect that an implementation of a cuckoo or chaining hashmap will still scale in a transactional setting in nearly all the same scenarios in which individual operations commute. 
 
 \begin{table}[t]
     \singlespace
@@ -441,17 +446,15 @@ Again, it is simple to show that this extension constructs all possible non-comm
     \label{tab:txnal_hm_commute}
     \end{table}
 
-To synchronize transactions that do not commute, both the cuckoo and chaining hashmaps must synchronize all buckets modified by both transactions. We note that the modifications necessary to add transactional guarantees to the cuckoo hashmap are essentially equivalent to those necessary to add transactional guarantees to the chaining hashmap: an operation that requires synchronizing one bucket in the chaining hashmap requires synchronizing two buckets in the cuckoo hashmap. The method in which transactions are synchronized is as follows:
+To synchronize transactions that do not commute, both the cuckoo and chaining hashmaps must synchronize all buckets that are modified by both transactions, or that are modified by one transaction and observed by another. We note that the synchronization necessary to add transactional guarantees to the cuckoo hashmap is essentially equivalent to those necessary to add transactional guarantees to the chaining hashmap. The difference between two synchronization mechanisms is that an operation that will require synchronizing one bucket in the chaining hashmap will instead require synchronizing two buckets in the cuckoo hashmap. The method in which transactions are synchronized is as follows:
 
-A transactional find in a cuckoo hashmap and a chaining hashmap adds to the read set an object representing the bucket(s) in which the object should be (or is) located. A transactional insert adds a read---and write, depending if the inserted key is already present---of the bucket(s) in which the object should be located. A transactional erase adds a read---and write, depending if the key to erase is present---of the bucket(s) in which the object should be located. At commit time, these buckets are locked. Only reads and writes that occurred within these buckets should be in the read- and write-set of the transaction. The reads are then checked, and the writes installed.
+A transactional find in a cuckoo hashmap and a chaining hashmap adds to the read set an object representing the bucket(s) in which the object should be (or is) located. A transactional insert adds a read of the bucket in which the key is located only if the key is already present; and a transactional erase adds a read of the bucket(s) in which the key is located if the key is absent, or a write of the bucket(s) if the key to erase is present. At commit time, any buckets that are read are locked; the reads are then checked, and the writes installed.
 
-This algorithm allows for a scalable implementation of a transactional hashmap. We note that only the same buckets that are locked during the \emph{execution} of the hashmap's find or erase operations are locked again to \emph{commit} the hashmap's find or erase operation. This means that the granularity of synchronization of the transactional hashmap is still per-bucket synchronization. Adding transactions to either the cuckoo or chaining hashmap means that the buckets must be synchronized twice (once at execution, and once at commit time). 
+We note that buckets are locked during either only at execution time, only at commit time, or at both commit and execution time, depending on which operation accesses the buckets. A transactional find, unsuccessful erase, or unsuccessful insert locks the appropriate buckets only at commit time. A successful transactional erase locks the appropriate buckets only at commit time, and a successful transactional insert locks the appropriate buckets only at execution time (a bucket in which an element is inserted at execution time does not need to be locked at commit time because insertions are eager).
 
-As before, if the hashmap is large and if the workload uses a large range of keys, it is very likely that two transactions will commute because they will modify or read separate buckets. 
-We reason about commutativity in a transactional setting in terms of \emph{sets} of buckets that overlap between two transactions, rather than individual buckets that are both modified/read by two operations. However, the intersection between the set of buckets modified in one transaction, and the set of buckets modified in the other, is likely to be empty or small (depending on the length of the transactions and the particular workload). We can therefore expect that an implementation of a cuckoo or chaining hashmap will still scale in a transactional setting in nearly all the same scenarios in which individual operations commute. 
-
+This algorithm allows for a implementation of a transactional hashmap that can scale in nearly all the scenarios as an implementation of a non-transactional hashmap. This is because the granularity of synchronization of the transactional hashmap is still per-bucket synchronization. 
 The synchronization schemes of the cuckoo and chaining hashmaps rely on the fundamental assumption that operations performed on separate buckets will commute with each other. In a transactional setting, this assumption is still true for transactions whose operations modify or read on disjoint sets of buckets. Because the scenarios that require extra synchronization to handle non-commuting transactions are rare, and these scenarios do not require synchronization beyond the level of buckets, both the transactional cuckoo and chaining hashmaps scale in nearly all the same situations in which their non-transactional counterparts scale. 
 This demonstrates that, unlike our queue operation interface, our hashmap operation interface (and the commutativity of operations in a transactional setting) allows for a scalable implementation of a transactional hashmap.
 
-Furthermore, the cuckoo hashmap retains its non-transactional characteristics of better cache performance than the chaining hashmap, and asymptotic constant (or amortized constant) time bounds for its operations, even in the transactional setting. This is because the fundamental aspects of the algorithm---hashing into multiple buckets of fixed size, and the cuckoo hashing scheme for inserts---is not modified when the cuckoo hashmap is made transactional. We contrast this with the flat combining algorithm, which has to be fundamentally modified to support queue transactions.
+Furthermore, the cuckoo hashmap retains its non-transactional characteristics of better cache performance than the chaining hashmap, and asymptotic constant (or amortized constant) time bounds for its operations, even in the transactional setting. This is because the fundamental aspects of the algorithm---hashing into multiple buckets of fixed size, and the cuckoo hashing scheme for inserts---is not modified when the cuckoo hashmap is made transactional. As we stated earlier, this result is contrary to our result with the flat combining algorithm, which has to be fundamentally modified to support queue transactions.
 

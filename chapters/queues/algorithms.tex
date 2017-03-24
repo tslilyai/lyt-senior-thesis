@@ -31,13 +31,13 @@ STO provides two transactional FIFO queues that support push and pop operations 
 \begin{figure}[t]
     \centering
     \begin{lstlisting}
-            // push adds value v onto the tail of the queue
-            // always succeeds
-            void push(const value_type& v); 
-           
-            // pop removes a value from the head of the queue
-            // succeeds if the queue is nonempty 
-            bool pop();                     
+                // push adds value v onto the tail of the queue
+                // always succeeds
+                void push(const value_type& v); 
+               
+                // pop removes a value from the head of the queue
+                // succeeds if the queue is nonempty 
+                bool pop();                     
     \end{lstlisting}
     \caption{Queue Operations Interface}
     \label{fig:q_interface}
