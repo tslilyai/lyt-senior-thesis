@@ -31,6 +31,6 @@ This work is divided into the following parts:
     \item Background information on transactions and transactional memory, and related work on transactional data structure algorithms and their scalability (Chapter~\ref{related_work})
     \item An evaluation of different transactional and concurrent algorithms for queue and hashmap data structures (Chapters~\ref{queue} and~\ref{hashmap})
     \item An explanation based on operation commutativity and invalid histories for why concurrent algorithms for queues fail to retain their performance benefits when moved into the STO transactional framework (Chapter~\ref{queue})
-    \item A demonstration of how the performance loss of queue concurrent algorithms can be avoided through changing the queue operation specification (Chapter~\ref{commutativity})
+    \item A demonstration of how the performance loss of queue concurrent algorithms can be avoided through changing the queue operation specification to allow for greater commutativity in a transactional setting (Chapter~\ref{commutativity})
     \item A demonstration of and explanation why highly-concurrent hashmap algorithms do, in fact, retain performance benefits in a transactional setting (Chapter~\ref{hashmap})
 \end{itemize}
