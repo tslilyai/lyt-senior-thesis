@@ -8,9 +8,9 @@ As a supporting example of our hypotheses, we examine the flat combining techniq
 
 We then implement a weak transactional flat combining queue---a flat combining queue with operations satisfying the weak queue specification---with the expectation that the flat combining technique can achieve scalable performance close to its performance in a non-transactional setting. Our experimental results illustrate that the greater commutativity of operations in the weak queue specification is essential for the flat combining technique to be effective in a transactional setting.
 
-\section{History Terminology}
+\section{Histories and Commutativity}
 
-We introduce some terminology about histories and transactional histories that will be used in our discussion of operation commutativity.
+We introduce some terminology and results about histories and transactional histories that will be used in our discussion of operation commutativity.
 
 \begin{defn}
     A \emph{history} is a sequence of \texttt{(thread, operation, result)} tuples that represent an interleaving of operations of all threads. Knowledge of both the history and initial conditions of a data structure leads to complete knowledge of the (high-level) end state of the structure.
@@ -157,15 +157,18 @@ H & H'\\
 \end{figure}
 \end{eg}
 
-\section{The Relationship of Commutativity and Scalability}
+\subsection{The Relationship of Commutativity and Scalability}
 
 The \emph{scalable commutativity rule}, formally defined by Clements et al.~\cite{scrule}, asserts that whenever interface operations \emph{commute}, there exists an implementation of the interface that scales.
-Operations \emph{commute} in a particular interface when there is no way to distinguish their execution order: exchanging the order of the operations in the history does not modify the return values of the operations seen by each thread.
+Operations \emph{commute} in a particular interface when there is no way to distinguish their execution order: exchanging the order of the operations in the history does not modify the return values of the operations seen by each thread, and no possible future sequence of operations can distinguish the two orders.
 
-\subsection{Commutativity of the Strong Queue Specification} 
+\section{Commutativity of the Strong Queue Specification} 
 
-In a non-transactional setting, we consider histories in which the only operations are push and pop (i.e., the histories are not transactional). Given the strong queue specification (Figure~\ref{fig:q_interface}) in which push returns \texttt{void} and pop returns \texttt{bool}, we determine the commutativity of these operations by examining if exchanging the order in which the operations appear in the history changes the operations' return values. We show operations that do not commute in Table~\ref{tab:strongq_commute}.
+In a non-transactional setting, we consider histories in which the only operations are push and pop (i.e., the histories are not transactional). Given the strong queue specification (Figure~\ref{fig:q_interface}) in which push returns \texttt{void} and pop returns \texttt{bool}, we determine the commutativity of these operations by examining if exchanging the order in which the operations appear in the history changes the operations' return values or the resulting global state (if the resulting state is the same in both orders, then no future operation sequences can distinguish the orders). We show operations that do not commute in Table~\ref{tab:strongq_commute}.
+
 Based on this commutativity analysis, we note that a pop operation does not commute with a push operation when the queue is empty, or another pop operation when the queue is near empty. By the scalable commutativity rule, this means that there is no concurrent queue implementation for pop that scales in these particular scenarios. A push operation commutes with all operations because it returns \texttt{void}, and has a scalable implementation in all scenarios.
+
+In practice, the pop operation is rarely used without an accompanying call to the front operation immediately prior to the pop. This is because a user of the queue will likely not only want to remove a value and to know if a value was successfully removed from the queue (i.e., perform a pop), but also want to know the contents at the head of the queue (and of the popped value). If every pop is immediately preceded by a front operation, we note that a front-pop operation pair will never commute in \emph{any} scenario, even when the queue is empty. This is because a front-pop will return the contents of the value at the head of the queue, and the same value cannot be popped off the queue twice. To simplify our commutativity and queue algorithms discussions, we omit the front operation; however, it is important to note that omitting the front operation has the side effect of deceiving us into believing that a pop commutes in more scenarios that it does in practice.
 
 \begin{table}[t]
     \singlespace
@@ -211,20 +214,13 @@ We reason about commutativity of a queue implemented in a transactional setting 
 Because a valid transactional history is strictly serializable, we can find a corresponding serial history for every valid transactional history. This means that operations belonging to the same transaction must occur in a group in the history. To reason about transaction commutativity, we have a parallel notion to exchanging operations in the history to detect whether two operations commutate:  we exchange \emph{groups} of operations in a \texttt{START\_TXN} and \texttt{COMMIT\_TXN} block of a serial history, and detect whether there is any observable change in the return values within the exchanged transactions. Because the occurrence of each transaction in the serial transactional history can be uniquely identified by its \texttt{COMMIT\_TXN} tuple: if exchanging the positions of two transactions does not commute in a particular scenario, we can say that the two \texttt{COMMIT\_TXN} operations do not commute in that scenario.
 
 We also must now consider when \texttt{COMMIT\_TXN} operations do not commute. Note that when transactions contain only one operation, then a lack of commutativity between two transactions is equivalent to saying that that the two operations do not commute (and vice versa). We provide a constructive approach to find all non-singleton transactions in the history whose lack of commutativity prevents their order from being exchanged. This approach works by extending the singleton operations transactions that do not commute---identified in Table~\ref{tab:strongq_commute}---as follows: 
-\begin{itemize}
-    \item Let transaction $T1$ perform some ordered set of operations $O_1$ and transaction $T2$ perform some ordered set of operations $O_2$. Let $H$ be a (serial) history in which $T1$ and $T2$ do not commute, and $H'$ be the history in which the order of $T1$ and $T2$ has been exchanged. Let $H_{new}$ and $H'_{new}$ be the histories when $T1$ or $T2$ is extended with new operations.
-    \item Assume $T1$ and $T2$ do not commute: WLOG, let at least one of the return values of an operation in $O_1$ change when the order of $T1$ and $T2$ is exchanged in $H$. We know this happens only if exchanging the order of $T1$ and $T2$ causes a pop operation in $T1$ to observe an empty queue given one order, but not in another.
-    \item We extend $T1$ with operations $O_3$ appended to $O_1$, where $O_3$ is some arbitrary set of operations. Then $T1$ performing $O_1 + O_3$ does not commute with $T2$. This is because we will have in $O_1 + O_3 + O_2$ in $H_{new}$, and $O_2 + O_1 + O_3$ in $H'_{new}$: the return values of $O_1$ in $O_1 + O_3 + O_2$ are the same as in $O_1 + O_2$, and the return values of $O_1$ in $O_2 + O_1 + O_3$ are the same as in $O_2 + O_1$.
-    \item We extend $T1$ with operations $O_4$ added to the front of $O_1$. $O_4$ is an ordered set of operations such that at least one pop in $O_1$ observes an empty queue in $H_{new}$ or $H'_{new}$, and a nonempty queue in the other. Then $T1$ performing $O_4 + O_1$ does not commute with $T2$ by definition.
-\end{itemize}
 
-\noindent Conversely, we know that these arbitrarily large, non-commuting transactions that we find through our construction are the \emph{only} transactions that do not commute: 
-\begin{itemize}
-    \item Let transaction $T1$ perform some ordered set of operations $P$ and transaction $T2$ perform some ordered set of operations $Q$.
-    \item We are given that $T1$ and $T2$ do not commute. WLOG, this means that we can find some $o \in P$ s.t. $o$'s return value changes when we exchange the order of $T'$ and $T''$ in the history, and $o$ is the first such operation (necessarily a pop) in $P$ s.t.\ this occurs.
-    \item We deconstruct $O$ into the following ordered set: $O' + \{o\} + O''$. Let $\{o\}$ be $O_1$ from the construction above. 
-        Let $O'$ be $O_4$: $O'$ satisfies the properties of $O_4$ specified above, because $o$ provides the witness for the pop in $O_1$ that observes an empty queue $H_{new}$ or $H'_{new}$ and a nonempty queue in the other. We can also find a witness for $O_3$, namely $O''$: because $O' + \{o\}$ does not commute with $T1$, our construction will generate $P = O' + \{o\} + O''$ as operations of a transaction $T1$ that does not commute with $T2$.
-\end{itemize}
+Let transaction $T1$ perform some ordered set of operations $O_1$ and transaction $T2$ perform some ordered set of operations $O_2$ such that $T1$ and $T2$ do not commute. $T1$ and $T2$ do not commute if and only if exchanging the order of $T1$ and $T2$ means (a) a pop operation in one transaction observes an empty queue given one order, but not the other; and/or (b) the resulting size of the queue immediately after both transactions have committed in the history is different in one order from the resulting size in the other.
+   
+   We can extend either $T1$ or $T2$ to create a transaction that does not commute with the other. WLOG, choose $T1$ to extend with ordered sets of operations $O_{app}$ appended to $O_1$ and $O_{cons}$ added to the front of $O1$. $O_{app}$ and $O_{cons}$ may be empty, and satisfy the properties that the new $T1$ and $T2$ do not commute: one or both of (a) and (b) must hold for $T1 = O_{cons} + O_1 + O_{app}$ and $T2$.
+
+We know that these arbitrarily large, non-commuting transactions that we find through our construction are the \emph{only} transactions that do not commute. Let $T1$ and $T2$ be two non-commuting transactions. If $T1$ and $T2$ do not commute because of property (a), then we can deconstruct $T1$ into operations $O' + \{o\} + O''$, where $o$'s return value changes when we exchange the order of $T1$ and $T2$ in the history. We then show that our method will construct this transaction by providing witnesses $O_1 = \{o\}$, $O'' = O_{app}$, and $O' = O_{cons}$.
+Otherwise, $T1$ and $T2$ do not commute because of property (b). We find the smallest subset $O_s$ of operations in $T1$ such that these operations do not commute with $T2$. Trivially, we then have witnesses $O_1 = O_s$, $O_{cons}$ = operations prior to $O_s$ in $T1$, and $O_{app}$ = operations after $O_s$ in $T1$.
 
 \begin{table}[t]
     \singlespace
@@ -288,11 +284,12 @@ We also must now consider when \texttt{COMMIT\_TXN} operations do not commute. N
     \label{tab:txnal_strongq_commute}
     \end{table}
 
-\noindent We provide some examples of larger transactions that fail to commute in Table~\ref{tab:txnal_strongq_commute}.
+We provide some examples of larger transactions that fail to commute in Table~\ref{tab:txnal_strongq_commute}. These can all be created using our construction and starting from singleton transactions (single operations) that do not commute.
 
 Based on this commutativity analysis, we note that, in addition to the non-commutativity of pop operations in particular scenarios involving empty, or near-empty queues, we now have a further lack of commutativity of transactions (identified by their \texttt{COMMIT\_TXN} operations) even in scenarios in which the queue may contain far more than one element. For example, even if a transaction starts with a relatively non-empty queue, a large transaction that performs several pops may reduce the queue to a near-empty state, and therefore contain a pop operation that observes the empty status of the queue. This transaction will likely \emph{not} commute with any other transaction performing a push or pop.  By the scalable commutativity rule, this means that there is no scalable queue implementation for a strong transactional queue whenever \texttt{COMMIT\_TXN} operations do not commute.
 
-We hypothesize that any implementation of our strong queue specification in a transactional setting that must handle scenarios in which queues may become empty will not scale. A concurrent queue already lacks a scalable implementation for pop due to the high likelihood that a pop operation will not commute with any other operation when the queue nears empty. When this queue is put in a transactional setting, there is an even higher likelihood that two transactions will not commute, even if the queue contains more values. This prevents an efficient, scalable implementation of a strong transactional queue. In Section~\ref{wqueue}, we provide a counterexample, a transactional queue satisfying the \emph{weak queue specification}, and demonstrate how increased commutativity in this new specification allows for a scalable implementation.
+We hypothesize that any implementation of our strong queue specification in a transactional setting that must handle scenarios in which queues may become empty will not scale. A concurrent queue already lacks a scalable implementation for pop due to the high likelihood that a pop operation will not commute with any other operation when the queue nears empty. When this queue is put in a transactional setting, there is an even higher likelihood that two transactions will not commute, even if the queue contains more values.\footnote{Furthermore, if we consider that a pop is often preceded by a front operation, then every individual pop (even on non-empty queues) will not commute, and every transaction containing a (front-)pop operation on a non-empty queue will not commute with another transaction containing a (front-)pop operation on a non-empty queue.}
+This prevents an efficient, scalable implementation of a strong transactional queue. In Section~\ref{wqueue}, we provide a counterexample, a transactional queue satisfying the \emph{weak queue specification}, and demonstrate how increased commutativity in this new specification allows for a scalable implementation.
 
 \subsection{The Strong Transactional Flat Combining Queue}
 The flat combining algorithm is an example of a queue algorithm that implements the strong queue interface and loses its effectiveness in a transactional setting. Recall that our results from testing Hypothesis 5 demonstrate that flat combining's effectiveness is lost in a transactional setting. Here, we argue that this is due to a decrease in the amount of commutativity in the transactional setting: in addition to non-commutative single operations (pops and pushes), transactions may not always commute.
