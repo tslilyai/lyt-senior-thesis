@@ -158,6 +158,7 @@ H & H'\\
 \end{eg}
 
 \subsection{The Relationship of Commutativity and Scalability}
+\label{com_scale}
 
 The \emph{scalable commutativity rule}, formally defined by Clements et al.~\cite{scrule}, asserts that whenever interface operations \emph{commute}, there exists an implementation of the interface that scales.
 Operations \emph{commute} in a particular interface when there is no way to distinguish their execution order: exchanging the order of the operations in the history does not modify the return values of the operations seen by each thread, and no possible future sequence of operations can distinguish the two orders.
@@ -217,9 +218,9 @@ We also must now consider when \texttt{COMMIT\_TXN} operations do not commute. N
 
 Let transaction $T1$ perform some ordered set of operations $O_1$ and transaction $T2$ perform some ordered set of operations $O_2$ such that $T1$ and $T2$ do not commute. $T1$ and $T2$ do not commute if and only if exchanging the order of $T1$ and $T2$ means (a) a pop operation in one transaction observes an empty queue given one order, but not the other; and/or (b) the resulting size of the queue immediately after both transactions have committed in the history is different in one order from the resulting size in the other.
    
-   We can extend either $T1$ or $T2$ to create a transaction that does not commute with the other. WLOG, choose $T1$ to extend with ordered sets of operations $O_{app}$ appended to $O_1$ and $O_{cons}$ added to the front of $O1$. $O_{app}$ and $O_{cons}$ may be empty, and satisfy the properties that the new $T1$ and $T2$ do not commute: one or both of (a) and (b) must hold for $T1 = O_{cons} + O_1 + O_{app}$ and $T2$.
+We can extend either $T1$ or $T2$ to create a transaction that does not commute with the other. WLOG, choose $T1$ to extend, and ordered sets of operations $O_{app}$ to append to $O_1$ and $O_{cons}$ to add to the front of $O_1$. $O_{app}$ and $O_{cons}$ may be empty, and satisfy the properties that the new $T1$ and $T2$ do not commute: one or both of (a) and (b) must hold for $T1 = O_{cons} + O_1 + O_{app}$ and $T2$.
 
-We know that these arbitrarily large, non-commuting transactions that we find through our construction are the \emph{only} transactions that do not commute. Let $T1$ and $T2$ be two non-commuting transactions. If $T1$ and $T2$ do not commute because of property (a), then we can deconstruct $T1$ into operations $O' + \{o\} + O''$, where $o$'s return value changes when we exchange the order of $T1$ and $T2$ in the history. We then show that our method will construct this transaction by providing witnesses $O_1 = \{o\}$, $O'' = O_{app}$, and $O' = O_{cons}$.
+We know that these arbitrarily large, non-commuting pairs of transactions constructed using this method are the \emph{only} transactions that do not commute. Let $T1$ and $T2$ be two non-commuting transactions. If $T1$ and $T2$ do not commute because of property (a), then we can deconstruct $T1$ into operations $O' + \{o\} + O''$, where $o$'s return value changes when we exchange the order of $T1$ and $T2$ in the history. We then show that our method will construct this transaction by providing witnesses $O_1 = \{o\}$, $O'' = O_{app}$, and $O' = O_{cons}$.
 Otherwise, $T1$ and $T2$ do not commute because of property (b). We find the smallest subset $O_s$ of operations in $T1$ such that these operations do not commute with $T2$. Trivially, we then have witnesses $O_1 = O_s$, $O_{cons}$ = operations prior to $O_s$ in $T1$, and $O_{app}$ = operations after $O_s$ in $T1$.
 
 \begin{table}[t]
