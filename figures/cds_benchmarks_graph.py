@@ -257,7 +257,7 @@ class Plotter():
             if len(labels) < 5:
                 fig = plt.figure(figsize=(8,5))
             else:
-                fig = plt.figure(figsize=(9,6))
+                fig = plt.figure(figsize=(9,5))
             ax = fig.add_subplot(111)
             qbars = []
             for index in indices:
@@ -426,8 +426,8 @@ class Plotter():
     def concurrent_queues_graphs(self):
         queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "Basket", "Moir","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
         #queues = ["T-QueueO", "T-QueueP", "NT-FCQueue", "Basket", "Max Performance of other queues","Michael-Scott","Optimistic","Read-Write","Segmented","TsigasCycle"]
-        filename='concurrent/'
-        #filename='concurrent/all'
+        #filename='concurrent/'
+        filename='concurrent/all'
         colors = ["red", "red","green"] + [(0.15*i,0.15*i, 0.15*i) for i in range(7)]
         results = self.ctests['Q:PushPop']
 
