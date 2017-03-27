@@ -56,9 +56,6 @@ A transactional pop first checks if the queue will be empty by observing the cur
 If the queue will be empty, the thread checks for earlier pushes by the same transaction: if the thread intends to push a value onto the queue in this transaction, then the thread removes the value from its \texttt{write\_list} and returns \texttt{true}. Otherwise, the return value of the pop is \texttt{false}. At commit time, the thread must check that the queue is still empty by validating the value of the tail version, which increments each time an item is added to the queue.
 When a transaction that performs one or more pops commits, it locks the head version (ensuring atomic access to the head of the queue), removes a value from the head of the queue for every successful transactional pop call, and increments the head version.
 
-We note that this algorithm can be potentially improved by using a predicate on the emptiness of the queue, rather than the head version, to check for changes in queue emptiness in the specific case in which a pop encounters an empty queue.
-\lyt{todo}
-
 %The design is summarized in Table \ref{table:sto1}.
 
 \subsection{T-QueueP}
@@ -127,7 +124,7 @@ We now describe the new algorithms for push and pop.  We change the types of req
     \item \texttt{<PUSH, list>} : push a list of values onto the queue
     \item \texttt{<MARK\_POP, thread\_id>} : mark a value in the queue as ``to be popped'' by this \texttt{thread\_id}
     \item \texttt{<DEQ, thread\_id>} : dequeue all values in the queue that are marked ``to be popped'' by this \texttt{thread\_id}
-    \item \texttt{<EMPTY?, thread\_id>} : check if the queue, after popping all items marked by this \texttt{thread\_id}, is empty
+    \item \texttt{<EMPTY?, thread\_id>} : check that (1) the queue, after popping all items marked by this \texttt{thread\_id}, is empty and that (2) no other transactions have performed a sequence of concurrent updates that increased the queue size but then returned it to empty.
     \item \texttt{<CLEANUP, thread\_id>} : unmark all values that are marked with this \texttt{thread\_id}
 \end{itemize}
 
@@ -155,10 +152,9 @@ If the value is neither marked by another thread nor unmarked, then the value mu
 
 If the queue is empty, or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time. If the calling thread has previously performed a push in the same transaction, the transaction removes the head of the \texttt{write\_list}; in this case, the transactional pop returns true. Otherwise, the pop returns false.
 
-The \texttt{<EMPTY?, thread\_id>} request is posted at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction. If the thread receives \texttt{[<EMPTY?, thread\_id> == true]}, then the queue state is currently empty.
-The thread therefore knows that no other thread has increased the size of the queue since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}. The transaction can safely commit. If the thread instead receives \texttt{[<EMPTY?, thread\_id> == false]}, then it knows the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
+The \texttt{<EMPTY?, thread\_id>} request is posted during the check at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread receives an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction's execution. If the thread receives \texttt{[<EMPTY?, thread\_id> == true]}, then the queue is empty at commit time and the thread knows that no concurrent modifications to the queue have been performed since the time it saw an empty queue while performing a \texttt{<MARK\_POP>}. The transaction can safely commit. If the thread instead receives \texttt{[<EMPTY?, thread\_id> == false]}, then it knows the queue is no longer empty---another thread has pushed items onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
 
-If a thread ever sees an empty queue when executing a pop \emph{and} subsequently performs a push within the same transaction, the thread must prevent another transaction from committing between the time of the empty check and the installation of its pushed value. This requires adding what is essentially a lock of the tail of the queue. This is implemented via additional machinery in the combiner thread code, which signals whether or not a transaction has locked the queue and prevents any other thread's pushes from being installed until the ``lock'' is released.
+Note that in order for the check of \texttt{EMPTY?} to correctly verify the empty state of the queue at commit time, it also needs to check both that the queue is empty, and that there have been no concurrent sequence of updates by other transactions that adds values to the queue and then returns the queue to an empty state. Our implementation checks for such concurrent updates using an \emph{empty predicate version}. This version is updated when a transaction installs a push, and a transaction that observes an empty queue during a pop adds a read of this version. This version is checked by the \texttt{EMPTY?} call at commit time, which will return false if the version has changed since the time it was observed.
 
 The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any items in the queue that it had marked as pending pops. The combiner thread iterates through the queue from the head and unmarks any items with the \texttt{thread\_id}. An example of this is shown in Figure~\ref{fig:fcqueue_abort2}.
 
