@@ -241,23 +241,24 @@ class Plotter():
         width = 0.5/len(indices)
         qdata = defaultdict(dict)
         labels = [queues[i] for i in indices]
+        
+        for q_index in range(len(queues)):
+            qdata[q_index]['speed'] = []
+            qdata[q_index]['aborts'] = []
 
         for size, data_lists in results.items():
             if len(data_lists['speed'][0]) == 0:
                 continue
-
             for q_index in range(len(queues)):
-                qdata[q_index]['speed'] = []
-                qdata[q_index]['aborts'] = []
-                for i in range(len(data_lists)):
-                    qdata[q_index]['speed'].append(data_lists['speed'][q_index][0])
-                    qdata[q_index]['aborts'].append(data_lists['aborts'][q_index][0])
-       
+                qdata[q_index]['speed'].append(data_lists['speed'][q_index][0])
+                qdata[q_index]['aborts'].append(data_lists['aborts'][q_index][0])
+
+        for size, data_lists in results.items():
             x = range(len(INIT_SIZES)) 
             if len(labels) < 5:
                 fig = plt.figure(figsize=(8,5))
             else:
-                fig = plt.figure(figsize=(9,5))
+                fig = plt.figure(figsize=(9,6))
             ax = fig.add_subplot(111)
             qbars = []
             for index in indices:
@@ -299,7 +300,7 @@ class Plotter():
                 '\\hline',
                 '\\multirow{2}{*}{Queue} & \\multicolumn{2}{c|}{Initial Size}\\\\'
                 '\\cline{2-3}'
-                '& \qquad 10000 \qquad\quad & 100000\\\\',
+                '& \qquad 10000 \qquad\quad & \qquad 100000\qquad\quad\\\\',
             ]
             end_lines = [
                 '\\hline'
@@ -312,6 +313,8 @@ class Plotter():
                 f.write('\\hline'+"\n")
                 f.write('\\hline'+"\n")
                 for i in indices:
+                    if i == 3:
+                        continue
                     data = qdata[i]['aborts']
                     f.write(queues[i] + ' & ' 
                             + '{0:.5f}'.format(median(data[0])) + ' & ' 
@@ -383,11 +386,11 @@ class Plotter():
             # aborts
             if 'map' not in filename:
                 begin_lines = [
-                    '\\begin{tabular}{|c|c|c|c|}',
+                    '\\begin{tabular}{|c|c|c|c|c|c|c|}',
                     '\\hline',
-                    '\\multirow{2}{*}{Queue} & \\multicolumn{3}{c|}{\#Threads}\\\\'
-                    '\\cline{2-4}'
-                    '& \quad 4 & 12 & 20\\\\',
+                    '\\multirow{2}{*}{Queue} & \\multicolumn{6}{c|}{\#Threads}\\\\'
+                    '\\cline{2-7}'
+                    '& 2 & 4 & 8 & 12 & 16 & 20\\\\',
                 ]
                 end_lines = [
                     '\\hline'
@@ -396,11 +399,12 @@ class Plotter():
                 myfile = filename+str(size)+'aborts.tex'
             else:
                 begin_lines = [
-                    '\\begin{tabular}{|c|c|c|c|}',
+                    '\\begin{tabular}{|c|c|c|c|c|c|c|}',
                     '\\hline',
-                    '\\multirow{2}{*}{Hashmap} & \\multicolumn{3}{c|}{\#Threads}\\\\'
-                    '\\cline{2-4}'
-                    '& 4 & 12 & 20\\\\',
+                    '\\multirow{2}{*}{Hashmap} & \\multicolumn{6}{c|}{\#Threads}\\\\'
+                    '\\cline{2-7}'
+                    '& 2 & 4 & 8 & 12 & 16 & 20\\\\',
+                    #'& 4 & 12 & 20\\\\',
                 ]
                 end_lines = [
                     '\\hline',
@@ -414,11 +418,12 @@ class Plotter():
                 f.write('\\hline'+"\n")
                 f.write('\\hline'+"\n")
                 for i in indices:
+                    if 'map' not in filename and i == 3:
+                        continue
                     datum = data[i]['aborts'][1:]
                     thread_data = []
                     for j, val in enumerate(datum):
-                        if j % 2 == 1:
-                            thread_data.append('{0:.5f}'.format(median(val)))
+                        thread_data.append('{0:.5f}'.format(median(val)))
                     f.write(ds[i] + ' & ' + ' & '.join(thread_data) + '\\\\\n')
                 for line in end_lines:
                     f.write(line + '\n')
@@ -489,7 +494,7 @@ class Plotter():
             "HM10K:F34,I33,E33","HM10K:F90,I5,E5",
         ]
 
-        '''patterns = ['','//','','..','']
+        patterns = ['','//','','..','']
         self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_5,5)
         self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_10,10)
         self.get_cm_graphs(maps, colors, patterns, filename+'33', map_cache_misses_15,15)
@@ -507,12 +512,13 @@ class Plotter():
         for name in test_names:
             self.get_fullness_graphs(0, filename+"chaining", colors[0], name) 
             self.get_fullness_graphs(2, filename+"kf", colors[2], name) 
+        '''
 
 def main():
     p = Plotter()
     #p.hashmaps_graphs()
     p.fcqueues_graphs()
-    #p.concurrent_queues_graphs()
+    p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,11 @@
 \begin{thebibliography}{10}
 
+\bibitem{queue4}
+Y.~Afek, G.~Korland, and E.~Yanovsky.
+\newblock {\em Quasi-Linearizability: Relaxed Consistency for Improved
+  Concurrency}, pages 395--410.
+\newblock Springer Berlin Heidelberg, Berlin, Heidelberg, 2010.
+
 \bibitem{badrinath}
 B.~R. Badrinath and K.~Ramamritham.
 \newblock Semantics-based concurrency control: Beyond commutativity.
@@ -35,12 +41,6 @@ D.~Dice, O.~Shalev, and N.~Shavit.
 \newblock Transactional locking ii.
 \newblock In {\em International Symposium on Distributed Computing}, pages
   194--208. Springer, 2006.
-
-\bibitem{queue2}
-S.~Doherty, L.~Groves, V.~Luchangco, and M.~Moir.
-\newblock {\em Formal Verification of a Practical Lock-Free Queue Algorithm},
-  pages 97--114.
-\newblock Springer Berlin Heidelberg, Berlin, Heidelberg, 2004.
 
 \bibitem{swisstm}
 A.~Dragojevi{\'c}, R.~Guerraoui, and M.~Kapalka.
@@ -228,12 +228,13 @@ A.~Spiegelman, G.~Golan-Gueta, and I.~Keidar.
   Language Design and Implementation}, PLDI '16, pages 682--696, New York, NY,
   USA, 2016. ACM.
 
-\bibitem{stone}
-J.~M. Stone.
-\newblock A simple and correct shared-queue algorithm using compare-and-swap.
-\newblock In {\em Proceedings of the 1990 ACM/IEEE Conference on
-  Supercomputing}, Supercomputing '90, pages 495--504, Los Alamitos, CA, USA,
-  1990. IEEE Computer Society Press.
+\bibitem{queue5}
+P.~Tsigas and Y.~Zhang.
+\newblock A simple, fast and scalable non-blocking concurrent fifo queue for
+  shared memory multiprocessor systems.
+\newblock In {\em Proceedings of the Thirteenth Annual ACM Symposium on
+  Parallel Algorithms and Architectures}, SPAA '01, pages 134--143, New York,
+  NY, USA, 2001. ACM.
 
 \bibitem{weihl}
 W.~E. Weihl.
