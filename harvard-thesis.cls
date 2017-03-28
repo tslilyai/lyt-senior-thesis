@@ -195,7 +195,7 @@
 % the acknowledgments page
 \newcommand{\acknowledgments}{
 	\chapter*{Acknowledgments}
-    \vspace*{-40pt}
+    \vspace*{-50pt}
 	\noindent
     \doublespacing
 	\input{frontmatter/thanks}
