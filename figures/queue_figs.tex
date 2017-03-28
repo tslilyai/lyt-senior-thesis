@@ -54,12 +54,13 @@ Cache misses are recorded by running the Multi-Thread Singletons Test benchmark 
 \begin{figure}[H]
     \centering
         \input{figures/fcqueues/all10000aborts.tex}
-    \caption*{Multi-Thread Singletons Test: Initial Size 10000}
+    \caption*{Multi-Thread Singletons Test: Initial Size 10000$^*$}
 \end{figure}
 \begin{figure}[H]
     \centering
     \input{figures/fcqueues/all100000aborts.tex}
-    \caption*{Multi-Thread Singletons Test: Initial Size 100000}
+    \caption*{Multi-Thread Singletons Test: Initial Size 100000$^*$}
 \end{figure}
+    \caption*{\footnotesize{$^*$We note that the abort rate appears to spike at 4 threads and decrease as the number of threads increases. One possible explanation may be that contention varies due to the spread of the threads among the CPU sockets.}}
     \caption{Queue Test Abort Rate Results}
 \end{table}
