@@ -108,15 +108,14 @@ The test is run twice, once with a probability of 33\% insert, 33\% delete, and 
 \subsection{Overview of Results}
 
 We measure all the performance of all hashmaps in terms of operations per second, abort rates, and cache performance (number of cache misses). 
-The full results can be found in Appendix~\ref{app:hashmaps}. As we did with the queue results, we proceed in our discussion by first giving an overview of our conclusions, then show how we reach these conclusions through a sequence of hypotheses.
-
-Our results demonstrate the following:
-\begin{itemize}
-    \item The key-fragments transactional cuckoo hashmap achieves the best overall cache performance. The number of cache misses is strongly correlated with overall performance, particularly because the abort rate of our tests is negligible.
+The full results can be found in Appendix~\ref{app:hashmaps}. As we did with the queue results, we proceed in our discussion by first giving an overview of our conclusions, then show how we reach these conclusions through a sequence of hypotheses. We draw the following conclusions from our results (corresponding to our four hypotheses):
+\begin{enumerate}
+    \item The key-fragments transactional cuckoo hashmap achieves the best overall cache performance. 
     \item When the hashmap can fit entirely or mostly in cache, the transactional cuckoo hashmaps outperform the transactional chaining hashmap.
     \item When the hashmap has a high maximum fullness, the transactional cuckoo hashmaps outperform the transactional chaining hashmap.
-    \item The relative performance of the transactional cuckoo hashmaps and the transactional chaining hashmap mirrors the relative performance expected of their non-transactional counterparts.
-\end{itemize}
+    \item The number of cache misses is strongly correlated with overall performance, particularly because the abort rate of our tests is negligible.
+\end{enumerate}
+Our overall conclusion is that the relative performance of the transactional cuckoo hashmaps and the transactional chaining hashmap mirrors the relative performance expected of their non-transactional counterparts.
 
 \subsection{Hypothesis 1}
 \subsubsection{The non-allocating transactional cuckoo hashmap (T-CuckooNA) achieves the best cache usage out of all transactional hashmaps (Not Supported).}
@@ -269,7 +268,7 @@ Regardless of the number of buckets in the map, T-Chaining experiences a much mo
 
 
 \subsection{Hypothesis 4}
-\subsubsection{An algorithm's cache usage most heavily affects performance on our benchmarks; abort rate has a negligible effect on performance (Supported).}
+\subsubsection{An algorithm's cache usage most heavily affects performance on our benchmarks; abort rate is negligible and has little effect on performance (Supported).}
 
     We pose this hypothesis to determine if the bottleneck in performance is the algorithm's cache usage or its abort rate. 
 Our results for both tests discussed in Hypothesis 3 indicate that the number of cache misses is strongly correlated with performance. In general, the performance of all hashmaps decreases slightly (less than 20\%) as hashmap size increases from 10K to 1M buckets. We attribute this to the increasing number of cache misses with increasing numbers of buckets.
@@ -300,7 +299,7 @@ We see that cache performance affects overall performance more than the abort ra
 
 \vspace{12pt}
 \noindent\fbox{\begin{minipage}{\textwidth}
-    \textbf{SUPPORTED}: The number of cache misses is strongly correlated with performance, but abort rate does not heavily affect performance.
+    \textbf{SUPPORTED}: The number of cache misses is strongly correlated with performance on our benchmarks, but abort rate is low and does not heavily affect performance.
 \end{minipage}}
 
 \subsection{Conclusion}

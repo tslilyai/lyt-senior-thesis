@@ -45,7 +45,7 @@ STO provides two transactional FIFO queues that support push and pop operations 
 
 \subsection{T-QueueO}
 T-QueueO is an optimistic transactional queue, and implements a bounded-length transactional queue using a circular buffer.
-It supports transactional operations push and pop, and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue while executing their transactions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. Checks on the queue are performed using two versions: the head version and the tail version. The head version, which tracks the state of the head, is used to check if another thread has popped from the queue, and the tail version, which tracks the state of the tail, is used to check if another thread has pushed onto the queue.
+It supports transactional operations push and pop, and is implemented using optimistic concurrency control (OCC). This means that two threads can simultaneously access the queue while executing their transactions. At commit time, the threads check if the queue has changed in a way that would invalidate their transactions. T-QueueO exposes two versions for checking the state of the queue: the head version and the tail version. The head version, which tracks the state of the head, is used to check if another thread has popped from the queue, and the tail version, which tracks the state of the tail, is used to check if another thread has pushed onto the queue.
 
 A transactional push adds to an internal \texttt{write\_list}, which holds a thread-local list of values to be pushed onto the queue at commit time. At commit time, the tail version acts as a lock to prevent any other thread from pushing onto the queue. After locking the tail version, the thread pushes all values on the \texttt{write\_list} onto the queue and increments the tail version. If the queue is full, the queue will raise an assertion error.
 If a transaction performs only pushes, then the transaction will always commit unless the bounded size overflows: a push does not observe any property of the queue, such as the value at the head of the queue or the emptiness of the queue. 
@@ -110,7 +110,6 @@ Detecting these invalid orderings requires two important changes to flat combini
 
 \end{enumerate}
 
-
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_publist}
@@ -151,17 +150,16 @@ If the value is neither marked by another thread nor unmarked, then the value mu
 
 If the queue is empty, or all values are marked with the caller's \texttt{thread\_id}, the combiner thread will return \texttt{<EMPTY>}, which is remembered by the calling thread. An \texttt{<EMPTY>} response requires that the size of the queue be checked at commit time. If the calling thread has previously performed a push in the same transaction, the transaction removes the head of the \texttt{write\_list}; in this case, the transactional pop returns \texttt{true}. Otherwise, the pop returns \texttt{false}.
 
+
 The \texttt{<EMPTY?, thread\_id>} request is posted during the check at commit time when a thread tries to commit a transaction that observed an empty queue at some point in its execution. This happens when the thread observes an \texttt{<EMPTY>} response to a \texttt{<MARK\_POP>} request during the transaction's execution. If \texttt{EMPTY?} returns \texttt{true}, then the queue is empty at commit time. No concurrent modifications to the queue have been performed since the time the thread saw an empty queue while performing a \texttt{<MARK\_POP>}, and the transaction can safely commit. If instead \texttt{EMPTY?} returns \texttt{false}, then the thread knows the queue is no longer empty---another thread has pushed values onto the queue---and this thread's \texttt{<MARK\_POP>} result is invalid. The transaction must therefore abort. This scenario is shown in Figure~\ref{fig:fcqueue_abort2}.
 
 Note that in order for the check of \texttt{EMPTY?} to correctly verify the empty state of the queue at commit time, it needs to check both that the queue is empty, and that there have been no concurrent updates by other transactions that add values to the queue and then return the queue to an empty state. Our implementation checks for such concurrent updates using an \emph{empty predicate version}. This version is updated when a transaction installs a push, and a transaction that observes an empty queue during a pop adds a read of this version. This version is checked by the \texttt{EMPTY?} call at commit time, which will return \texttt{false} if the version has changed since the time it was observed.
 
 The \texttt{<CLEANUP, thread\_id>} request is posted when a thread aborts a transaction and must unmark any values in the queue that it had marked as pending pops. The combiner thread iterates through the queue from the head and unmarks any values with the \texttt{thread\_id}. An example of this is shown in Figure~\ref{fig:fcqueue_abort2}.
 
-
-\begin{figure}[ht!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.45\textwidth]{fcqueue_abort2}
     \caption[Abort and cleanup when checking the empty status of the queue]{This sequence shows how a transaction can abort when checking \texttt{<EMPTY?>} in the transactional flat combining queue. $T2$ tries to pop from an empty queue, and sees the queue is empty. This means that when $T2$ commits, $T2$ will have to check if the queue is empty. $T1$ commits its transaction and pushes $v0$ onto the queue (recall that a push only executes at commit time). $T2$ then tries to pop another value off the queue and sees $v0$, marking it with its \texttt{thread\_id} 2. $T2$ tries to commit, but observes that the queue is no longer empty: $T2$ must abort. When $T2$ aborts, it must clean up any markers it left in the queue.}
 \label{fig:fcqueue_abort2}
 \end{figure}
-
