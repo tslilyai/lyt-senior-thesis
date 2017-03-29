@@ -12,7 +12,7 @@ In all graphs, we show the median of 5 consecutive runs with the minimum and max
 
 \emph{Initial Queue Size}. We run our tests with varying numbers of initial entries in the queue. This affects how often the structure becomes empty, which can cause aborts and additional overhead (as described in the algorithms above). It also affects the number of cache lines accessed: a near-empty queue will never require iterating over values contained in more than one cache line.
 
-\emph{Operations per transaction}. We set the number of operations per transaction to 1 (i.e., the transactions are singleton transactions). By keeping a transaction as short as possible, we maximize the impact of any fixed per-transaction overhead. However, we also minimize the performance hit from the additional transactional overhead required to maintain and commit larger read- or write-sets: running multiple-operation transactions requires multiple-item support in read- and write-sets, creates scenarios of read-my-writes, and increases the number of aborts and retries, all of which incur additional overhead. 
+\emph{Operations per transaction}. We set the number of operations per transaction to 1 (i.e., the transactions are singleton transactions). By keeping a transaction as short as possible, we maximize the impact of any fixed per-transaction overhead. However, we also minimize the performance hit from the additional transactional overhead required to maintain and commit larger read or write sets: running multiple-operation transactions requires multiple-item support in read and write sets, creates scenarios of read-my-writes, and increases the number of aborts and retries, all of which incur additional overhead. 
 Because most highly-concurrent data structures provide guarantees equivalent to those of singleton transactions, we use singleton transactions when comparing transactional and non-transactional data structures.
 Note that our data structure implementations can correctly handle multiple-operation transactions: we simply benchmark them with singleton transactions to compare performance.
 
@@ -148,7 +148,7 @@ The T-QueueP outperforms all queues by at least 150\% on the 2-thread Push-Pop t
 Regardless of the difference in speed between the push-only and pop-only threads, we see that our naive algorithms perform at least as well as the majority of concurrent algorithms on this test. 
 T-QueueO performs about equally as well as any non-transactional queue, and the ratio of pops to pushes in T-QueueO is close to that of these non-transactional queues.
 
-The Push-Pop Test is designed for low abort rates and minimal transactional overhead from tracking items in read- and write-sets. It is therefore unsurprising that, on this test, a simple synchronization strategy can outperform the majority of highly-concurrent algorithms which are optimized for scalability. 
+The Push-Pop Test is designed for low abort rates and minimal transactional overhead from tracking items in read and write sets. It is therefore unsurprising that, on this test, a simple synchronization strategy can outperform the majority of highly-concurrent algorithms which are optimized for scalability. 
 Our results demonstrate that a simple implementation of a naive algorithm can consistently outperform more complex concurrent queue implementations, even when supporting transactions using STO. The overhead added from STO does not inherently cripple performance---our transactional data structures can compete with several highly-concurrent, non-transactional data structures in particular cases. 
 
 \vspace{12pt}
@@ -215,7 +215,7 @@ We create a version of NT-FCQueue, called NT-FCQueueWrapped, that invokes genera
 \label{fig:wrappers}
 \end{figure}
 The STO wrapper functions called by NT-FCQueueWrapped must be called by any user of the data structure in order for the data structure to perform the necessary bookkeeping to support transactions.
-These two calls are \texttt{start\_transaction} and \texttt{try\_commit}, and allow a user to mark which operations should occur together in the same transaction. An example of how these calls are used are in Figure~\ref{fig:wrappers}. After invoking the \texttt{start\_transaction} call, the thread is able to collect items in its read- and write-sets. At the end of a transaction, the thread invokes the \texttt{try\_commit} call to run the commit protocol. The NT-FCQueueWrapped adds no items to the read- and write-sets after invoking \texttt{start\_transaction} and does nothing in its commit protocol. This means that NT-FCQueueWrapped incurs the minimum amount of overhead necessary to use STO and therefore represents the upper bound on the performance we can expect from a fully transactional flat combining queue (T-FCQueue). 
+These two calls are \texttt{start\_transaction} and \texttt{try\_commit}, and allow a user to mark which operations should occur together in the same transaction. An example of how these calls are used are in Figure~\ref{fig:wrappers}. After invoking the \texttt{start\_transaction} call, the thread is able to collect items in its read and write sets. At the end of a transaction, the thread invokes the \texttt{try\_commit} call to run the commit protocol. The NT-FCQueueWrapped adds no items to the read and write sets after invoking \texttt{start\_transaction} and does nothing in its commit protocol. This means that NT-FCQueueWrapped incurs the minimum amount of overhead necessary to use STO and therefore represents the upper bound on the performance we can expect from a fully transactional flat combining queue (T-FCQueue). 
 
 \begin{figure}[t!]
     \centering
@@ -275,7 +275,7 @@ We compare T-FCQueue against NT-FCQueueWrapped and T-QueueP to measure how the f
 	\begin{minipage}{0.9\textwidth}
         {\includegraphics[width=\textwidth]{fcqueues/tQ:PushPop.png}}
 	\end{minipage}
-        \caption{T-FCQueue Performance: Push-Pop Test}
+        \caption{T-FCQueue Performance: Push-Pop Test (2 threads)}
         \label{fig:tqs_pp}
 \end{figure}
 
