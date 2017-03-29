@@ -16,6 +16,7 @@ TESTS = ["PQRandSingleOps:R","PQRandSingleOps:D","PQPushPop:R",
         ]
 CONCURRENT_BENCHMARK_FILE = "concurrent/concurrent.data"
 FCQUEUES_BENCHMARK_FILE = "fcqueues/fcqueues.data"
+TIMES_FILE = "../times.out"
 HM_BENCHMARK_FILE = "maps/maps_%s.data"
 INIT_SIZES = [10000, 100000]
 NTHREADS = [1,2,4,8,12,16,20]
@@ -150,6 +151,51 @@ class Plotter():
         self.hmtests = {}
         for fullness in fullnesses:
             self.hmtests[fullness] = _construct_test_data(HM_BENCHMARK_FILE % fullness)
+
+    def get_prog_graphs(self):
+        with open(TIMES_FILE) as f:
+            index = 0
+            lines = f.read().splitlines()
+        Othread0 = [int(x) for x in lines[0].split(',')[:-1]]
+        Othread1 = [int(x) for x in lines[1].split(',')[:-1]]
+        Pthread0 = [int(x) for x in lines[2].split(',')[:-1]]
+        Pthread1 = [int(x) for x in lines[3].split(',')[:-1]]
+
+        min_time_o = min(min(Othread0), min(Othread1))
+        min_time_p = min(min(Pthread0), min(Pthread1))
+        time_range = max(max(max(Pthread0), max(Pthread1)) - min_time_p, 
+                    max(max(Othread0), max(Othread1)) - min_time_o)
+        Othread0 = [x - min_time_o for x in Othread0]
+        Othread1 = [x - min_time_o for x in Othread1]
+        Pthread0 = [x - min_time_p for x in Pthread0]
+        Pthread1 = [x - min_time_p for x in Pthread1]
+        ys = [1*y for y in range(100)]
+
+        colors = ["red","black","red","black"]
+        patterns = ["solid", "solid", "--", "--"]
+
+        labels = ["T-QueueO: Push" , "T-QueueO: Pop","T-QueueP: Push", "T-QueueP: Pop"]
+        fig = plt.figure(figsize=(8,5))
+        ax = fig.add_subplot(111)
+        ax.errorbar(Othread0, ys, label="T-QueueO: Push", color=colors[0], linestyle=patterns[0], linewidth=2)
+        ax.errorbar(Othread1, ys, label="T-QueueO: Pop", color=colors[1], linestyle=patterns[1], linewidth=2)
+        ax.errorbar(Pthread0, ys, label="T-QueueP: Push", color=colors[2], linestyle=patterns[2], linewidth=2)
+        ax.errorbar(Pthread1, ys, label="T-QueueP: Pop", color=colors[3], linestyle=patterns[3], linewidth=2)
+
+        ax.set_xlabel("Time Passed (microseconds)")
+        ax.set_ylabel("% 10M Operations Complete")
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width, box.height*0.85])
+
+        legend = ax.legend(labels, bbox_to_anchor=(0., 1.1, 1., .1), loc="upper center", ncol=2, borderaxespad=0, prop={'size':11})
+       
+        ax.set_ylim(0, 100)
+        ax.set_xlim(0, time_range+10)
+
+        plt.savefig("progress.png")
+        plt.show()
+        plt.close()
+
 
     def get_cm_graphs(self, ds, colors, patterns, filename, cm_map, args=None):
         width = 0.5/len(ds)
@@ -516,9 +562,10 @@ class Plotter():
 
 def main():
     p = Plotter()
+    p.get_prog_graphs()
     #p.hashmaps_graphs()
-    p.fcqueues_graphs()
-    p.concurrent_queues_graphs()
+    #p.fcqueues_graphs()
+    #p.concurrent_queues_graphs()
 
 if __name__ == "__main__":
     main()
