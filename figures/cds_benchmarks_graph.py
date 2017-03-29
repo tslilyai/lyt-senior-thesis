@@ -164,11 +164,11 @@ class Plotter():
         min_time_o = min(min(Othread0), min(Othread1))
         min_time_p = min(min(Pthread0), min(Pthread1))
         time_range = max(max(max(Pthread0), max(Pthread1)) - min_time_p, 
-                    max(max(Othread0), max(Othread1)) - min_time_o)
-        Othread0 = [x - min_time_o for x in Othread0]
-        Othread1 = [x - min_time_o for x in Othread1]
-        Pthread0 = [x - min_time_p for x in Pthread0]
-        Pthread1 = [x - min_time_p for x in Pthread1]
+                    max(max(Othread0), max(Othread1)) - min_time_o)/1000000.0
+        Othread0 = [y/1000000.0 for y in [x - min_time_o for x in Othread0]]
+        Othread1 = [y/1000000.0 for y in[x - min_time_o for x in Othread1]]
+        Pthread0 = [y/1000000.0 for y in[x - min_time_p for x in Pthread0]]
+        Pthread1 = [y/1000000.0 for y in[x - min_time_p for x in Pthread1]]
         ys = [1*y for y in range(100)]
 
         colors = ["red","black","red","black"]
@@ -182,7 +182,7 @@ class Plotter():
         ax.errorbar(Pthread0, ys, label="T-QueueP: Push", color=colors[2], linestyle=patterns[2], linewidth=2)
         ax.errorbar(Pthread1, ys, label="T-QueueP: Pop", color=colors[3], linestyle=patterns[3], linewidth=2)
 
-        ax.set_xlabel("Time Passed (microseconds)")
+        ax.set_xlabel("Time Passed (seconds)")
         ax.set_ylabel("% 10M Operations Complete")
         box = ax.get_position()
         ax.set_position([box.x0, box.y0, box.width, box.height*0.9])
@@ -190,7 +190,7 @@ class Plotter():
         legend = ax.legend(labels, bbox_to_anchor=(0., 1.1, 1., .1), loc="upper center", ncol=2, borderaxespad=0, prop={'size':11})
        
         ax.set_ylim(0, 100)
-        ax.set_xlim(0, time_range+10)
+        ax.set_xlim(0, time_range+0.1)
 
         plt.savefig("progress.png")
         plt.show()
