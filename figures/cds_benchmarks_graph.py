@@ -185,7 +185,7 @@ class Plotter():
         ax.set_xlabel("Time Passed (microseconds)")
         ax.set_ylabel("% 10M Operations Complete")
         box = ax.get_position()
-        ax.set_position([box.x0, box.y0, box.width, box.height*0.85])
+        ax.set_position([box.x0, box.y0, box.width, box.height*0.9])
 
         legend = ax.legend(labels, bbox_to_anchor=(0., 1.1, 1., .1), loc="upper center", ncol=2, borderaxespad=0, prop={'size':11})
        

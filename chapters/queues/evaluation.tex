@@ -70,13 +70,20 @@ We see that for both queues, the push-only thread completes its 10 million trans
         \hline
         Queue & Pops:Pushes\\
         \hline
-            T-QueueO & 0.64\\
-            T-QueueP & 0.28\\
+            T-QueueO & 64:100\\
+            T-QueueP & 28:100\\
         \hline
     \end{tabular}
-    \caption{T-QueueO vs.\ T-QueueP Push-Pop Test Performance: Number of pops completed by the pop-only thread when the push-only thread has completed 10M pushes.}
+    \caption{T-QueueO vs.\ T-QueueP Push-Pop Test Performance: Ratio of pops to pushes when the push-only thread completes 10M pushes and exits}
     \label{tab:sto_pop_push_ratio}
 \end{table}
+
+\begin{figure}[t]
+    \centering
+        \boxed{\includegraphics[width=\textwidth]{progress.png}}
+    \caption{T-QueueO vs.\ T-QueueP Push-Pop Test Performance: Speed of push and pops}
+    \label{fig:sto_progress}
+\end{figure}
 
 We conclude that the modified algorithm for T-QueueP allows a push to execute much faster than a pop, and that this is because T-QueueP uses only one queue version as a global queue lock. Both a push and pop contend on this lock in order to install an operation; the push-only thread can potentially ``starve'' the pop-only thread by continuously succeeding in acquiring the lock.
 T-QueueO, on the other hand, uses two versions (head and tail versions), and each thread acquires only one of these locks when performing an operation.
@@ -118,19 +125,19 @@ We also observe that NT-FCQueue is the only queue in which 10 million pops compl
         \hline
         Queue & Pops:Pushes\\
         \hline
-            T-QueueO & 0.64\\
-            T-QueueP & 0.28\\
-            NT-FCQueue & 1.10\\
-            Basket & 0.42\\
-            Moir & 0.62\\
-            Michael-Scott& 0.54\\
-            Optimistic & 0.50\\
-            Read-Write & 0.84\\
-            Segmented & 0.50\\
-            TsigasCycle & 0.52\\
+            T-QueueO & 64\\
+            T-QueueP & 28\\
+            NT-FCQueue & 110:100\\
+            Basket & 42:100\\
+            Moir & 62:100\\
+            Michael-Scott& 54:100\\
+            Optimistic & 50:100\\
+            Read-Write & 84:100\\
+            Segmented & 50:100\\
+            TsigasCycle & 52:100\\
         \hline
     \end{tabular}
-    \caption{Non-transactional Queues vs.\ T-QueueO and T-QueueP Push-Pop Test Performance: Ratio of completed pops to completed pushes.}
+    \caption{Non-transactional Queues vs.\ T-QueueO and T-QueueP Push-Pop Test Performance: Ratio of pops to pushes when the push-only thread completes 10M pushes and exits}
     \label{tab:push_pop_ratio}
 \end{table}
 
@@ -235,11 +242,11 @@ We also see an impact on performance of NT-FCQueue in the Push-Pop Test (perform
         \hline
         Queue & Pops:Pushes\\
         \hline
-            NT-FCQueue & 1.10\\
-            NT-FCQueueWrapped & 0.94\\
+            NT-FCQueue & 110:100\\
+            NT-FCQueueWrapped & 94:100\\
         \hline
     \end{tabular}
-    \caption{NT-FCQueue vs.\ NT-FCQueueWrapped Push-Pop Test Performance: Ratio of completed pops to completed pushes.}
+    \caption{NT-FCQueue vs.\ NT-FCQueueWrapped Push-Pop Test Performance: Ratio of pops to pushes when the push-only thread completes 10M pushes and exits}
     \label{tab:nt_pop_push_ratio}
 \end{table}
 
@@ -279,13 +286,13 @@ In the Push-Pop Test (Figure~\ref{fig:tqs}), T-QueueP outperforms both flat comb
         \hline
         Queue & Pops:Pushes\\
         \hline
-            T-QueueP & 0.28\\
-            NT-FCQueueWrapped & 0.94\\
-            T-FCQueue & 0.57\\
+            T-QueueP & 28:100\\
+            NT-FCQueueWrapped & 94:100\\
+            T-FCQueue & 57:100\\
         \hline
     \end{tabular}
 
-    \caption{T-FCQueue Push-Pop Test Performance: Ratio of completed pops to completed pushes.}
+    \caption{T-FCQueue Push-Pop Test Performance: Ratio of pops to pushes when the push-only thread completes 10M pushes and exits}
     \label{tab:tfc_pop_push_ratio}
 \end{table}
 
