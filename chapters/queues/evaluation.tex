@@ -157,7 +157,6 @@ Our results demonstrate that a simple implementation of a naive algorithm can co
 \end{minipage}}
 
 
-\newpage
 \subsection{Hypothesis 3}
 \subsubsection{The flat combining algorithm is the most promising concurrent queue algorithm to integrate with STO (Supported).}
 \label{eval:hypo3}
@@ -237,7 +236,7 @@ We also see an impact on performance of NT-FCQueue in the Push-Pop Test, shown i
 
 \begin{figure}[t!]
     \centering
-	\begin{minipage}{\textwidth}
+	\begin{minipage}{0.9\textwidth}
         {\includegraphics[width=\textwidth]{fcqueues/ntQ:PushPop.png}}
 	\end{minipage}
     \caption{NT-FCQueue vs. NT-FCQueueWrapped Performance: Push-Pop Test (2 threads)}
@@ -271,23 +270,14 @@ Comparing NT-FCQueueWrapped and NT-FCQueue demonstrates that STO introduces unav
 
 We compare T-FCQueue against NT-FCQueueWrapped and T-QueueP to measure how the flat combining transactional approach described in Section~\ref{fcqueuet} performs.
 
-In the Push-Pop Test (Figure~\ref{fig:tqs_pp}), T-QueueP outperforms both flat combining variants. This is an unsurprising result given our results from the concurrent queues benchmark in Figure~\ref{fig:ntqs_pp}, and the fact that T-FCQueue has a more equal ratio of pops to pushes than does T-QueueP (Table~\ref{tab:tfc_pop_push_ratio}). 
-
 \begin{figure}[t!]
     \centering
-	\begin{minipage}{\textwidth}
+	\begin{minipage}{0.9\textwidth}
         {\includegraphics[width=\textwidth]{fcqueues/tQ:PushPop.png}}
 	\end{minipage}
         \caption{T-FCQueue Performance: Push-Pop Test}
         \label{fig:tqs_pp}
 \end{figure}
-
-The Multi-Threaded Singletons Test (Figure~\ref{fig:tqs}) shows that T-QueueP performs approximately 2$\times$ better than T-FCQueue, regardless of initial queue size. Both queues do not scale, and the performance ratio remains constant regardless of the number of threads. The T-FCQueue also experiences abort rates around 5\%, which are $1.5$--$2\times$ the abort rates of T-QueueP.
-
-\vspace{12pt}
-\noindent\fbox{\begin{minipage}{\textwidth}
-\textbf{NOT SUPPORTED}: The transactional flat combining queue does not outperform or scale better than other transactional queues using naive synchronization mechanisms. The T-FCQueue's poor performance compared to that of T-QueueP demonstrates that the flat combining algorithm performs poorly when modified to support transactions.
-\end{minipage}}
 
 \begin{table}[t!]
         \centering
@@ -300,20 +290,27 @@ The Multi-Threaded Singletons Test (Figure~\ref{fig:tqs}) shows that T-QueueP pe
             T-FCQueue & 57:100\\
         \hline
     \end{tabular}
-
     \caption{T-FCQueue Push-Pop Test: Ratio of pops to pushes when the push-only and pop-only threads are executing simultaneously}
     \label{tab:tfc_pop_push_ratio}
 \end{table}
 
+In the Push-Pop Test (Figure~\ref{fig:tqs_pp}), T-QueueP outperforms both flat combining variants. This is an unsurprising result given our results from the concurrent queues benchmark in Figure~\ref{fig:ntqs_pp}, and the fact that T-FCQueue has a more equal ratio of pops to pushes than does T-QueueP (Table~\ref{tab:tfc_pop_push_ratio}). 
 
 \begin{figure}[t!]
     \centering
-   	\begin{minipage}{\textwidth}
+   	\begin{minipage}{0.9\textwidth}
         {\includegraphics[width=\textwidth]{fcqueues/tQ:RandSingleOps10000.png}}
 	\end{minipage}
     \caption{T-FCQueue Performance: Multi-Thread Singletons Test}
     \label{fig:tqs}
 \end{figure}
+
+The Multi-Threaded Singletons Test (Figure~\ref{fig:tqs}) shows that T-QueueP performs approximately 2$\times$ better than T-FCQueue, regardless of initial queue size. Both queues do not scale, and the performance ratio remains constant regardless of the number of threads. The T-FCQueue also experiences abort rates around 5\%, which are $1.5$--$2\times$ the abort rates of T-QueueP.
+
+\vspace{12pt}
+\noindent\fbox{\begin{minipage}{\textwidth}
+\textbf{NOT SUPPORTED}: The transactional flat combining queue does not outperform or scale better than other transactional queues using naive synchronization mechanisms. The T-FCQueue's poor performance compared to that of T-QueueP demonstrates that the flat combining algorithm performs poorly when modified to support transactions.
+\end{minipage}}
 
 \subsection{Conclusion}
 Analysis with the \texttt{perf} tool indicates that the majority of T-FCQueue's overhead comes from spinning on the flat combining lock (acquired by the combiner thread) or waiting for a flat combining call to complete. In addition, the number of cache misses is over 4$\times$ greater than that of NT-FCQueue (see Figure~\ref{fig:qcm}). This overhead occurs for two reasons:
