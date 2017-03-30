@@ -118,7 +118,7 @@ The full results can be found in Appendix~\ref{app:hashmaps}. As we did with the
 Our overall conclusion is that the relative performance of the transactional cuckoo hashmaps and the transactional chaining hashmap mirrors the relative performance expected of their non-transactional counterparts.
 
 \subsection{Hypothesis 1}
-\subsubsection{The non-allocating transactional cuckoo hashmap (T-CuckooNA) achieves the best cache usage out of all transactional hashmaps (Not Supported).}
+\subsubsection{The non-allocating transactional cuckoo hashmap (T-CuckooNA) achieves the best cache usage out of all transactional hashmaps. (Not Supported)}
 \label{section:hmcm}
 
 The number of cache misses is influenced by the number of allocations, the patterns in which these allocations are accessed, and the patterns in which the hashmap buckets themselves are accessed. Our results in Figures~\ref{fig:hm_cm5},~\ref{fig:hm_cm10}, and~\ref{fig:hm_cm15} demonstrate that, as expected, a pattern of 90\% finds (5\% inserts/5\% erases) achieves better cache performance than a pattern of 33\% finds/inserts/erases.
@@ -189,7 +189,7 @@ We conjecture that T-CuckooKF has fewer cache misses than T-CuckooNA because the
 \end{minipage}}
 
 \subsection{Hypothesis 2}
-\subsubsection{When the hashmap can fit entirely or mostly in cache, the transactional cuckoo hashmaps outperform the transactional chaining hashmap (Supported).}
+\subsubsection{When the hashmap can fit entirely or mostly in cache, the transactional cuckoo hashmaps outperform the transactional chaining hashmap. (Supported)}
 
 \begin{figure}[ht!]
     \centering
@@ -217,7 +217,7 @@ We note that this result is consistent with the claim made in Section~\ref{secti
 \end{minipage}}
 
 \subsection{Hypothesis 3}
-\subsubsection{As maximum fullness increases, T-CuckooKF outperforms T-Chaining by a greater margin (Supported).}
+\subsubsection{As maximum fullness increases, T-CuckooKF outperforms T-Chaining by a greater margin. (Supported)}
 
 \begin{figure}[ht!]
     \centering
@@ -268,7 +268,7 @@ Regardless of the number of buckets in the map, T-Chaining experiences a much mo
 
 
 \subsection{Hypothesis 4}
-\subsubsection{An algorithm's cache usage most heavily affects performance on our benchmarks; abort rate is negligible and has little effect on performance (Supported).}
+\subsubsection{An algorithm's cache usage most heavily affects performance on our benchmarks; abort rate is negligible and has little effect on performance. (Supported)}
 
     We pose this hypothesis to determine if the bottleneck in performance is the algorithm's cache usage or its abort rate. 
 Our results for both tests discussed in Hypothesis 3 indicate that the number of cache misses is strongly correlated with performance. In general, the performance of all hashmaps decreases slightly (less than 20\%) as hashmap size increases from 10K to 1M buckets. We attribute this to the increasing number of cache misses with increasing numbers of buckets.
