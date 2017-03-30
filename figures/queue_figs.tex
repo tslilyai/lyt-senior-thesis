@@ -1,31 +1,35 @@
 \chapter{Queue Results}
 \label{app:queues}
 
-\vspace{-20pt}
+All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with \texttt{g++-5.3}. In all tests, threads are pinned to cores, with at most one thread per logical core.
+In all performance graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
+
+Cache misses are recorded by running the Multi-Thread Singletons Test benchmark with 8 threads, with each thread performing 10M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
+We report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses).
+
 \section{Cache Misses}
+    \label{app:qcm}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.66\textwidth]{fcqueues/cm.png}
-    \caption{Queue Cache Misses}
-    \caption*{
-Cache misses are recorded by running the Multi-Thread Singletons Test benchmark with 8 threads, with each thread performing 9M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
-    In these results, we report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses).}
-\label{fig:qcm}
+    \includegraphics[width=\textwidth]{fcqueues/cm.png}
+    \caption*{Queue Cache Misses}
 \end{figure}
 
 \section{Performance of Non-transactional Concurrent Queues}
+
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{concurrent/allQ:RandSingleOps10000.png}
     
     \vspace{12pt}
     \includegraphics[width=0.85\textwidth]{concurrent/allQ:RandSingleOps100000.png}
-    \caption{Non-transactional, Concurrent Queues vs. Transactional Queues: Multi-Thread Singletons Test}
+    \caption*{Multi-Thread Singletons Test}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{concurrent/allQ:PushPop.png}
-    \caption{Non-transactional, Concurrent Queues vs. Transactional Queues: Push-Pop Test (2 threads)}
+    \caption*{Push-Pop Test (2 threads)}
 \end{figure}
 
 \section{Performance of Various Transactional Queues}
@@ -34,13 +38,39 @@ Cache misses are recorded by running the Multi-Thread Singletons Test benchmark 
     \includegraphics[width=0.85\textwidth]{fcqueues/allQ:RandSingleOps10000.png}
     \vspace{20pt}
     \includegraphics[width=0.85\textwidth]{fcqueues/allQ:RandSingleOps100000.png}
-    \caption{Various Transactional Queues: Multi-Thread Singletons Test}
+    \caption*{Multi-Thread Singletons Test}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{fcqueues/allQ:PushPop.png}
-    \caption{Various Transactional Queues: Push-Pop Test (2 threads)}
+    \caption*{Push-Pop Test (2 threads)}
 \end{figure}
+
+\section{Push-Pop Test: Ratio of Pops to Pushes}
+
+\begin{table}[H]
+        \centering
+    \begin{tabular}{|cc|}
+        \hline
+        Queue & Pops per 100 Pushes\\
+        \hline
+            T-QueueO & 64\\
+            T-QueueP & 28\\
+            T-FCQueue & 57\\
+            NT-FCQueueWrapped & 94\\
+            NT-FCQueue & 110\\
+            Basket & 42\\
+            Moir & 62\\
+            Michael-Scott& 54\\
+            Optimistic & 50\\
+            Read-Write & 84\\
+            Segmented & 50\\
+            TsigasCycle & 52\\
+        \hline
+    \end{tabular}
+    \caption*{Ratio of pops to pushes when the push-only and pop-only threads are executing simultaneously}
+\end{table}
+
 
 \section{Abort Rate Results}
 \label{app:queue_mt}
@@ -62,5 +92,4 @@ Cache misses are recorded by running the Multi-Thread Singletons Test benchmark 
     \caption*{Multi-Thread Singletons Test: Initial Size 100000$^*$}
 \end{figure}
     \caption*{\footnotesize{$^*$We note that the abort rate appears to spike at 4 threads and decrease as the number of threads increases. One possible explanation may be that contention varies due to the spread of the threads among the CPU sockets.}}
-    \caption{Queue Test Abort Rate Results}
 \end{table}

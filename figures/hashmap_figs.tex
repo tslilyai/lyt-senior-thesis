@@ -1,52 +1,61 @@
 \chapter{Hashmap Results}
 \label{app:hashmaps}
 
-All results presented are the median of 5 trials. If there is an error bar, the bar represents the maximum and minimum value of the 5 trials.
+All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with \texttt{g++-5.3}. In all tests, threads are pinned to cores, with at most one thread per logical core.
+In all performance graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
 
-\iffalse
+Cache misses are recorded by running the benchmark with 8 threads, with each thread performing 10M transactions, under the profiling tool Performance Events for Linux (\texttt{perf}). The sampling period is set to 1000, meaning that every 1000th cache miss is recorded.
+We report the number of cache misses reported by perf (approximately 1/1000 of the actual number of cache misses).
+
 \section{Cache Misses}
 
-\subsection{33\%Find, 33\% Insert, 33\% Erase}
-
-\begin{figure}[H]
+    \begin{figure}[H]
     \centering
-        \includegraphics[width=0.75\linewidth]{maps/335cm.png}
-        \caption*{Maximum Fullness 5}
-\end{figure}
-\begin{figure}[H]
-    \centering
-        \includegraphics[width=0.75\linewidth]{maps/3310cm.png}
-        \caption*{Maximum Fullness 10}
-\end{figure}
-\begin{figure}[H]
-    \centering
-        \includegraphics[width=0.75\linewidth]{maps/3315cm.png}
-        \caption*{Maximum Fullness 15}
-\end{figure}
+        \begin{minipage}{0.75\textwidth}
+        \centering
+            {\includegraphics[width=\textwidth]{maps/335cm.png}}
+            \caption*{Max Fullness 5: 33\%Find, 33\%Insert, 33\%Delete}
+            \vspace{20pt}
+        \end{minipage}
+        \begin{minipage}{0.75\textwidth}
+            \centering
+            {\includegraphics[width=\textwidth]{maps/905cm.png}}
+            \caption*{Max Fullness 5: 90\%Find, 5\%Insert, 5\%Delete}
+        \end{minipage}
+    \end{figure}
 
-\subsection{90\%Find, 5\% Insert, 5\% Erase}
-
-\begin{figure}[H]
+    \begin{figure}[H]
     \centering
-        \includegraphics[width=0.75\linewidth]{maps/905cm.png}
-        \caption*{Maximum Fullness 5}
-\end{figure}
-\begin{figure}[H]
+        \begin{minipage}{0.75\textwidth}
+        \centering
+            {\includegraphics[width=\textwidth]{maps/3310cm.png}}
+            \caption*{Max Fullness 10: 33\%Find, 33\%Insert, 33\%Delete}
+            \vspace{20pt}
+        \end{minipage}
+        \begin{minipage}{0.75\textwidth}
+            \centering
+            {\includegraphics[width=\textwidth]{maps/9010cm.png}}
+            \caption*{Max Fullness 10: 90\%Find, 5\%Insert, 5\%Delete}
+        \end{minipage}
+    \end{figure}
+
+    \begin{figure}[H]
     \centering
-        \includegraphics[width=0.75\linewidth]{maps/9010cm.png}
-        \caption*{Maximum Fullness 10}
-\end{figure}
-\begin{figure}[H]
-    \centering
-        \includegraphics[width=0.75\linewidth]{maps/9015cm.png}
-        \caption*{Maximum Fullness 15}
-\end{figure}
-\fi
+        \begin{minipage}{0.75\textwidth}
+        \centering
+            {\includegraphics[width=\textwidth]{maps/3315cm.png}}
+            \caption*{Max Fullness 15: 33\%Find, 33\%Insert, 33\%Delete}
+            \vspace{20pt}
+        \end{minipage}
+        \begin{minipage}{0.75\textwidth}
+            \centering
+            {\includegraphics[width=\textwidth]{maps/9015cm.png}}
+            \caption*{Max Fullness 15: 90\%Find, 5\%Insert, 5\%Delete}
+        \end{minipage}
+    \end{figure}
 
 
-%\section{Performance Results}
-
-\section{10K Buckets, 33\%Find, 33\% Insert, 33\% Erase}
+\section{Performance: 10K Buckets, 33\%Find, 33\% Insert, 33\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM10K:F34,I33,E33.png} 
@@ -63,7 +72,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \caption*{Maximum Fullness 15}
     \end{figure}
 
-\section{10K Buckets, 90\%Find, 5\% Insert, 5\% Erase}
+\section{Performance: 10K Buckets, 90\%Find, 5\% Insert, 5\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM10K:F90,I5,E5.png} 
@@ -80,7 +89,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \caption*{Maximum Fullness 15}
     \end{figure}
 
-\section{125K Buckets, 33\%Find, 33\% Insert, 33\% Erase}
+\section{Performance: 125K Buckets, 33\%Find, 33\% Insert, 33\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM125K:F34,I33,E33.png} 
@@ -98,7 +107,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
 \end{figure}
 
 
-\section{125K Buckets, 90\%Find, 5\% Insert, 5\% Erase}
+\section{Performance: 125K Buckets, 90\%Find, 5\% Insert, 5\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM125K:F90,I5,E5.png} 
@@ -116,7 +125,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
 \end{figure}
 
 
-\section{1MK Buckets, 33\%Find, 33\% Insert, 33\% Erase}
+\section{Performance: 1M Buckets, 33\%Find, 33\% Insert, 33\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM1M:F34,I33,E33.png} 
@@ -134,7 +143,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
 \end{figure}
 
 
-\section{1M Buckets, 90\%Find, 5\% Insert, 5\% Erase}
+\section{Performance: 1M Buckets, 90\%Find, 5\% Insert, 5\% Erase}
 \begin{figure}[H]
     \centering
 	\includegraphics[width=0.85\textwidth]{maps/5HM1M:F90,I5,E5.png} 
@@ -174,7 +183,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \input{figures/maps/HM10K:F34,I33,E3315_aborts.tex}
         \caption*{Maximum Fullness 15}
     \end{minipage}
-    \caption{33F/33I/33E, 10K Buckets Abort Rate Results}
+    \caption*{33F/33I/33E, 10K Buckets Abort Rate Results}
 \end{table}
 
 \begin{table}[H]
@@ -196,7 +205,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \input{figures/maps/HM10K:F90,I5,E515_aborts.tex}
         \caption*{Maximum Fullness 15}
     \end{minipage}
-    \caption{90F/5I/5E, 10K Buckets Abort Rate Results}
+    \caption*{90F/5I/5E, 10K Buckets Abort Rate Results}
 \end{table}
 
 \begin{table}[H]
@@ -218,7 +227,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \input{figures/maps/HM125K:F34,I33,E3315_aborts.tex}
         \caption*{Maximum Fullness 15}
     \end{minipage}
-    \caption{33F/33I/33E, 125K Buckets Abort Rate Results}
+    \caption*{33F/33I/33E, 125K Buckets Abort Rate Results}
 \end{table}
 
 \begin{table}[H]
@@ -240,7 +249,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \input{figures/maps/HM125K:F90,I5,E515_aborts.tex}
         \caption*{Maximum Fullness 15}
     \end{minipage}
-    \caption{90F/5I/5E, 125K Buckets Abort Rate Results}
+    \caption*{90F/5I/5E, 125K Buckets Abort Rate Results}
 \end{table}
 
 
@@ -263,7 +272,7 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \input{figures/maps/HM1M:F34,I33,E3315_aborts.tex}
         \caption*{Maximum Fullness 15}
     \end{minipage}
-    \caption{33F/33I/33E, 1M Buckets Abort Rate Results}
+    \caption*{33F/33I/33E, 1M Buckets Abort Rate Results}
 \end{table}
 
 \begin{table}[H]
@@ -285,6 +294,6 @@ All results presented are the median of 5 trials. If there is an error bar, the 
         \input{figures/maps/HM1M:F90,I5,E515_aborts.tex}
         \caption*{Maximum Fullness 15}
     \end{minipage}
-    \caption{90F/5I/5E, 1M Buckets Abort Rate Results}
+    \caption*{90F/5I/5E, 1M Buckets Abort Rate Results}
 \end{table}
 

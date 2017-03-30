@@ -4,7 +4,7 @@
 \label{q_microbenchmarks}
 
 We evaluate all the queue implementations on a set of microbenchmarks to determine their scalability and performance. The controlled nature of these microbenchmarks allows us to compare particular aspects of each algorithm, such as transactional overhead introduced by STO. All experiments are run on a 100GB DRAM machine with two 6-core Intel Xeon X5690 processors clocked at 3.47GHz. Hyperthreading is enabled in each processor, resulting in 24 available logical cores. The machine runs a 64-bit Linux 3.2.0 operating system, and all benchmarks and STO data structures are compiled with \texttt{g++-5.3}. In all tests, threads are pinned to cores, with at most one thread per logical core.
-In all graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
+In all performance graphs, we show the median of 5 consecutive runs with the minimum and maximum performance results represented as error bars.
 
 \subsubsection{Parameters}
 
@@ -233,7 +233,7 @@ We see from our Multi-Thread Singletons Test results (Figure~\ref{fig:wrappedqs}
  With fewer threads accessing the queue, the proportion of overhead from the STO wrapper calls is greater, because the overhead from synchronizing access to the queue is minimal. As the number of threads increases, the overhead from STO wrapper calls becomes negligible in comparison to the cost of synchronization.
 NT-FCQueueWrapped retains most of NT-FCQueue's scalability, and the two queues perform equally well after the number of threads reaches approximately 14.
 
-We also see an impact on performance of NT-FCQueue in the Push-Pop Test, shown in Figure~\ref{fig:wrappedqs_pp}: performance drops by approximately 20\%. The push-only thread now beats the pop-only thread in NT-FCQueueWrapped, but the ratio is still close to one pop operation performed per push operation at 94 pops per 100 pushes. The performance impact likely comes from the overhead added by STO wrapper calls; this is expected, as we discussed before, because this constant overhead affects performance more significantly at low thread counts and low contention.
+We also see an impact on performance of NT-FCQueue in the Push-Pop Test, shown in Figure~\ref{fig:wrappedqs_pp}: performance drops by approximately 20\%. The push-only thread now beats the pop-only thread in NT-FCQueueWrapped, but the ratio of 94 pops per 100 pushes is still close to 1:1. The performance impact likely comes from the overhead added by STO wrapper calls; this is expected, as we discussed before, because this constant overhead affects performance more significantly at low thread counts and low contention.
 
 \begin{figure}[t!]
     \centering
@@ -301,7 +301,7 @@ The Multi-Thread Singletons Test (Figure~\ref{fig:tqs}) shows that T-QueueP perf
 \end{minipage}}
 
 \subsection{Conclusion}
-Analysis with the \texttt{perf} tool indicates that the majority of T-FCQueue's overhead comes from spinning on the flat combining lock (acquired by the combiner thread), or waiting for a flat combining call to complete. In addition, the number of cache misses is over 4$\times$ greater than that of NT-FCQueue (see Figure~\ref{fig:qcm}). This overhead occurs for two reasons:
+Analysis with the \texttt{perf} tool indicates that the majority of T-FCQueue's overhead comes from spinning on the flat combining lock (acquired by the combiner thread), or waiting for a flat combining call to complete. In addition, the number of cache misses is over 4$\times$ greater than that of NT-FCQueue (see Appendix~\ref{app:qcm}). This overhead occurs for two reasons:
 \begin{enumerate}
     \item \emph{Higher Quantity}: As described in Section~\ref{fcqueuet}, a thread must make multiple flat combining calls to perform a pop within a transaction (recall that a push only requires one flat combining call).
     \item \emph{Higher Complexity}: Existing flat combining calls need to be made more complex to support transactions (for example, installing a list of values per push rather than a single value).
