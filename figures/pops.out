@@ -1,0 +1,76 @@
+
+--------------NEW TEST-----------------
+
+Q:PushPop
+0 pushed 10000000 
+1 popped 6428951
+
+0 pushed 10000000
+1 popped 278341
+
+1 popped 10000000
+0 pushed 9059820
+
+1 popped 4182691
+0 pushed 10000000
+
+0 pushed 10000000
+1 popped 6176939
+
+0 pushed 10000000
+1 popped 5358251
+
+1 popped 5023366
+0 pushed 10000000
+
+1 popped 8358165
+0 pushed 10000000
+
+0 pushed 10000000
+1 popped 4963126
+
+0 pushed 10000000
+1 popped 9447419
+
+0 pushed 10000000
+1 popped 5685593
+
+0 pushed 10000000
+1 popped 8176076
+
+
+1 popped 5829679
+0 pushed 10000000
+
+0 pushed 10000000
+1 popped 217325
+
+1 popped 10000000
+0 pushed 9029349
+
+1 popped 3756483
+0 pushed 10000000
+
+1 popped 4953704
+0 pushed 10000000
+
+1 popped 4225858
+0 pushed 10000000
+
+0 pushed 10000000
+1 popped 5175965
+
+1 popped 7774911
+0 pushed 10000000
+
+0 pushed 10000000
+1 popped 4678753
+
+0 pushed 10000000
+1 popped 9406553
+
+0 pushed 10000000
+1 popped 5483208
+
+0 pushed 10000000
+1 popped 8942230

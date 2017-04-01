@@ -16,7 +16,7 @@ TESTS = ["PQRandSingleOps:R","PQRandSingleOps:D","PQPushPop:R",
         ]
 CONCURRENT_BENCHMARK_FILE = "concurrent/concurrent.data"
 FCQUEUES_BENCHMARK_FILE = "fcqueues/fcqueues.data"
-TIMES_FILE = "../times.out"
+TIMES_FILE = "times.out"
 HM_BENCHMARK_FILE = "maps/maps_%s.data"
 INIT_SIZES = [10000, 100000]
 NTHREADS = [1,2,4,8,12,16,20]
